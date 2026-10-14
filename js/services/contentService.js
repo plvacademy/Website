@@ -13,7 +13,7 @@
  *   { "items": [ ... ] }                  local JSON files
  *   { "status": "ok", "data": [ ... ] }   typical Apps Script wrapper
  */
-import { CONFIG } from '../config.js?v=8';
+import { CONFIG } from '../config.js?v=9';
 
 export class ContentError extends Error {
   /** kind: not-configured | timeout | network | http | invalid-json | invalid-structure */
@@ -181,9 +181,11 @@ const sheetUrl = (key) => {
 };
 
 /* ONE request fetches areas + coaches + gallery together (Apps Script is slow per request), and the answer is
- * kept in localStorage for a few minutes so moving between pages is instant. Sheet edits show up within ~3 min. */
+ * kept in localStorage for 30 seconds so moving between pages is instant. Sheet edits show up within about a minute. */
 const BUNDLE_STORE = 'plv.sheet.bundle.v1';
-const BUNDLE_FRESH_MS = 3 * 60 * 1000;
+const BUNDLE_FRESH_MS = 30 * 1000;
+// ?refresh=1 in the page address skips every cache (handy right after editing the sheet).
+const FORCE_REFRESH = (() => { try { return new URLSearchParams(window.location.search).has('refresh'); } catch { return false; } })();
 let bundleInflight = null;
 
 function readStoredBundle() {
@@ -219,7 +221,7 @@ async function fetchBundle() {
 }
 
 function getBundle({ force = false } = {}) {
-  if (!force) {
+  if (!force && !FORCE_REFRESH) {
     const stored = readStoredBundle();
     if (stored && Date.now() - stored.at < BUNDLE_FRESH_MS) return Promise.resolve(stored.data);
   }

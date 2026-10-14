@@ -30,7 +30,7 @@ export const CONFIG = {
    * automatic silent refresh when the tab becomes visible again after ttlMs.
    * This is NOT real-time. */
   CACHE: {
-    ttlMs: 5 * 60 * 1000,
+    ttlMs: 30 * 1000,
   },
 
   /* ---- Future endpoints (leave null until a secure backend exists) ---- */
