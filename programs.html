@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-page="programs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Programs &amp; Registration | PLV Academy</title>
+  <meta name="description" content="Register a player at PLV — Performance Lab Volleyball Academy. Choose a training area and fill in the player details.">
+  <meta name="theme-color" content="#071D33">
+  <link rel="icon" href="assets/images/Logo.png?v=2">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=3">
+  <link rel="stylesheet" href="css/registration.css?v=3">
+</head>
+<body class="flow" data-view="area">
+
+<!-- Icon sprite (inline so it works locally and on GitHub Pages) -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z" fill="currentColor"/><circle cx="12" cy="10" r="2.6" fill="var(--pin-hole, #071D33)"/></symbol>
+  <symbol id="i-person" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c.8-3.6 3.6-5.6 7-5.6s6.2 2 7 5.6"/></g></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M6.6 3.5h2.6l1.3 3.6-1.8 1.3a11 11 0 005.3 5.3l1.3-1.8 3.6 1.3v2.6a2 2 0 01-2.2 2A15 15 0 014.6 5.7a2 2 0 012-2.2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="5.5" width="16" height="14.5" rx="3"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></g></symbol>
+  <symbol id="i-ball" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5c-2 3-2.2 6.2-.4 9.2M20 9c-3.2-.4-6 .6-8.4 3.7M7.6 19.3c.2-3.2 1.8-5.6 4-6.6M5 7.5c3 .6 5.2 2.4 6.6 5.2"/></g></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8.5a1 1 0 01-1 1h-4.5v-6h-5v6H5a1 1 0 01-1-1z" fill="currentColor"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<a class="skip-link" href="#main" data-i18n="skip">Skip to main content</a>
+<noscript><p class="noscript">This website needs JavaScript enabled to load its content.</p></noscript>
+
+<div class="flow-wrap">
+
+  <!-- Header: logo (links Home) + tagline + language switch -->
+  <header class="flow-header">
+    <a class="flow-logo" href="index.html" aria-label="PLV Academy — Home">
+      <!-- Logo.png = the main logo (white text, for dark backgrounds); Logo-dark.png = navy-text version for the light screens -->
+      <img class="flow-logo__img flow-logo__img--on-dark" src="assets/images/Logo.png?v=2" alt="PLV Academy" width="47" height="56"
+           onerror="document.body.classList.add('no-logo-on-dark')">
+      <!-- Optional navy-text version of the same logo for the light screens (see README) -->
+      <img class="flow-logo__img flow-logo__img--on-light" src="assets/images/Logo-dark.png?v=2" alt="" aria-hidden="true" width="47" height="56"
+           onerror="document.body.classList.add('no-logo-on-light')">
+      <span class="flow-logo__text" aria-hidden="true"><strong>PLV</strong><small>ACADEMY</small></span>
+    </a>
+    <div class="flow-header__side">
+      <div class="lang-switch" role="group" data-i18n-aria="lang.switch" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true" lang="en">EN</button>
+        <span aria-hidden="true">|</span>
+        <button type="button" data-lang="ar" aria-pressed="false" lang="ar">العربية</button>
+      </div>
+      <p class="flow-tagline" data-i18n="reg.tag.build">Build Your Game</p>
+    </div>
+  </header>
+
+  <main id="main" class="flow-main">
+
+    <!-- Screen 1: choose a training area -->
+    <section class="view view--area" id="step-area" aria-labelledby="area-title">
+      <h1 class="flow-title" id="area-title"><span data-i18n="reg.choose.title1">Choose Your</span> <em data-i18n="reg.choose.title2">Training Area</em></h1>
+      <p class="flow-sub" data-i18n="reg.choose.sub">Select the area you want to train in.</p>
+      <div class="area-list" id="area-grid" role="group" data-i18n-aria="reg.areasLabel" aria-label="Training areas"></div>
+    </section>
+
+    <!-- Screen 2: player form (opens as soon as an area is selected) -->
+    <section class="view view--form" id="step-form" aria-labelledby="form-title" hidden>
+      <button type="button" class="back-btn" id="back-to-areas" data-i18n-aria="reg.back" aria-label="Back">
+        <svg class="icon flip-back" aria-hidden="true"><use href="#i-arrow"/></svg>
+      </button>
+      <div class="form-head">
+        <h1 class="flow-title flow-title--sm" id="form-title" data-i18n="reg.step2.title">Player Registration</h1>
+        <span class="step-pill" data-i18n="reg.stepOf">Step 2 of 2</span>
+      </div>
+      <p class="flow-sub" data-i18n="reg.form.sub">Complete the form below to register.</p>
+
+      <div class="selected-area" id="selected-chip">
+        <span class="selected-area__pin" aria-hidden="true"><svg class="icon"><use href="#i-pin"/></svg></span>
+        <span class="selected-area__text">
+          <small data-i18n="reg.selected">Selected Area</small>
+          <strong id="selected-area" aria-live="polite"></strong>
+        </span>
+      </div>
+
+      <form id="reg-form" novalidate aria-labelledby="form-title">
+        <fieldset class="reg-fields" id="reg-fields">
+          <div class="field">
+            <label for="f-name" data-i18n="reg.name">Player’s Full Name</label>
+            <div class="input-wrap">
+              <svg class="input-icon" aria-hidden="true"><use href="#i-person"/></svg>
+              <input id="f-name" name="name" type="text" autocomplete="name" maxlength="80" required data-i18n-placeholder="reg.name.ph" placeholder="Enter full name">
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-mobile" data-i18n="reg.mobile">Mobile Number</label>
+            <div class="input-wrap">
+              <svg class="input-icon" aria-hidden="true"><use href="#i-phone"/></svg>
+              <input id="f-mobile" name="mobile" type="tel" inputmode="tel" dir="ltr" autocomplete="tel" maxlength="24" required data-i18n-placeholder="reg.mobile.ph" placeholder="01XXXXXXXXX">
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-age" data-i18n="reg.age">Age</label>
+            <div class="input-wrap">
+              <svg class="input-icon" aria-hidden="true"><use href="#i-calendar"/></svg>
+              <input id="f-age" name="age" type="text" inputmode="numeric" autocomplete="off" maxlength="3" required data-i18n-placeholder="reg.age.ph" placeholder="Enter age">
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-position" data-i18n="reg.position">Playing Position</label>
+            <div class="input-wrap">
+              <svg class="input-icon" aria-hidden="true"><use href="#i-ball"/></svg>
+              <select id="f-position" name="position" required>
+                <option value="" data-i18n="reg.position.ph">Select position</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Honeypot (not a user field): real visitors never see or fill it -->
+          <div class="hp" aria-hidden="true"><label>Website <input type="text" id="f-website" name="website" tabindex="-1" autocomplete="off"></label></div>
+        </fieldset>
+
+        <div class="form-alert" id="form-alert" role="alert" hidden></div>
+
+        <button class="btn btn--primary btn--lg reg-submit" id="reg-submit" type="submit">
+          <span class="reg-submit__spinner" aria-hidden="true"></span>
+          <span class="reg-submit__text" data-i18n="reg.submit">Submit Registration</span>
+          <svg class="icon icon--sm flip-rtl reg-submit__arrow" aria-hidden="true"><use href="#i-arrow"/></svg>
+        </button>
+      </form>
+    </section>
+
+    <!-- Screen 3: success (only ever shown after the backend confirms the save) -->
+    <section class="view view--success" id="reg-success" hidden tabindex="-1" role="status">
+      <div class="success-mark" aria-hidden="true">
+        <svg viewBox="0 0 200 200" class="success-mark__rays">
+          <g stroke-width="5" stroke-linecap="round">
+            <line x1="100" y1="14" x2="100" y2="30" stroke="#071D33"/>
+            <line x1="148" y1="27" x2="138" y2="40" stroke="#FF850B"/>
+            <line x1="52" y1="27" x2="62" y2="40" stroke="#FF850B"/>
+            <line x1="14" y1="100" x2="30" y2="100" stroke="#071D33"/>
+            <line x1="186" y1="100" x2="170" y2="100" stroke="#071D33"/>
+            <line x1="26" y1="148" x2="40" y2="138" stroke="#FF850B"/>
+            <line x1="174" y1="148" x2="160" y2="138" stroke="#FF850B"/>
+          </g>
+        </svg>
+        <span class="success-mark__circle"><svg class="icon"><use href="#i-check"/></svg></span>
+      </div>
+      <h1 class="success-title" data-i18n="reg.success.title">Registration Submitted Successfully!</h1>
+      <div class="success-text" lang="en" dir="ltr">
+        <p>Thank you for registering with PLV Academy!</p>
+        <p>Your registration has been received. Our team will contact you soon to discuss the next steps.</p>
+      </div>
+      <div class="success-text success-text--ar" lang="ar" dir="rtl">
+        <p>شكرًا لتسجيلك في أكاديمية PLV. تم استلام بياناتك، وسيقوم فريقنا بالتواصل معك قريبًا لاستكمال الخطوات التالية.</p>
+      </div>
+      <div class="success-actions">
+        <a class="btn btn--outline-navy btn--lg" href="index.html"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-home"/></svg><span data-i18n="reg.success.home">Back to Home</span></a>
+        <button class="btn btn--primary btn--lg" type="button" id="reg-again"><span data-i18n="reg.success.again">Register Another Player</span></button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="flow-foot">
+    <p class="flow-foot__text"><span data-i18n="reg.tag.community1">More Than Volleyball</span><br><span data-i18n="reg.tag.community2">It’s a Community</span></p>
+    <span class="flow-foot__bar" aria-hidden="true"></span>
+  </footer>
+</div>
+
+<!-- Optional city picture behind the form (assets/images/skyline-<area>.jpg). Hidden when the file is missing. -->
+<img class="skyline" id="skyline" alt="" hidden>
+
+<!-- Shown only when the page is opened by double-click (file://): ES modules need a local server. -->
+<script>
+  if (location.protocol === 'file:') {
+    document.addEventListener('DOMContentLoaded', function () {
+      var d = document.createElement('div');
+      d.setAttribute('role', 'alert');
+      d.style.cssText = 'position:sticky;top:0;z-index:300;background:#FF850B;color:#071D33;padding:.8rem 1rem;text-align:center;font:600 14px/1.5 sans-serif';
+      d.textContent = 'Open this page through a local server (VS Code Live Server, or: python -m http.server). Opening index.html directly blocks the scripts, so the chatbot and dynamic sections cannot load. / افتح الصفحة عبر Live Server وليس بالضغط المزدوج على الملف.';
+      document.body.prepend(d);
+    });
+  }
+</script>
+
+<!-- Floating chatbot (same component as the Home page) -->
+<div class="chatbot" id="chatbot-root"></div>
+
+<script type="module" src="js/programs.js?v=3"></script>
+</body>
+</html>

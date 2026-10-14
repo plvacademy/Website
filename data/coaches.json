@@ -1,0 +1,41 @@
+{
+  "_comment": "PLACEHOLDER DATA ONLY. One canonical record per coach, shared by the Home Page, the future Coaches directory and the future profile page. The Home Page shows only: image, name, role, intro. Optional full-profile fields (bio, qualifications, experience, specialties, ageGroups, achievements, photos, programIds, contact) are documented in data/SCHEMA.md; add them only when real.",
+  "items": [
+    {
+      "id": "coach-1",
+      "name": "Coach Name 1 (placeholder)",
+      "role": "Role / title",
+      "image": "assets/images/Coach1.jpg",
+      "slug": "coach-1",
+      "intro": "One short introductory sentence (placeholder).",
+      "published": true
+    },
+    {
+      "id": "coach-2",
+      "name": "Coach Name 2 (placeholder)",
+      "role": "Role / title",
+      "image": "assets/images/Coach2.jpg",
+      "slug": "coach-2",
+      "intro": "One short introductory sentence (placeholder).",
+      "published": true
+    },
+    {
+      "id": "coach-3",
+      "name": "Coach Name 3 (placeholder)",
+      "role": "Role / title",
+      "image": "assets/images/Coach3.jpg",
+      "slug": "coach-3",
+      "intro": "One short introductory sentence (placeholder).",
+      "published": true
+    },
+    {
+      "id": "coach-4",
+      "name": "Coach Name 4 (placeholder)",
+      "role": "Role / title",
+      "image": "assets/images/Coach4.jpg",
+      "slug": "coach-4",
+      "intro": "One short introductory sentence (placeholder).",
+      "published": true
+    }
+  ]
+}

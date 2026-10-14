@@ -1,0 +1,4 @@
+{
+  "_comment": "Only records with approved:true (or status:\"approved\") are ever shown; a missing field is NOT approval. Empty on purpose until real feedback is approved. See feedback.sample.json.",
+  "items": []
+}

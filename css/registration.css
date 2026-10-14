@@ -1,0 +1,185 @@
+/* ==========================================================================
+   PLV — registration.css  (Programs / Registration page only)
+   Mobile-first "app screens" flow matching the design mockup:
+     screen 1 (dark): choose area  ->  screen 2 (light): player form  ->  screen 3 (light): success.
+   Uses the tokens from styles.css. Logical properties keep RTL correct.
+   ========================================================================== */
+
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.flip-back { transform: scaleX(-1); }
+[dir='rtl'] .flip-back { transform: none; }
+
+/* ---------------- Page backgrounds per screen ---------------- */
+body.flow { position: relative; min-height: 100vh; display: block; transition: background-color .45s var(--ease); }
+body.flow[data-view='area'] {
+  color: var(--white);
+  background:
+    radial-gradient(circle at 12% 92%, rgba(255, 133, 11, .14), transparent 38%),
+    radial-gradient(circle at 90% 8%, rgba(255, 255, 255, .05), transparent 40%),
+    linear-gradient(180deg, #071D33 0%, #0b2a47 55%, #071D33 100%);
+}
+body.flow:not([data-view='area']) { color: var(--gray-700); background: #f5f7fb; }
+
+.flow-wrap { position: relative; z-index: 1; width: min(100% - 2.5rem, 480px); min-height: 100vh; margin-inline: auto; display: flex; flex-direction: column; padding-block: 1.3rem 1.2rem; }
+.flow-main { flex: 1; display: flex; flex-direction: column; padding-top: 1.6rem; }
+
+/* ---------------- Header ---------------- */
+.flow-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.flow-logo { display: inline-flex; align-items: center; }
+.flow-logo__img { height: 56px; width: auto; max-width: 190px; object-fit: contain; }
+.flow-logo__text { display: none; flex-direction: column; line-height: 1; }
+.flow-logo__text strong { font-size: 2.1rem; font-weight: 800; letter-spacing: .02em; }
+.flow-logo__text small { font-size: .7rem; font-weight: 800; letter-spacing: .28em; color: var(--orange); margin-top: .2rem; }
+
+/* dark screen shows Logo.png (white text); light screens show Logo-dark.png (navy text). A missing file falls back to a text wordmark. */
+.flow-logo__img--on-light { display: none; }
+body.flow:not([data-view='area']) .flow-logo__img--on-dark { display: none; }
+body.flow:not([data-view='area']) .flow-logo__img--on-light { display: block; }
+body.flow[data-view='area'].no-logo-on-dark .flow-logo__img--on-dark { display: none; }
+body.flow:not([data-view='area']).no-logo-on-light .flow-logo__img--on-light { display: none; }
+body.flow[data-view='area'].no-logo-on-dark .flow-logo__text,
+body.flow:not([data-view='area']).no-logo-on-light .flow-logo__text { display: flex; }
+body.flow[data-view='area'] .flow-logo__text strong { color: var(--white); }
+body.flow:not([data-view='area']) .flow-logo__text strong { color: var(--navy); }
+
+.flow-header__side { display: flex; flex-direction: column; align-items: flex-end; gap: .55rem; }
+[dir='rtl'] .flow-header__side { align-items: flex-start; }
+.flow-tagline { max-width: 4.6rem; font-size: .78rem; font-weight: 700; line-height: 1.3; text-align: end; opacity: .9; }
+body.flow:not([data-view='area']) .flow-tagline { color: var(--navy); }
+.flow .lang-switch { font-size: .75rem; }
+body.flow:not([data-view='area']) .lang-switch button { color: var(--navy); }
+body.flow:not([data-view='area']) .lang-switch button.is-active,
+body.flow:not([data-view='area']) .lang-switch button:hover { color: var(--orange-d); }
+
+/* ---------------- Views ---------------- */
+.view[hidden] { display: none; }
+.view { animation: viewIn .45s var(--ease); }
+@keyframes viewIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+.flow-title { font-size: clamp(1.8rem, 6vw, 2.3rem); line-height: 1.15; font-weight: 800; }
+.flow-title em { font-style: normal; color: var(--orange); display: block; }
+.flow-title--sm { font-size: 1.6rem; color: var(--navy); }
+[dir='rtl'] .flow-title { line-height: 1.4; }
+.flow-sub { margin-top: .7rem; font-size: .95rem; opacity: .9; }
+body.flow:not([data-view='area']) .flow-sub { color: var(--gray-700); opacity: 1; }
+
+/* ---------------- Screen 1: areas ---------------- */
+.view--area .flow-title { margin-top: 1.4rem; }
+.area-list { display: grid; gap: 1rem; margin-top: 1.8rem; }
+.area-card {
+  display: flex; align-items: center; gap: 1rem; width: 100%; text-align: start; font: inherit; color: var(--white);
+  padding: 1rem 1.1rem; border-radius: 18px; border: 1.5px solid rgba(255, 255, 255, .38); background: rgba(255, 255, 255, .04);
+  transition: transform .3s var(--ease), border-color .3s, background-color .3s, box-shadow .3s;
+}
+.area-card:hover { transform: translateY(-3px); border-color: var(--orange); background: rgba(255, 255, 255, .08); }
+.area-card:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
+.area-card.is-selected { border: 2px solid var(--orange); box-shadow: 0 0 0 4px rgba(255, 133, 11, .15); }
+.area-card__icon { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: 50%; background: rgba(255, 255, 255, .08); color: var(--white); --pin-hole: #0b2a47; }
+.area-card.is-selected .area-card__icon, .area-card:hover .area-card__icon { color: var(--orange); }
+.area-card__text { display: flex; flex-direction: column; min-width: 0; line-height: 1.35; }
+.area-card__text strong { font-size: 1.15rem; font-weight: 700; }
+.area-card__text small { font-size: .98rem; opacity: .92; }
+.area-card__chev { margin-inline-start: auto; flex: none; opacity: .85; }
+[dir='rtl'] .area-card__chev { transform: scaleX(-1); }
+
+/* ---------------- Screen 2: form ---------------- */
+.back-btn { display: grid; place-items: center; width: 40px; height: 40px; margin-inline-start: -.5rem; border: 0; border-radius: 50%; background: transparent; color: var(--navy); transition: background-color .25s; }
+.back-btn:hover { background: rgba(7, 29, 51, .08); }
+.form-head { display: flex; align-items: center; justify-content: space-between; gap: .8rem; margin-top: .6rem; }
+.step-pill { flex: none; padding: .3rem .8rem; border-radius: 999px; background: #e6ebf3; color: var(--gray-700); font-size: .75rem; font-weight: 700; }
+
+.selected-area {
+  --chip-bg: #fdeede; --chip-accent: var(--orange-d); --chip-border: #f9d6b0;
+  display: flex; align-items: center; gap: .9rem; margin-top: 1.4rem; padding: .9rem 1.1rem; border-radius: 16px;
+  background: var(--chip-bg); border: 1px solid var(--chip-border);
+}
+.selected-area[data-area='Nasr City'] { --chip-bg: #e6ecf5; --chip-accent: #2a4a7a; --chip-border: #cbd6e8; }
+.selected-area[data-area='New Cairo'] { --chip-bg: #e3f3ea; --chip-accent: #1f8a4f; --chip-border: #bfe2cd; }
+.selected-area__pin { display: grid; place-items: center; flex: none; width: 34px; height: 34px; color: var(--chip-accent); --pin-hole: var(--chip-bg); }
+.selected-area__pin .icon { width: 1.9rem; height: 1.9rem; }
+.selected-area__text { display: flex; flex-direction: column; line-height: 1.35; min-width: 0; }
+.selected-area__text small { font-size: .78rem; font-weight: 700; color: var(--chip-accent); }
+.selected-area__text strong { font-size: 1.05rem; font-weight: 800; color: var(--navy); }
+.selected-area__alt { font-weight: 700; }
+
+.reg-fields { border: 0; margin: 1.5rem 0 0; padding: 0; min-width: 0; display: grid; gap: 1.1rem; }
+.field { display: flex; flex-direction: column; gap: .45rem; min-width: 0; }
+.field label { font-size: .92rem; font-weight: 700; color: var(--navy); }
+.input-wrap { position: relative; }
+.input-icon { position: absolute; inset-inline-start: 1rem; top: 50%; width: 1.25rem; height: 1.25rem; transform: translateY(-50%); color: var(--navy); opacity: .8; pointer-events: none; }
+.input-wrap input, .input-wrap select {
+  width: 100%; min-height: 52px; font: inherit; font-size: .95rem; color: var(--navy); background: var(--white);
+  padding: .8rem 1rem; padding-inline-start: 3rem; border: 1.5px solid var(--gray-200); border-radius: 12px;
+  transition: border-color .25s, box-shadow .25s, background-color .25s;
+}
+.input-wrap select { appearance: none; padding-inline-end: 2.6rem; background-image: linear-gradient(45deg, transparent 50%, var(--navy) 50%), linear-gradient(135deg, var(--navy) 50%, transparent 50%); background-position: calc(100% - 20px) 55%, calc(100% - 14px) 55%; background-size: 6px 6px; background-repeat: no-repeat; }
+[dir='rtl'] .input-wrap select { background-position: 20px 55%, 14px 55%; }
+.input-wrap input::placeholder { color: #9aa5b4; }
+.input-wrap input:focus, .input-wrap select:focus { outline: none; border-color: var(--orange); box-shadow: 0 0 0 4px rgba(255, 133, 11, .2); }
+/* the number field is LTR inside an RTL page: its own start/end are swapped, so pad the icon side explicitly */
+[dir='rtl'] .input-wrap input[dir='ltr'] { text-align: right; padding-inline-start: 1rem; padding-inline-end: 3rem; }
+.input-wrap .is-invalid { border-color: #c62828; background: #fff7f6; }
+.reg-fields:disabled { opacity: .7; }
+.reg-fields:disabled input, .reg-fields:disabled select { cursor: not-allowed; }
+
+.hp { position: absolute; inset-inline-start: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+.form-alert { margin-top: 1.2rem; padding: .85rem 1rem; border-radius: 12px; background: #fdecea; border: 1px solid #f3b8b3; color: #8a1c1c; font-size: .9rem; font-weight: 600; }
+.form-alert[hidden] { display: none; }
+
+.reg-submit { width: 100%; margin-top: 1.4rem; border-radius: 14px; }
+.reg-submit__spinner { display: none; width: 1.1rem; height: 1.1rem; border-radius: 50%; border: 3px solid rgba(7, 29, 51, .25); border-top-color: var(--navy); animation: spin .8s linear infinite; }
+.reg-submit.is-busy .reg-submit__spinner { display: inline-block; }
+.reg-submit.is-busy .reg-submit__arrow { display: none; }
+.reg-submit:disabled { opacity: .85; cursor: progress; transform: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------------- Screen 3: success ---------------- */
+.view--success { text-align: center; padding-top: 1.4rem; }
+.view--success:focus { outline: none; }
+.success-mark { position: relative; width: 168px; height: 168px; margin: 0 auto 1.4rem; }
+.success-mark__rays { position: absolute; inset: 0; width: 100%; height: 100%; animation: raysIn .6s var(--ease) both; }
+.success-mark__circle { position: absolute; inset: 34px; display: grid; place-items: center; border-radius: 50%; background: #1f9d55; color: var(--white); box-shadow: 0 10px 26px rgba(31, 157, 85, .35); animation: pop .5s var(--ease) both; }
+.success-mark__circle .icon { width: 3rem; height: 3rem; }
+@keyframes pop { from { transform: scale(.4); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes raysIn { from { transform: scale(.7); opacity: 0; } to { transform: none; opacity: 1; } }
+.success-title { font-size: clamp(1.5rem, 5.5vw, 1.9rem); line-height: 1.25; font-weight: 800; color: var(--navy); margin-bottom: 1.2rem; }
+.success-text { color: var(--gray-700); font-size: .98rem; max-width: 36ch; margin-inline: auto; }
+.success-text p + p { margin-top: 1rem; }
+.success-text--ar { margin-top: 1.4rem; padding-top: 1.4rem; border-top: 1px solid var(--gray-200); font-family: 'Cairo', var(--font); }
+.success-actions { display: grid; gap: .8rem; margin-top: 2rem; }
+.btn--outline-navy { border-color: var(--navy); color: var(--navy); background: transparent; }
+.btn--outline-navy:hover { background: var(--navy); color: var(--white); }
+.success-actions .btn { width: 100%; border-radius: 14px; }
+
+/* ---------------- Footer tagline + optional skyline ---------------- */
+.flow-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-top: auto; padding-top: 2.6rem; font-size: .82rem; font-weight: 700; line-height: 1.4; }
+body.flow:not([data-view='area']) .flow-foot__text { color: var(--navy); }
+.flow-foot__bar { width: 64px; height: 3px; border-radius: 3px; background: var(--orange); margin-bottom: .45rem; }
+body.flow[data-view='success'] .flow-foot { visibility: hidden; }
+.skyline { position: absolute; z-index: 0; inset-inline: 0; bottom: 0; width: 100%; height: 190px; object-fit: cover; object-position: center bottom; opacity: .55; pointer-events: none;
+  -webkit-mask-image: linear-gradient(to top, #000 35%, transparent); mask-image: linear-gradient(to top, #000 35%, transparent); }
+body.flow[data-view='area'] .skyline, body.flow[data-view='success'] .skyline { display: none; }
+
+/* ---------------- Larger screens: same column, a little more air ---------------- */
+@media (min-width: 700px) {
+  .flow-wrap { padding-block: 2.2rem 1.6rem; }
+  .flow-main { padding-top: 2.4rem; }
+  .flow-logo__img { height: 64px; }
+}
+@media (max-width: 380px) {
+  .flow-wrap { width: min(100% - 1.6rem, 480px); }
+  .area-card__text strong { font-size: 1.05rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .view, .success-mark__rays, .success-mark__circle { animation: none; }
+  .reg-submit__spinner { animation-duration: 1.6s !important; }
+}
+
+/* Room for the floating chat button so it never covers the last field/button */
+.flow { padding-bottom: 5.5rem; }
+@media (max-width: 600px) {
+  .chatbot { inset-inline-end: .8rem; bottom: .8rem; }
+  .chatbot__launcher { width: 60px; height: 60px; }
+  .chatbot__hint { display: none; }
+}

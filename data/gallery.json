@@ -1,0 +1,41 @@
+{
+  "_comment": "PLACEHOLDER DATA ONLY. One entry per photo. All published entries are shown. Browsers cannot list folders, so keep this list updated or generate it (see README).",
+  "items": [
+    {
+      "id": "img-1",
+      "src": "assets/images/Img1.jpg",
+      "alt": "Academy photo 1 (replace with a real description)",
+      "published": true
+    },
+    {
+      "id": "img-2",
+      "src": "assets/images/Img2.jpg",
+      "alt": "Academy photo 2 (replace with a real description)",
+      "published": true
+    },
+    {
+      "id": "img-3",
+      "src": "assets/images/Img3.jpg",
+      "alt": "Academy photo 3 (replace with a real description)",
+      "published": true
+    },
+    {
+      "id": "img-4",
+      "src": "assets/images/Img4.jpg",
+      "alt": "Academy photo 4 (replace with a real description)",
+      "published": true
+    },
+    {
+      "id": "img-5",
+      "src": "assets/images/Img5.jpg",
+      "alt": "Academy photo 5 (replace with a real description)",
+      "published": true
+    },
+    {
+      "id": "img-6",
+      "src": "assets/images/Img6.jpg",
+      "alt": "Academy photo 6 (replace with a real description)",
+      "published": true
+    }
+  ]
+}

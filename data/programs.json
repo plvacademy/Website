@@ -1,0 +1,41 @@
+{
+  "_comment": "PLACEHOLDER DATA ONLY. All published programs are shown. Optional: slug, url (a real page), title_ar/tagline_ar for Arabic.",
+  "items": [
+    {
+      "id": "program-1",
+      "title": "Program Name 1 (placeholder)",
+      "ageRange": "Age range",
+      "tagline": "Short description",
+      "image": "assets/images/Img1.jpg",
+      "url": "",
+      "published": true
+    },
+    {
+      "id": "program-2",
+      "title": "Program Name 2 (placeholder)",
+      "ageRange": "Age range",
+      "tagline": "Short description",
+      "image": "assets/images/Img2.jpg",
+      "url": "",
+      "published": true
+    },
+    {
+      "id": "program-3",
+      "title": "Program Name 3 (placeholder)",
+      "ageRange": "Age range",
+      "tagline": "Short description",
+      "image": "assets/images/Img3.jpg",
+      "url": "",
+      "published": true
+    },
+    {
+      "id": "program-4",
+      "title": "Program Name 4 (placeholder)",
+      "ageRange": "Age range",
+      "tagline": "Short description",
+      "image": "assets/images/Img4.jpg",
+      "url": "",
+      "published": true
+    }
+  ]
+}
