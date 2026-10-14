@@ -66,7 +66,6 @@ export const CONFIG = {
   CONTACT: {
     whatsappNumber: '201556335340', // digits only with country code
     whatsappDisplay: '+20 155 633 5340', // how the number is shown to visitors
-    email: 'plvacademy1@gmail.com',
     socials: {
       facebook: 'https://www.facebook.com/share/1M6PYk11ft/',
       instagram: 'https://instagram.com/_plv25',

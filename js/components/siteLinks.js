@@ -2,8 +2,8 @@
  * PLV — links shared by every page (Home, Programs/Registration):
  * page links from CONFIG.PAGES, Register Now, WhatsApp, social icons, footer contact, year.
  */
-import { CONFIG } from '../config.js?v=10';
-import { el, icon } from './contentSection.js?v=10';
+import { CONFIG } from '../config.js?v=14';
+import { el, icon } from './contentSection.js?v=14';
 
 export function setupSiteLinks() {
   // "View All …" / footer links to future dedicated pages
@@ -73,7 +73,6 @@ export function setupSiteLinks() {
 
   // Footer contact info: only what is configured is shown
   const rows = [];
-  if (CONFIG.CONTACT.email) rows.push(['footer.email', CONFIG.CONTACT.email, `mailto:${CONFIG.CONTACT.email}`, false]);
   document.querySelectorAll('.js-contact-info').forEach((ul) => {
     ul.hidden = rows.length === 0;
     ul.replaceChildren(...rows.map(([labelKey, text, href, external]) => el('li', {}, [

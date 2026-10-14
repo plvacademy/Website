@@ -68,8 +68,8 @@ body.flow:not([data-view='area']) .flow-sub { color: var(--gray-700); opacity: 1
 .area-list { display: grid; gap: 1rem; margin-top: 1.8rem; }
 .area-card {
   display: flex; align-items: center; gap: 1rem; width: 100%; text-align: start; font: inherit; color: var(--white);
-  padding: 1rem 1.1rem; border-radius: 18px; border: 1.5px solid rgba(255, 255, 255, .38); background: rgba(6, 18, 40, .72);
-  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); text-shadow: 0 1px 3px rgba(0, 0, 0, .55);
+  padding: 1rem 1.1rem; border-radius: 18px; border: 1.5px solid rgba(255, 255, 255, .38); background: rgba(6, 18, 40, .8);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .55);
   transition: transform .3s var(--ease), border-color .3s, background-color .3s, box-shadow .3s;
 }
 .area-card:hover { transform: translateY(-3px); border-color: var(--orange); background: rgba(10, 28, 58, .82); }
@@ -169,14 +169,14 @@ body.flow[data-view='area']::before {
   content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
   background-image:
     linear-gradient(180deg, rgba(5, 16, 36, .58) 0%, rgba(5, 16, 36, .30) 42%, rgba(5, 16, 36, .06) 100%),
-    url('../assets/images/bg-court-mobile.jpg?v=12');
+    url('../assets/images/bg-court-mobile.jpg?v=14');
   background-size: cover; background-position: center bottom; background-repeat: no-repeat;
 }
 @media (min-width: 700px), (orientation: landscape) {
   body.flow[data-view='area']::before {
     background-image:
       linear-gradient(180deg, rgba(5, 16, 36, .50) 0%, rgba(5, 16, 36, .22) 45%, rgba(5, 16, 36, .04) 100%),
-      url('../assets/images/bg-court-desktop.jpg?v=12');
+      url('../assets/images/bg-court-desktop.jpg?v=14');
     background-position: center 80%;
   }
 }
@@ -212,3 +212,10 @@ body.flow[data-view='area'] .flow-wrap { min-height: 100vh; min-height: 100dvh; 
 body.flow[data-view='area'] .flow-foot { padding-top: 1.6rem; }
 body.flow[data-view='area'] .flow-foot__bar { display: none; }
 body.flow[data-view='area'] .flow-foot__text { text-shadow: 0 1px 4px rgba(0, 0, 0, .7); }
+
+/* Calm, steady screen: the photo is pinned to the largest phone viewport so it never re-crops when the browser bar slides,
+ * no rubber-band bounce, no looping bobbing/glow from the chat button on these focused pages, and touch devices skip hover lift. */
+body.flow[data-view='area']::before { height: 100vh; height: 100lvh; transform: translateZ(0); }
+html:has(body.flow) { overscroll-behavior-y: none; }
+body.flow .chatbot__launcher, body.flow .chatbot__launcher img, body.flow .chatbot__hint::after { animation: none !important; }
+@media (hover: none) { .area-card:hover { transform: none; } }

@@ -2,13 +2,13 @@
  * PLV — Home Page entry point.
  * Wires i18n, header, dynamic sections (each independent), chatbot and small UI bits.
  */
-import { CONFIG } from './config.js?v=10';
-import { initI18n, t, pick, onLangChange, applyTranslations } from './i18n.js?v=10';
-import { initHeader } from './components/header.js?v=10';
-import { initChatbot } from './components/chatbot.js?v=10';
-import { createGalleryCarousel } from './components/gallery.js?v=10';
-import { createSection, el, icon, imageEl, pageLink } from './components/contentSection.js?v=10';
-import { setupSiteLinks } from './components/siteLinks.js?v=10';
+import { CONFIG } from './config.js?v=14';
+import { initI18n, t, pick, onLangChange, applyTranslations } from './i18n.js?v=14';
+import { initHeader } from './components/header.js?v=14';
+import { initChatbot } from './components/chatbot.js?v=14';
+import { createGalleryCarousel } from './components/gallery.js?v=14';
+import { createSection, el, icon, imageEl, pageLink } from './components/contentSection.js?v=14';
+import { setupSiteLinks } from './components/siteLinks.js?v=14';
 
 /* ------------------------------------------------------------------ */
 /* Renderers: one per content type. Text is always set via textContent. */
