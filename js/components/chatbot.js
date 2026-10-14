@@ -5,9 +5,9 @@
  * When a secure backend exists, set CONFIG.CHATBOT_API_URL and the same UI
  * becomes a working chat — no redesign needed.
  */
-import { el } from './contentSection.js?v=3';
-import { t, getLang } from '../i18n.js?v=3';
-import { isChatbotConfigured, sendMessage } from '../services/chatbotService.js?v=3';
+import { el } from './contentSection.js?v=4';
+import { t, getLang } from '../i18n.js?v=4';
+import { isChatbotConfigured, sendMessage } from '../services/chatbotService.js?v=4';
 
 export function initChatbot(root) {
   if (!root) return;
@@ -65,6 +65,16 @@ export function initChatbot(root) {
   ]);
 
   root.replaceChildren(panel, hint, launcher);
+
+  // Slide the "Chat with us" capsule out every 15s for ~5s (never while the panel is open or being dragged).
+  const peek = () => {
+    if (panel.hidden && !root.classList.contains('is-dragging')) {
+      root.classList.add('is-peek');
+      setTimeout(() => root.classList.remove('is-peek'), 5000);
+    }
+  };
+  setTimeout(peek, 2500);
+  setInterval(peek, 15000);
 
   const setOpen = (open) => {
     if (open) placePanel(true);

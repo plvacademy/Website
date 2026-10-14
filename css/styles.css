@@ -345,18 +345,19 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
 .chatbot__launcher-text[hidden] { display: none; }
 .chatbot__launcher:focus-visible { outline: 2px solid var(--orange); outline-offset: 6px; border-radius: 8px; }
 
-/* "Chat with us": text only, no box. Orange with a dark outline + soft glow so it reads on light and dark sections. */
+/* "Chat with us": dark capsule that slides out beside the logo every 15s (class is-peek toggled in chatbot.js). */
 .chatbot__hint {
-  position: absolute; inset-inline-end: 54px; bottom: 22px; z-index: 0; white-space: nowrap; pointer-events: none;
-  background: none; box-shadow: none; padding: 0;
-  color: var(--orange); font-size: .74rem; font-weight: 800;
-  text-shadow: 0 0 2px var(--navy), 0 0 2px var(--navy), 0 0 3px var(--navy), 0 0 14px rgba(255, 133, 11, .6);
-  animation: floaty 3.6s ease-in-out infinite, hintOut .4s ease 7s forwards;
+  position: absolute; inset-inline-end: 54px; bottom: 20px; z-index: 0; white-space: nowrap; pointer-events: none;
+  background: rgba(8, 22, 46, .94); border: 1px solid rgba(255, 133, 11, .75); border-radius: 999px; padding: .5rem .95rem;
+  color: #fff; font-size: .74rem; font-weight: 800; box-shadow: 0 8px 22px rgba(0, 0, 0, .35), 0 0 14px rgba(255, 133, 11, .3);
+  opacity: 0; visibility: hidden; transform: translateX(12px) scale(.96);
+  transition: opacity .35s ease, transform .35s ease, visibility 0s linear .35s;
 }
-html[lang='en'] .chatbot__hint { letter-spacing: .16em; text-transform: uppercase; }
-.chatbot__hint::after { content: '_'; margin-inline-start: .15em; animation: caret 1s steps(1) infinite; }
+.chatbot.is-left .chatbot__hint { transform: translateX(-12px) scale(.96); }
+.chatbot.is-peek .chatbot__hint { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+html[lang='en'] .chatbot__hint { letter-spacing: .14em; text-transform: uppercase; }
+.chatbot__hint::after { content: '_'; color: var(--orange); margin-inline-start: .15em; animation: caret 1s steps(1) infinite; }
 @keyframes caret { 50% { opacity: 0; } }
-@keyframes hintOut { to { opacity: 0; visibility: hidden; } }
 .chatbot.is-open .chatbot__hint { display: none; }
 @keyframes floaty { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 @keyframes logoGlow { 0%, 100% { opacity: 1; } 50% { opacity: .82; } }
