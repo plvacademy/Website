@@ -68,10 +68,11 @@ body.flow:not([data-view='area']) .flow-sub { color: var(--gray-700); opacity: 1
 .area-list { display: grid; gap: 1rem; margin-top: 1.8rem; }
 .area-card {
   display: flex; align-items: center; gap: 1rem; width: 100%; text-align: start; font: inherit; color: var(--white);
-  padding: 1rem 1.1rem; border-radius: 18px; border: 1.5px solid rgba(255, 255, 255, .38); background: rgba(255, 255, 255, .04);
+  padding: 1rem 1.1rem; border-radius: 18px; border: 1.5px solid rgba(255, 255, 255, .38); background: rgba(6, 18, 40, .72);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); text-shadow: 0 1px 3px rgba(0, 0, 0, .55);
   transition: transform .3s var(--ease), border-color .3s, background-color .3s, box-shadow .3s;
 }
-.area-card:hover { transform: translateY(-3px); border-color: var(--orange); background: rgba(255, 255, 255, .08); }
+.area-card:hover { transform: translateY(-3px); border-color: var(--orange); background: rgba(10, 28, 58, .82); }
 .area-card:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
 .area-card.is-selected { border: 2px solid var(--orange); box-shadow: 0 0 0 4px rgba(255, 133, 11, .15); }
 .area-card__icon { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: 50%; background: rgba(255, 255, 255, .08); color: var(--white); --pin-hole: #0b2a47; }
@@ -168,14 +169,14 @@ body.flow[data-view='area']::before {
   content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
   background-image:
     linear-gradient(180deg, rgba(5, 16, 36, .58) 0%, rgba(5, 16, 36, .30) 42%, rgba(5, 16, 36, .06) 100%),
-    url('../assets/images/bg-court-mobile.jpg?v=10');
+    url('../assets/images/bg-court-mobile.jpg?v=11');
   background-size: cover; background-position: center bottom; background-repeat: no-repeat;
 }
 @media (min-width: 700px), (orientation: landscape) {
   body.flow[data-view='area']::before {
     background-image:
       linear-gradient(180deg, rgba(5, 16, 36, .50) 0%, rgba(5, 16, 36, .22) 45%, rgba(5, 16, 36, .04) 100%),
-      url('../assets/images/bg-court-desktop.jpg?v=10');
+      url('../assets/images/bg-court-desktop.jpg?v=11');
     background-position: center 80%;
   }
 }
