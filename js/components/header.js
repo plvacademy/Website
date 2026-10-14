@@ -1,7 +1,7 @@
 /**
  * PLV — header behaviour: mobile menu, language switch, scroll state, active link.
  */
-import { setLang } from '../i18n.js?v=9';
+import { setLang } from '../i18n.js?v=10';
 
 export function initHeader() {
   const header = document.querySelector('.site-header');

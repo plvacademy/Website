@@ -93,6 +93,11 @@ body.flow:not([data-view='area']) .flow-sub { color: var(--gray-700); opacity: 1
   display: flex; align-items: center; gap: .9rem; margin-top: 1.4rem; padding: .9rem 1.1rem; border-radius: 16px;
   background: var(--chip-bg); border: 1px solid var(--chip-border);
 }
+.selected-area[data-tone='1'] { --chip-bg: #e6ecf5; --chip-accent: #2a4a7a; --chip-border: #cbd6e8; }
+.selected-area[data-tone='2'] { --chip-bg: #e3f3ea; --chip-accent: #1f8a4f; --chip-border: #bfe2cd; }
+.selected-area[data-tone='3'] { --chip-bg: #efe9f7; --chip-accent: #6b3fa0; --chip-border: #d9ccec; }
+.selected-area[data-tone='4'] { --chip-bg: #e0f2f4; --chip-accent: #1d7f8a; --chip-border: #b9dde1; }
+.selected-area[data-area='Heliopolis'] { --chip-bg: #fdeede; --chip-accent: var(--orange-d); --chip-border: #f9d6b0; }
 .selected-area[data-area='Nasr City'] { --chip-bg: #e6ecf5; --chip-accent: #2a4a7a; --chip-border: #cbd6e8; }
 .selected-area[data-area='New Cairo'] { --chip-bg: #e3f3ea; --chip-accent: #1f8a4f; --chip-border: #bfe2cd; }
 .selected-area__pin { display: grid; place-items: center; flex: none; width: 34px; height: 34px; color: var(--chip-accent); --pin-hole: var(--chip-bg); }
@@ -152,14 +157,28 @@ body.flow:not([data-view='area']) .flow-sub { color: var(--gray-700); opacity: 1
 .btn--outline-navy:hover { background: var(--navy); color: var(--white); }
 .success-actions .btn { width: 100%; border-radius: 14px; }
 
-/* ---------------- Footer tagline + optional skyline ---------------- */
+/* ---------------- Footer tagline ---------------- */
 .flow-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-top: auto; padding-top: 2.6rem; font-size: .82rem; font-weight: 700; line-height: 1.4; }
 body.flow:not([data-view='area']) .flow-foot__text { color: var(--navy); }
 .flow-foot__bar { width: 64px; height: 3px; border-radius: 3px; background: var(--orange); margin-bottom: .45rem; }
 body.flow[data-view='success'] .flow-foot { visibility: hidden; }
-.skyline { position: absolute; z-index: 0; inset-inline: 0; bottom: 0; width: 100%; height: 190px; object-fit: cover; object-position: center bottom; opacity: .55; pointer-events: none;
-  -webkit-mask-image: linear-gradient(to top, #000 35%, transparent); mask-image: linear-gradient(to top, #000 35%, transparent); }
-body.flow[data-view='area'] .skyline, body.flow[data-view='success'] .skyline { display: none; }
+/* Dark first screen: the volleyball-court picture, with its own crop for phones and for wide screens.
+ * A navy veil over the top keeps the title and cards readable; the ball, floor and lights stay visible below. */
+body.flow[data-view='area']::before {
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(180deg, rgba(5, 16, 36, .58) 0%, rgba(5, 16, 36, .30) 42%, rgba(5, 16, 36, .06) 100%),
+    url('../assets/images/bg-court-mobile.jpg?v=10');
+  background-size: cover; background-position: center bottom; background-repeat: no-repeat;
+}
+@media (min-width: 700px), (orientation: landscape) {
+  body.flow[data-view='area']::before {
+    background-image:
+      linear-gradient(180deg, rgba(5, 16, 36, .50) 0%, rgba(5, 16, 36, .22) 45%, rgba(5, 16, 36, .04) 100%),
+      url('../assets/images/bg-court-desktop.jpg?v=10');
+    background-position: center 80%;
+  }
+}
 
 /* ---------------- Larger screens: same column, a little more air ---------------- */
 @media (min-width: 700px) {
