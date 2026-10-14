@@ -2,15 +2,15 @@
  * PLV — Programs / Registration page controller.
  * Screen 1: pick an area  ->  screen 2: player form  ->  screen 3: success (only after the backend confirms the save).
  */
-import { CONFIG } from './config.js?v=6';
-import { initI18n, t, getLang, setLang, applyTranslations } from './i18n.js?v=6';
-import { el, icon } from './components/contentSection.js?v=6';
-import { fetchContent } from './services/contentService.js?v=6';
-import { initChatbot } from './components/chatbot.js?v=6';
+import { CONFIG } from './config.js?v=7';
+import { initI18n, t, getLang, setLang, applyTranslations } from './i18n.js?v=7';
+import { el, icon } from './components/contentSection.js?v=7';
+import { fetchContent } from './services/contentService.js?v=7';
+import { initChatbot } from './components/chatbot.js?v=7';
 import {
   submitRegistration, RegistrationError, newRequestId,
   normalizeName, isValidName, normalizeMobile, normalizeAge, toAsciiDigits,
-} from './services/registrationService.js?v=6';
+} from './services/registrationService.js?v=7';
 
 const $ = (id) => document.getElementById(id);
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -266,7 +266,11 @@ async function init() {
   document.querySelectorAll('[data-lang]').forEach((btn) => btn.addEventListener('click', () => setLang(btn.dataset.lang)));
 
   $('area-grid').setAttribute('aria-busy', 'true');
-  $('area-grid').replaceChildren(el('p', { class: 'area-loading', 'data-i18n': 'state.loading' }));
+  const loadingText = el('span', { 'data-i18n': 'state.loading' });
+  const loadingMsg = el('p', { class: 'area-loading', role: 'status' }, [el('span', { class: 'spinner', 'aria-hidden': 'true' }), loadingText]);
+  $('area-grid').replaceChildren(loadingMsg);
+  applyTranslations(loadingMsg);
+  setTimeout(() => { if (loadingMsg.isConnected) { loadingText.dataset.i18n = 'state.loadingLong'; applyTranslations(loadingMsg); } }, 6000);
   buildPositions();
   form.addEventListener('submit', onSubmit);
   $('back-to-areas').addEventListener('click', backToAreas);

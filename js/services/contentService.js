@@ -13,7 +13,7 @@
  *   { "items": [ ... ] }                  local JSON files
  *   { "status": "ok", "data": [ ... ] }   typical Apps Script wrapper
  */
-import { CONFIG } from '../config.js?v=6';
+import { CONFIG } from '../config.js?v=7';
 
 export class ContentError extends Error {
   /** kind: not-configured | timeout | network | http | invalid-json | invalid-structure */
@@ -180,13 +180,36 @@ const sheetUrl = (key) => {
   return base && CONFIG.SHEET_CONTENT?.includes(key) ? `${base}?type=content&name=${encodeURIComponent(key)}` : null;
 };
 
-async function loadFromSheet(key, url) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), CONFIG.REQUEST.timeoutMs);
+/* ONE request fetches areas + coaches + gallery together (Apps Script is slow per request), and the answer is
+ * kept in localStorage for a few minutes so moving between pages is instant. Sheet edits show up within ~3 min. */
+const BUNDLE_STORE = 'plv.sheet.bundle.v1';
+const BUNDLE_FRESH_MS = 3 * 60 * 1000;
+let bundleInflight = null;
+
+function readStoredBundle() {
   try {
-    const response = await fetch(url, { signal: controller.signal });
+    const raw = JSON.parse(localStorage.getItem(BUNDLE_STORE) || 'null');
+    return raw && raw.data && typeof raw.at === 'number' ? raw : null;
+  } catch { return null; }
+}
+function writeStoredBundle(data) {
+  try { localStorage.setItem(BUNDLE_STORE, JSON.stringify({ at: Date.now(), data })); } catch { /* private mode: fine */ }
+}
+
+async function fetchBundle() {
+  const base = CONFIG.REGISTRATION_API_URL;
+  if (!base) throw new ContentError('not-configured', 'No sheet endpoint configured');
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), CONFIG.REQUEST.timeoutMs * 2);
+  try {
+    const response = await fetch(`${base}?type=content&name=all`, { signal: controller.signal });
     if (!response.ok) throw new ContentError('http', `HTTP ${response.status}`, { status: response.status });
-    return postProcess(key, parse(key, await response.text()));
+    const json = JSON.parse(await response.text());
+    if (!json || json.ok === false || !json.data || typeof json.data !== 'object') {
+      throw new ContentError('invalid-structure', 'Unexpected sheet response');
+    }
+    writeStoredBundle(json.data);
+    return json.data;
   } catch (err) {
     if (err instanceof ContentError) throw err;
     throw new ContentError(err.name === 'AbortError' ? 'timeout' : 'network', String(err.message || err));
@@ -195,14 +218,34 @@ async function loadFromSheet(key, url) {
   }
 }
 
-async function loadFresh(key) {
+function getBundle({ force = false } = {}) {
+  if (!force) {
+    const stored = readStoredBundle();
+    if (stored && Date.now() - stored.at < BUNDLE_FRESH_MS) return Promise.resolve(stored.data);
+  }
+  if (!bundleInflight) bundleInflight = fetchBundle().finally(() => { bundleInflight = null; });
+  return bundleInflight;
+}
+
+async function loadFromSheet(key, force) {
+  try {
+    const bundle = await getBundle({ force });
+    if (!Array.isArray(bundle[key])) throw new ContentError('invalid-structure', `No "${key}" list in the sheet response`);
+    return postProcess(key, parse(key, JSON.stringify(bundle[key])));
+  } catch (err) {
+    if (err instanceof ContentError) throw err;
+    throw new ContentError(err.name === 'AbortError' ? 'timeout' : 'network', String(err.message || err));
+  }
+}
+
+async function loadFresh(key, force = false) {
   const url = CONFIG.DATA_SOURCES[key];
   const mode = simulation[key];
   const remote = mode ? null : sheetUrl(key);
 
   if (remote) {
     try {
-      return { items: await loadFromSheet(key, remote) }; // the sheet is the source of truth, even when it is empty
+      return { items: await loadFromSheet(key, force) }; // the sheet is the source of truth, even when it is empty
     } catch (err) {
       log(key, `Google Sheet unavailable (${err.kind || 'error'}: ${err.message}); using the local fallback`);
     }
@@ -256,7 +299,7 @@ export function fetchContent(key, { force = false } = {}) {
   }
   if (inflight.has(key)) return inflight.get(key);
 
-  const promise = loadFresh(key)
+  const promise = loadFresh(key, force)
     .then((result) => {
       cache.set(key, { items: result.items, at: Date.now() });
       return { ...result, fromCache: false };
@@ -278,4 +321,9 @@ export async function findItem(key, idOrSlug) {
   const { items } = await fetchContent(key);
   const needle = String(idOrSlug);
   return items.find((i) => String(i.id) === needle || (i.slug && String(i.slug) === needle)) || null;
+}
+
+/* Start the sheet request as early as possible (before the sections ask for it). */
+if (!CONFIG.FEATURES.devSimulation || Object.keys(simulation).length === 0) {
+  if (CONFIG.REGISTRATION_API_URL && CONFIG.SHEET_CONTENT?.length) getBundle().catch(() => {});
 }

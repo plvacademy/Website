@@ -2,7 +2,7 @@
  * PLV — loading / empty / error / not-configured states.
  * Each function replaces the contents of ONE section container only.
  */
-import { t } from '../i18n.js?v=6';
+import { t } from '../i18n.js?v=7';
 
 const ICONS = {
   empty: 'M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z',
@@ -42,7 +42,19 @@ export function renderLoading(container, { count = 4, variant = 'card' } = {}) {
   status.className = 'state__loading-text';
   status.dataset.state = 'loading';
   status.setAttribute('role', 'status');
-  status.textContent = t('state.loading');
+  const spinner = document.createElement('span');
+  spinner.className = 'spinner';
+  spinner.setAttribute('aria-hidden', 'true');
+  const text = document.createElement('span');
+  text.dataset.i18n = 'state.loading'; // kept in its own element so a language switch never removes the spinner
+  text.textContent = t('state.loading');
+  status.append(spinner, text);
+  // Slow connection: after a few seconds say so, instead of leaving the same message on screen.
+  setTimeout(() => {
+    if (!status.isConnected) return;
+    text.dataset.i18n = 'state.loadingLong';
+    text.textContent = t('state.loadingLong');
+  }, 6000);
   wrap.appendChild(status);
 
   for (let i = 0; i < count; i += 1) {

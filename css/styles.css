@@ -398,3 +398,9 @@ html[lang='en'] .chatbot__hint { letter-spacing: .14em; text-transform: uppercas
   .skeleton::after { display: none; }
   [data-reveal] { opacity: 1 !important; transform: none !important; }
 }
+
+/* Loading message with a small spinner */
+.state__loading-text, .area-loading { display: flex; align-items: center; gap: .6rem; }
+.spinner { flex: none; width: .95rem; height: .95rem; border-radius: 50%; border: 2px solid rgba(255, 133, 11, .3); border-top-color: var(--orange); animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 2.4s; } }
