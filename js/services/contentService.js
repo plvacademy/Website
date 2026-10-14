@@ -13,7 +13,7 @@
  *   { "items": [ ... ] }                  local JSON files
  *   { "status": "ok", "data": [ ... ] }   typical Apps Script wrapper
  */
-import { CONFIG } from '../config.js?v=7';
+import { CONFIG } from '../config.js?v=8';
 
 export class ContentError extends Error {
   /** kind: not-configured | timeout | network | http | invalid-json | invalid-structure */
@@ -247,7 +247,8 @@ async function loadFresh(key, force = false) {
     try {
       return { items: await loadFromSheet(key, force) }; // the sheet is the source of truth, even when it is empty
     } catch (err) {
-      log(key, `Google Sheet unavailable (${err.kind || 'error'}: ${err.message}); using the local fallback`);
+      log(key, `Google Sheet unavailable (${err.kind || 'error'}: ${err.message})`);
+      throw err instanceof ContentError ? err : new ContentError('network', String(err?.message || err));
     }
   }
 

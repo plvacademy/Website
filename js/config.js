@@ -9,15 +9,12 @@ export const CONFIG = {
   /* ---- Content sources (local JSON now, Apps Script endpoints later) ---- */
   // Set a value to null/"" to show a deliberate "not configured" placeholder.
   DATA_SOURCES: {
-    programs: 'data/programs.json',
-    coaches: 'data/coaches.json',
-    gallery: 'data/gallery.json',
     feedback: 'data/feedback.json',
   },
 
   /* Content that the owner edits in the Google Sheet (tabs "Areas", "Coaches", "Gallery") and the site reads through
-   * the same Apps Script web app as registration. If the sheet cannot be reached the site falls back to the
-   * local JSON files (coaches, gallery) or the built-in list (REGISTRATION.areas). */
+   * the same Apps Script web app as registration. The sheet is the ONLY source: there is no built-in fallback
+   * data, so an unreachable sheet shows an error with a retry button (never stale or placeholder content). */
   SHEET_CONTENT: ['coaches', 'gallery', 'areas'], // areas = the "Areas" tab
 
   /* ---- Network behaviour ---- */
@@ -82,11 +79,6 @@ export const CONFIG = {
    * `value` is the canonical English name sent to the server; the server maps it to the worksheet
    * (never trust a worksheet name from the browser). Order matters: it is the display order. */
   REGISTRATION: {
-    areas: [
-      { value: 'New Cairo', key: 'newCairo' },
-      { value: 'Heliopolis', key: 'heliopolis' },
-      { value: 'Nasr City', key: 'nasrCity' },
-    ],
     positions: [
       { value: 'Setter', key: 'setter' },
       { value: 'Outside Hitter', key: 'outsideHitter' },
