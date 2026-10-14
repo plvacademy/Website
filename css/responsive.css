@@ -71,7 +71,7 @@
   .cta-band__actions .btn { width: 100%; }
   .socials { justify-content: flex-start; }
   .chatbot { inset-inline-end: .8rem; bottom: .8rem; }
-  .chatbot__launcher { width: 60px; height: 60px; }
+  .chatbot__launcher { width: 50px; height: 60px; }
   .chatbot__hint { display: none; }
 }
 

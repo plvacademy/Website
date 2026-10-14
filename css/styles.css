@@ -316,23 +316,50 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
 /* ---------------- Chatbot ---------------- */
 .chatbot { position: fixed; inset-inline-end: 1.2rem; bottom: 1.2rem; z-index: 150; display: flex; flex-direction: column; align-items: flex-end; gap: .7rem; }
 [dir='rtl'] .chatbot { align-items: flex-start; }
+/* Moved by the visitor: physical sides, independent of language direction */
+.chatbot.is-left { left: 1.2rem; right: auto; align-items: flex-start; }
+.chatbot.is-right { right: 1.2rem; left: auto; align-items: flex-end; }
+.chatbot.is-left .chatbot__hint { right: auto; left: 54px; }
+.chatbot.is-right .chatbot__hint { left: auto; right: 54px; }
+.chatbot.is-below { flex-direction: column-reverse; }
+.chatbot.is-dragging { transition: none; }
+.chatbot.is-dragging .chatbot__hint { display: none; }
+.chatbot.is-dragging .chatbot__launcher { animation: none; cursor: grabbing; transform: scale(1.12); }
+/* Launcher = the logo itself (no circle). A thin dark outline keeps the white logo readable on light sections. */
 .chatbot__launcher {
-  position: relative; width: 68px; height: 68px; border-radius: 50%; border: 3px solid var(--orange);
-  background: var(--navy); display: grid; place-items: center; padding: 0; color: var(--white); font-weight: 800;
-  animation: floaty 3.6s ease-in-out infinite, glow 2.8s ease-in-out infinite;
+  position: relative; width: 56px; height: 66px; border: 0; border-radius: 0; background: none; padding: 0;
+  display: grid; place-items: center; color: var(--white); font-weight: 800; cursor: grab;
+  touch-action: none; user-select: none; -webkit-user-select: none;
+  animation: floaty 3.6s ease-in-out infinite;
   transition: transform .25s var(--ease);
 }
-.chatbot__launcher:hover { transform: scale(1.08); }
-.chatbot__launcher img { width: 42px; height: 42px; object-fit: contain; }
+.chatbot__launcher:hover { transform: scale(1.1); }
+.chatbot__launcher img {
+  width: 100%; height: 100%; object-fit: contain;
+  filter: drop-shadow(1px 0 0 rgba(7, 29, 51, .9)) drop-shadow(-1px 0 0 rgba(7, 29, 51, .9))
+          drop-shadow(0 1px 0 rgba(7, 29, 51, .9)) drop-shadow(0 -1px 0 rgba(7, 29, 51, .9))
+          drop-shadow(0 0 10px rgba(255, 133, 11, .55));
+  animation: logoGlow 2.8s ease-in-out infinite;
+}
+.chatbot__launcher-text { font-size: 1.3rem; letter-spacing: .04em; text-shadow: 0 0 3px var(--navy), 0 0 3px var(--navy), 0 0 12px rgba(255, 133, 11, .8); }
 .chatbot__launcher-text[hidden] { display: none; }
-.chatbot__hint { position: absolute; inset-inline-end: 62px; bottom: 21px; background: var(--white); color: var(--navy); font-size: .72rem; font-weight: 700; padding: .35rem .7rem; border-radius: 8px; box-shadow: var(--shadow); white-space: nowrap; pointer-events: none; }
-[dir='rtl'] .chatbot__hint { inset-inline-end: auto; inset-inline-start: 62px; }
-.chatbot__hint { z-index: 0; padding-inline-end: 1.1rem; animation: floaty 3.6s ease-in-out infinite, hintOut .4s ease 7s forwards; }
-.chatbot__launcher { z-index: 1; }
+.chatbot__launcher:focus-visible { outline: 2px solid var(--orange); outline-offset: 6px; border-radius: 8px; }
+
+/* "Chat with us": text only, no box. Orange with a dark outline + soft glow so it reads on light and dark sections. */
+.chatbot__hint {
+  position: absolute; inset-inline-end: 54px; bottom: 22px; z-index: 0; white-space: nowrap; pointer-events: none;
+  background: none; box-shadow: none; padding: 0;
+  color: var(--orange); font-size: .74rem; font-weight: 800;
+  text-shadow: 0 0 2px var(--navy), 0 0 2px var(--navy), 0 0 3px var(--navy), 0 0 14px rgba(255, 133, 11, .6);
+  animation: floaty 3.6s ease-in-out infinite, hintOut .4s ease 7s forwards;
+}
+html[lang='en'] .chatbot__hint { letter-spacing: .16em; text-transform: uppercase; }
+.chatbot__hint::after { content: '_'; margin-inline-start: .15em; animation: caret 1s steps(1) infinite; }
+@keyframes caret { 50% { opacity: 0; } }
 @keyframes hintOut { to { opacity: 0; visibility: hidden; } }
 .chatbot.is-open .chatbot__hint { display: none; }
 @keyframes floaty { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-@keyframes glow { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 133, 11, .55), 0 8px 24px rgba(0, 0, 0, .4); } 50% { box-shadow: 0 0 0 14px rgba(255, 133, 11, 0), 0 8px 24px rgba(0, 0, 0, .4); } }
+@keyframes logoGlow { 0%, 100% { opacity: 1; } 50% { opacity: .82; } }
 
 .chatbot__panel { color: var(--navy); width: min(360px, calc(100vw - 2.4rem)); max-height: min(70vh, 520px); display: flex; flex-direction: column; background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-lg); overflow: hidden; border: 1px solid var(--gray-200); animation: panelIn .3s var(--ease); }
 .chatbot__panel[hidden] { display: none; }
@@ -366,7 +393,7 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
-  .hero__bg, .chatbot__launcher { animation: none !important; }
+  .hero__bg, .chatbot__launcher, .chatbot__launcher img, .chatbot__hint, .chatbot__hint::after { animation: none !important; }
   .skeleton::after { display: none; }
   [data-reveal] { opacity: 1 !important; transform: none !important; }
 }

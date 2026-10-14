@@ -180,6 +180,6 @@ body.flow[data-view='area'] .skyline, body.flow[data-view='success'] .skyline { 
 .flow { padding-bottom: 5.5rem; }
 @media (max-width: 600px) {
   .chatbot { inset-inline-end: .8rem; bottom: .8rem; }
-  .chatbot__launcher { width: 60px; height: 60px; }
+  .chatbot__launcher { width: 50px; height: 60px; }
   .chatbot__hint { display: none; }
 }
