@@ -13,7 +13,7 @@
  *   { "items": [ ... ] }                  local JSON files
  *   { "status": "ok", "data": [ ... ] }   typical Apps Script wrapper
  */
-import { CONFIG } from '../config.js?v=4';
+import { CONFIG } from '../config.js?v=6';
 
 export class ContentError extends Error {
   /** kind: not-configured | timeout | network | http | invalid-json | invalid-structure */
@@ -32,6 +32,7 @@ const REQUIRED_FIELDS = {
   coaches: ['id', 'name'],
   gallery: ['id', 'src'],
   feedback: ['id', 'message'],
+  areas: ['id', 'name'],
 };
 
 /* Sheets/Apps Script sometimes send booleans as "TRUE"/"true" strings. Only an explicit true counts. */
@@ -145,6 +146,7 @@ function parse(key, text) {
  *    and not explicitly deactivated (active: false).
  */
 export function isPublic(key, item) {
+  if (key === 'areas') return isTrue(item.active);
   if (key === 'feedback') {
     const approved = isTrue(item.approved) || item.status === 'approved';
     return approved && !isFalse(item.published);
@@ -161,7 +163,7 @@ function postProcess(key, items) {
   }
   const seen = new Set();
   return visible.filter((i) => {
-    const id = String(i.id);
+    const id = String(key === 'areas' ? i.name : i.id); // areas are identified by their name
     if (seen.has(id)) { log(key, `Duplicate id "${id}" skipped (ids must be unique)`); return false; }
     seen.add(id);
     return true;
@@ -171,9 +173,40 @@ function postProcess(key, items) {
 /* ------------------------------------------------------------------ */
 /* Public API                                                          */
 /* ------------------------------------------------------------------ */
+/* Rows published in the owner's Google Sheet, read through the Apps Script web app. A plain GET with no custom
+ * headers (a "simple" request), so the browser needs no CORS preflight. */
+const sheetUrl = (key) => {
+  const base = CONFIG.REGISTRATION_API_URL;
+  return base && CONFIG.SHEET_CONTENT?.includes(key) ? `${base}?type=content&name=${encodeURIComponent(key)}` : null;
+};
+
+async function loadFromSheet(key, url) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), CONFIG.REQUEST.timeoutMs);
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    if (!response.ok) throw new ContentError('http', `HTTP ${response.status}`, { status: response.status });
+    return postProcess(key, parse(key, await response.text()));
+  } catch (err) {
+    if (err instanceof ContentError) throw err;
+    throw new ContentError(err.name === 'AbortError' ? 'timeout' : 'network', String(err.message || err));
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function loadFresh(key) {
   const url = CONFIG.DATA_SOURCES[key];
   const mode = simulation[key];
+  const remote = mode ? null : sheetUrl(key);
+
+  if (remote) {
+    try {
+      return { items: await loadFromSheet(key, remote) }; // the sheet is the source of truth, even when it is empty
+    } catch (err) {
+      log(key, `Google Sheet unavailable (${err.kind || 'error'}: ${err.message}); using the local fallback`);
+    }
+  }
 
   if (mode === 'unconfigured' || !url) {
     throw new ContentError('not-configured', `No data source configured for "${key}"`);

@@ -2,14 +2,15 @@
  * PLV — Programs / Registration page controller.
  * Screen 1: pick an area  ->  screen 2: player form  ->  screen 3: success (only after the backend confirms the save).
  */
-import { CONFIG } from './config.js?v=4';
-import { initI18n, t, getLang, setLang, applyTranslations } from './i18n.js?v=4';
-import { el, icon } from './components/contentSection.js?v=4';
-import { initChatbot } from './components/chatbot.js?v=4';
+import { CONFIG } from './config.js?v=6';
+import { initI18n, t, getLang, setLang, applyTranslations } from './i18n.js?v=6';
+import { el, icon } from './components/contentSection.js?v=6';
+import { fetchContent } from './services/contentService.js?v=6';
+import { initChatbot } from './components/chatbot.js?v=6';
 import {
   submitRegistration, RegistrationError, newRequestId,
   normalizeName, isValidName, normalizeMobile, normalizeAge, toAsciiDigits,
-} from './services/registrationService.js?v=4';
+} from './services/registrationService.js?v=6';
 
 const $ = (id) => document.getElementById(id);
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -33,13 +34,40 @@ let lastFingerprint = '';
 let formShownAt = 0;
 
 /* ---------------------------- Build UI ---------------------------- */
-function buildAreas() {
-  $('area-grid').replaceChildren(...CONFIG.REGISTRATION.areas.map((area) => {
+/* Training areas come from the "Areas" tab of the Google Sheet; the built-in list is the fallback.
+ * Known names keep their built-in translations; a new area shows its English + Arabic name from the sheet. */
+function areaLabel(area, alt) {
+  if (area.key) return el('span', { 'data-i18n': `area.${area.key}${alt ? '.alt' : ''}` });
+  return el('span', { text: alt ? (area.nameAr || '') : area.value });
+}
+
+async function loadAreas() {
+  const builtIn = CONFIG.REGISTRATION.areas;
+  try {
+    const { items } = await Promise.race([
+      fetchContent('areas'),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 4000)),
+    ]);
+    const list = items
+      .filter((a) => typeof a.name === 'string' && a.name.trim())
+      .map((a) => {
+        const known = builtIn.find((b) => b.value === a.name.trim());
+        return known || { value: a.name.trim(), nameAr: typeof a.name_ar === 'string' ? a.name_ar.trim() : '' };
+      });
+    return list.length ? list : builtIn;
+  } catch (err) {
+    console.warn('[PLV:areas] using the built-in list:', err.message || err);
+    return builtIn;
+  }
+}
+
+function buildAreas(areas) {
+  $('area-grid').replaceChildren(...areas.map((area) => {
     const card = el('button', { type: 'button', class: 'area-card', dataset: { area: area.value } }, [
       el('span', { class: 'area-card__icon', 'aria-hidden': 'true' }, [icon('i-pin', 'icon')]),
       el('span', { class: 'area-card__text' }, [
-        el('strong', { 'data-i18n': `area.${area.key}` }),
-        el('small', { 'data-i18n': `area.${area.key}.alt` }),
+        el('strong', {}, [areaLabel(area, false)]),
+        el('small', {}, [areaLabel(area, true)]),
       ]),
       el('span', { class: 'area-card__chev', 'aria-hidden': 'true' }, [icon('i-chevron', 'icon icon--sm')]),
     ]);
@@ -107,9 +135,9 @@ function selectArea(area) {
   document.querySelectorAll('.area-card').forEach((c) => c.classList.toggle('is-selected', c.dataset.area === area.value));
   $('selected-chip').dataset.area = area.value;
   $('selected-area').replaceChildren(
-    el('span', { 'data-i18n': `area.${area.key}` }),
-    document.createTextNode(' — '),
-    el('span', { 'data-i18n': `area.${area.key}.alt`, class: 'selected-area__alt' }),
+    areaLabel(area, false),
+    document.createTextNode(area.key || area.nameAr ? ' — ' : ''),
+    (() => { const alt = areaLabel(area, true); alt.classList.add('selected-area__alt'); return alt; })(),
   );
   applyTranslations($('selected-area'));
   updateSkyline(area);
@@ -194,7 +222,7 @@ async function onSubmit(event) {
       requestId,
       lang: getLang(),
       elapsedMs: Math.round(performance.now() - formShownAt),
-      honeypot: $('f-website').value,
+      honeypot: $('f-trap').value,
     });
     showSuccess(); // reached ONLY when the backend returned { ok: true, saved: true }
   } catch (err) {
@@ -230,14 +258,15 @@ function startAnother() {
 }
 
 /* ---------------------------- Boot ---------------------------- */
-function init() {
+async function init() {
   initI18n();
   try { initChatbot($('chatbot-root')); } catch (err) { console.error('[PLV:chatbot]', err); }
 
   // Language switch (EN | العربية)
   document.querySelectorAll('[data-lang]').forEach((btn) => btn.addEventListener('click', () => setLang(btn.dataset.lang)));
 
-  buildAreas();
+  $('area-grid').setAttribute('aria-busy', 'true');
+  $('area-grid').replaceChildren(el('p', { class: 'area-loading', 'data-i18n': 'state.loading' }));
   buildPositions();
   form.addEventListener('submit', onSubmit);
   $('back-to-areas').addEventListener('click', backToAreas);
@@ -254,6 +283,10 @@ function init() {
   }));
 
   applyTranslations(document);
+
+  buildAreas(await loadAreas());
+  $('area-grid').removeAttribute('aria-busy');
+  applyTranslations($('area-grid'));
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

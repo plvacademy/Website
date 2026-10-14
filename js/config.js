@@ -15,6 +15,11 @@ export const CONFIG = {
     feedback: 'data/feedback.json',
   },
 
+  /* Content that the owner edits in the Google Sheet (tabs "Areas", "Coaches", "Gallery") and the site reads through
+   * the same Apps Script web app as registration. If the sheet cannot be reached the site falls back to the
+   * local JSON files (coaches, gallery) or the built-in list (REGISTRATION.areas). */
+  SHEET_CONTENT: ['coaches', 'gallery', 'areas'], // areas = the "Areas" tab
+
   /* ---- Network behaviour ---- */
   REQUEST: {
     timeoutMs: 8000,
@@ -37,7 +42,7 @@ export const CONFIG = {
   FEEDBACK_API_URL: null, // future endpoint for feedback submitted for moderation
   // Registration page (same site). The form posts to REGISTRATION_API_URL (Google Apps Script web app).
   REGISTRATION_URL: 'programs.html#register',
-  REGISTRATION_API_URL: 'https://script.google.com/macros/s/AKfycbxAuYnAHzv2CZynyod9ypEoK0XsSlX2WD_vUa0G5xhoxqTPPA4Wp9093tOsrBxQEY0X/exec',
+  REGISTRATION_API_URL: 'https://script.google.com/macros/s/AKfycbxvy014piGf11LDKmpQBLhVDa5smaxzvs4GGe_vr6r4U5_I5Y98YisvN4MlWSCIzIej1Q/exec',
 
   /* ---- Links to the future dedicated pages ----
    * null  -> the link falls back to the matching section on this page.

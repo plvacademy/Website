@@ -183,3 +183,4 @@ body.flow[data-view='area'] .skyline, body.flow[data-view='success'] .skyline { 
   .chatbot__launcher { width: 50px; height: 60px; }
   .chatbot__hint { display: none; }
 }
+.area-loading { color: rgba(255,255,255,.75); font-size: .95rem; padding: 1rem .2rem; }
