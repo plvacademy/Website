@@ -2,14 +2,14 @@
  * PLV — Home Page entry point.
  * Wires i18n, header, dynamic sections (each independent), chatbot and small UI bits.
  */
-import { CONFIG } from './config.js?v=17';
-import { initI18n, t, pick, onLangChange, applyTranslations } from './i18n.js?v=17';
-import { initHeader } from './components/header.js?v=17';
-import { initChatbot } from './components/chatbot.js?v=17';
-import { createGalleryCarousel } from './components/gallery.js?v=17';
-import { createSection, el, icon, imageEl, pageLink } from './components/contentSection.js?v=17';
-import { setupSiteLinks } from './components/siteLinks.js?v=17';
-import { renderStars } from './components/stars.js?v=17';
+import { CONFIG } from './config.js?v=18';
+import { initI18n, t, pick, onLangChange, applyTranslations } from './i18n.js?v=18';
+import { initHeader } from './components/header.js?v=18';
+import { initChatbot } from './components/chatbot.js?v=18';
+import { createGalleryCarousel } from './components/gallery.js?v=18';
+import { createSection, el, icon, imageEl, pageLink } from './components/contentSection.js?v=18';
+import { setupSiteLinks } from './components/siteLinks.js?v=18';
+import { renderStars } from './components/stars.js?v=18';
 
 /* ------------------------------------------------------------------ */
 /* Renderers: one per content type. Text is always set via textContent. */
