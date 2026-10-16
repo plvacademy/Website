@@ -3,15 +3,15 @@
  * The form (name, Parent/Player, half-star rating, message, mobile) and the list of approved reviews.
  * Success is shown ONLY after the server confirms the row was saved; any failure keeps the form and allows a retry.
  */
-import { initI18n, t, pick, getLang, applyTranslations, onLangChange } from './i18n.js?v=18';
-import { initHeader } from './components/header.js?v=18';
-import { initChatbot } from './components/chatbot.js?v=18';
-import { createSection, el } from './components/contentSection.js?v=18';
-import { setupSiteLinks } from './components/siteLinks.js?v=18';
-import { createRatingInput, renderStars, formatRating } from './components/stars.js?v=18';
+import { initI18n, t, pick, getLang, applyTranslations, onLangChange } from './i18n.js?v=19';
+import { initHeader } from './components/header.js?v=19';
+import { initChatbot } from './components/chatbot.js?v=19';
+import { createSection, el } from './components/contentSection.js?v=19';
+import { setupSiteLinks } from './components/siteLinks.js?v=19';
+import { createRatingInput, renderStars, formatRating } from './components/stars.js?v=19';
 import {
   submitFeedback, FeedbackError, newRequestId, normalizeName, isValidName, normalizeMobile, parseRating, isLowRating, FEEDBACK_LIMITS,
-} from './services/feedbackService.js?v=18';
+} from './services/feedbackService.js?v=19';
 
 const $ = (id) => document.getElementById(id);
 
@@ -152,16 +152,20 @@ function initForm() {
     label.textContent = t(label.dataset.i18n);
   }
 
+  const wrap = $('fb-form').parentElement;
   function showSuccess({ followUp }) {
-    const lowKey = followUp ? 'feedback.success.low' : 'feedback.success.text';
+    const key = followUp ? 'feedback.success.low' : 'feedback.success.text';
     const text = $('fb-success-text');
-    text.dataset.i18n = lowKey;
-    text.textContent = t(lowKey);
+    text.dataset.i18n = key;
+    text.textContent = t(key);
+    $('fb-success-note').hidden = !followUp;
+    $('fb-success').classList.toggle('is-followup', !!followUp);
+    wrap.style.minHeight = `${wrap.offsetHeight}px`; // the panel keeps the size the form had: nothing around it moves
     form.hidden = true;
     const box = $('fb-success');
     box.hidden = false;
-    box.focus();
-    box.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    box.focus({ preventScroll: true });
+    wrap.scrollIntoView({ block: 'start', behavior: 'smooth' });
   }
 
   function resetForm() {
@@ -173,6 +177,7 @@ function initForm() {
     requestId = newRequestId();
     form.hidden = false;
     $('fb-success').hidden = true;
+    wrap.style.minHeight = '';
     fields.name.focus();
   }
   $('fb-another').addEventListener('click', resetForm);
