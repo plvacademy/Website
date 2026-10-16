@@ -8,9 +8,7 @@
 export const CONFIG = {
   /* ---- Content sources (local JSON now, Apps Script endpoints later) ---- */
   // Set a value to null/"" to show a deliberate "not configured" placeholder.
-  DATA_SOURCES: {
-    feedback: 'data/feedback.json',
-  },
+  DATA_SOURCES: {},
 
   /* Content that the owner edits in the Google Sheet (tabs "Areas", "Coaches", "Gallery") and the site reads through
    * the same Apps Script web app as registration. The sheet is the ONLY source: there is no built-in fallback
@@ -36,7 +34,9 @@ export const CONFIG = {
   /* ---- Future endpoints (leave null until a secure backend exists) ---- */
   CHATBOT_API_URL: null, // e.g. 'https://your-backend.example.com/chat'
   CONTACT_API_URL: null, // future Apps Script endpoint for contact requests
-  FEEDBACK_API_URL: null, // future endpoint for feedback submitted for moderation
+  // Feedback web app (Google Apps Script bound to the Feedback sheet). Reviews are read from here and new ones are sent here;
+  // only rows the owner marked Visible are returned. Never put secrets in this file.
+  FEEDBACK_API_URL: 'https://script.google.com/macros/s/AKfycby20FtYcsmiQtQanVFAQXq9tJqRM_pPnnzRcHX45T06DMTG7TUMdQuTtylZOkLh1FxOvA/exec',
   // Registration page (same site). The form posts to REGISTRATION_API_URL (Google Apps Script web app).
   REGISTRATION_URL: 'programs.html#register',
   REGISTRATION_API_URL: 'https://script.google.com/macros/s/AKfycbxvy014piGf11LDKmpQBLhVDa5smaxzvs4GGe_vr6r4U5_I5Y98YisvN4MlWSCIzIej1Q/exec',
@@ -51,7 +51,7 @@ export const CONFIG = {
     coachDetails: null, // supports {id} and {slug}; e.g. 'coach.html?slug={slug}'
     programDetails: null, // supports {id} and {slug}
     gallery: null,
-    feedback: null,
+    feedback: 'feedback.html',
     privacy: null,
     terms: null,
   },

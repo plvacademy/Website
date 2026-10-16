@@ -13,7 +13,7 @@
  *   { "items": [ ... ] }                  local JSON files
  *   { "status": "ok", "data": [ ... ] }   typical Apps Script wrapper
  */
-import { CONFIG } from '../config.js?v=14';
+import { CONFIG } from '../config.js?v=15';
 
 export class ContentError extends Error {
   /** kind: not-configured | timeout | network | http | invalid-json | invalid-structure */
@@ -32,6 +32,7 @@ const REQUIRED_FIELDS = {
   coaches: ['id', 'name'],
   gallery: ['id', 'src'],
   feedback: ['id', 'message'],
+  feedbackHome: ['id', 'message'], // the same reviews, only those marked "Show on Home" in the sheet
   areas: ['id', 'name'],
 };
 
@@ -147,7 +148,7 @@ function parse(key, text) {
  */
 export function isPublic(key, item) {
   if (key === 'areas') return isTrue(item.active);
-  if (key === 'feedback') {
+  if (key === 'feedback' || key === 'feedbackHome') {
     const approved = isTrue(item.approved) || item.status === 'approved';
     return approved && !isFalse(item.published);
   }
@@ -240,9 +241,38 @@ async function loadFromSheet(key, force) {
   }
 }
 
+/* Reviews: read from the feedback web app, which returns ONLY rows the owner marked Visible (public fields only).
+ * Plain GET with no custom headers (no CORS preflight). The Home page asks for key "feedbackHome" = those also marked "Show on Home". */
+async function loadFeedback(key) {
+  const base = CONFIG.FEEDBACK_API_URL;
+  if (!base) throw new ContentError('not-configured', 'No feedback endpoint configured');
+  const { timeoutMs, retries, retryDelayMs } = CONFIG.REQUEST;
+  let lastError;
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs * 2);
+    try {
+      const response = await fetch(`${base}?type=feedback`, { signal: controller.signal });
+      if (!response.ok) throw new ContentError('http', `HTTP ${response.status}`, { status: response.status });
+      const items = postProcess(key, parse(key, await response.text()));
+      return key === 'feedbackHome' ? items.filter((i) => isTrue(i.home)) : items;
+    } catch (err) {
+      lastError = err instanceof ContentError ? err
+        : new ContentError(err.name === 'AbortError' ? 'timeout' : 'network', String(err.message || err));
+      if (!isRetryable(lastError) || attempt === retries) break;
+      await sleep(retryDelayMs * (attempt + 1));
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  log(key, `${lastError.kind}: ${lastError.message}`);
+  throw lastError;
+}
+
 async function loadFresh(key, force = false) {
   const url = CONFIG.DATA_SOURCES[key];
   const mode = simulation[key];
+  if ((key === 'feedback' || key === 'feedbackHome') && !mode) return { items: await loadFeedback(key) };
   const remote = mode ? null : sheetUrl(key);
 
   if (remote) {

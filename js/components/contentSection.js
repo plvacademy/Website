@@ -15,9 +15,9 @@
  * Each section owns its own loading / empty / error state, so one failing
  * source never affects another.
  */
-import { fetchContent } from '../services/contentService.js?v=14';
-import { renderLoading, renderEmpty, renderError, renderNotConfigured } from './loadingStates.js?v=14';
-import { t } from '../i18n.js?v=14';
+import { fetchContent } from '../services/contentService.js?v=15';
+import { renderLoading, renderEmpty, renderError, renderNotConfigured } from './loadingStates.js?v=15';
+import { t } from '../i18n.js?v=15';
 
 /* ------------------------- DOM helpers ------------------------- */
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -77,7 +77,7 @@ export function pageLink(template, ident) {
 }
 
 /* ------------------------- Section controller ------------------------- */
-export function createSection({ key, mount, render, skeleton = {}, onData }) {
+export function createSection({ key, mount, render, skeleton = {}, onData, emptyKey }) {
   if (!mount) { // the page has no container for this section: skip it instead of crashing the others
     console.warn(`[PLV] section "${key}" skipped: its container is missing in the HTML`);
     return { load: async () => {}, rerender: () => {} };
@@ -108,7 +108,7 @@ export function createSection({ key, mount, render, skeleton = {}, onData }) {
       if (silent && signature === lastSignature) return;
       lastItems = items;
       lastSignature = signature;
-      if (items.length === 0) { renderEmpty(mount); if (onData) onData([]); return; }
+      if (items.length === 0) { renderEmpty(mount, emptyKey); if (onData) onData([]); return; }
       paint(items);
     } catch (err) {
       if (mine !== token) return;
@@ -127,7 +127,7 @@ export function createSection({ key, mount, render, skeleton = {}, onData }) {
     else {
       // refresh state text in the current language
       const state = mount.querySelector('[data-state]')?.dataset.state;
-      if (state === 'empty') renderEmpty(mount);
+      if (state === 'empty') renderEmpty(mount, emptyKey);
       else if (state === 'not-configured') renderNotConfigured(mount);
       else if (state === 'error') renderError(mount, () => load({ force: true }));
       else if (state === 'loading') renderLoading(mount, skeleton);
