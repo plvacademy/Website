@@ -5,7 +5,8 @@
 .star { --s: 20px; position: relative; display: inline-block; width: var(--s); height: var(--s); flex: none; }
 .star svg { display: block; width: var(--s); height: var(--s); fill: #cdd5e0; }
 .star__fill { position: absolute; inset: 0 auto 0 0; width: 0; overflow: hidden; }
-.star__fill svg { fill: var(--orange); }
+.star__fill svg { fill: var(--orange); max-width: none; flex: none; } /* never shrink with the clipped box: it is cut, not scaled */
+.star svg { max-width: none; }
 .stars-row { display: inline-flex; gap: 2px; vertical-align: middle; }
 .rating-input { --star: 46px; display: inline-flex; gap: 6px; padding: .25rem .1rem; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; border-radius: 10px; }
 .rating-input .star { --s: var(--star); }

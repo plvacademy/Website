@@ -13,7 +13,7 @@
  *   { "items": [ ... ] }                  local JSON files
  *   { "status": "ok", "data": [ ... ] }   typical Apps Script wrapper
  */
-import { CONFIG } from '../config.js?v=15';
+import { CONFIG } from '../config.js?v=17';
 
 export class ContentError extends Error {
   /** kind: not-configured | timeout | network | http | invalid-json | invalid-structure */
@@ -242,8 +242,21 @@ async function loadFromSheet(key, force) {
 }
 
 /* Reviews: read from the feedback web app, which returns ONLY rows the owner marked Visible (public fields only).
- * Plain GET with no custom headers (no CORS preflight). The Home page asks for key "feedbackHome" = those also marked "Show on Home". */
-async function loadFeedback(key) {
+ * Plain GET with no custom headers (no CORS preflight). The Home page asks for key "feedbackHome" = those also marked "Show on Home".
+ * ONE request serves both pages: the raw list is kept in localStorage for 30 seconds (so moving between Home and the
+ * Feedback page is instant) and the request starts as soon as the page loads, before the section asks for it. */
+const FEEDBACK_STORE = 'plv.sheet.feedback.v1';
+const FEEDBACK_FRESH_MS = 30 * 1000;
+let feedbackInflight = null;
+
+function readStoredFeedback() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(FEEDBACK_STORE) || 'null');
+    return raw && Array.isArray(raw.items) && typeof raw.at === 'number' ? raw : null;
+  } catch { return null; }
+}
+
+async function fetchFeedbackList() {
   const base = CONFIG.FEEDBACK_API_URL;
   if (!base) throw new ContentError('not-configured', 'No feedback endpoint configured');
   const { timeoutMs, retries, retryDelayMs } = CONFIG.REQUEST;
@@ -254,8 +267,9 @@ async function loadFeedback(key) {
     try {
       const response = await fetch(`${base}?type=feedback`, { signal: controller.signal });
       if (!response.ok) throw new ContentError('http', `HTTP ${response.status}`, { status: response.status });
-      const items = postProcess(key, parse(key, await response.text()));
-      return key === 'feedbackHome' ? items.filter((i) => isTrue(i.home)) : items;
+      const items = parse('feedback', await response.text());
+      try { localStorage.setItem(FEEDBACK_STORE, JSON.stringify({ at: Date.now(), items })); } catch { /* private mode: fine */ }
+      return items;
     } catch (err) {
       lastError = err instanceof ContentError ? err
         : new ContentError(err.name === 'AbortError' ? 'timeout' : 'network', String(err.message || err));
@@ -265,14 +279,33 @@ async function loadFeedback(key) {
       clearTimeout(timer);
     }
   }
-  log(key, `${lastError.kind}: ${lastError.message}`);
   throw lastError;
+}
+
+function getFeedbackList({ force = false } = {}) {
+  if (!force && !FORCE_REFRESH) {
+    const stored = readStoredFeedback();
+    if (stored && Date.now() - stored.at < FEEDBACK_FRESH_MS) return Promise.resolve(stored.items);
+  }
+  if (!feedbackInflight) feedbackInflight = fetchFeedbackList().finally(() => { feedbackInflight = null; });
+  return feedbackInflight;
+}
+
+async function loadFeedback(key, force) {
+  try {
+    const items = postProcess(key, await getFeedbackList({ force }));
+    return key === 'feedbackHome' ? items.filter((i) => isTrue(i.home)) : items;
+  } catch (err) {
+    const e = err instanceof ContentError ? err : new ContentError('network', String(err?.message || err));
+    log(key, `${e.kind}: ${e.message}`);
+    throw e;
+  }
 }
 
 async function loadFresh(key, force = false) {
   const url = CONFIG.DATA_SOURCES[key];
   const mode = simulation[key];
-  if ((key === 'feedback' || key === 'feedbackHome') && !mode) return { items: await loadFeedback(key) };
+  if ((key === 'feedback' || key === 'feedbackHome') && !mode) return { items: await loadFeedback(key, force) };
   const remote = mode ? null : sheetUrl(key);
 
   if (remote) {
@@ -354,6 +387,11 @@ export async function findItem(key, idOrSlug) {
   const { items } = await fetchContent(key);
   const needle = String(idOrSlug);
   return items.find((i) => String(i.id) === needle || (i.slug && String(i.slug) === needle)) || null;
+}
+
+/* Start the reviews request early too, only on the pages that show reviews. */
+if (CONFIG.FEEDBACK_API_URL && typeof document !== 'undefined' && (document.getElementById('feedback-grid') || document.getElementById('fb-list'))) {
+  getFeedbackList().catch(() => {});
 }
 
 /* Start the sheet request as early as possible (before the sections ask for it). */
