@@ -1,17 +1,17 @@
 /**
  * PLV — single coach page (coach.html?c=ID). Reads the same CONFIG.COACHES_PAGE data as the roster.
  */
-import { initI18n, onLangChange, applyTranslations } from './i18n.js?v=36';
-import { initHeader } from './components/header.js?v=36';
-import { initChatbot } from './components/chatbot.js?v=36';
-import { setupSiteLinks } from './components/siteLinks.js?v=36';
-import { initAmbient } from './components/ambient.js?v=36';
-import { coaches, view, num, portraitHTML, fillList, setMeta, profileUrl, photoHTML } from './components/coachView.js?v=36';
+import { initI18n, t, onLangChange, applyTranslations } from './i18n.js?v=38';
+import { initHeader } from './components/header.js?v=38';
+import { initChatbot } from './components/chatbot.js?v=38';
+import { setupSiteLinks } from './components/siteLinks.js?v=38';
+import { initAmbient } from './components/ambient.js?v=38';
+import { coaches, loadCoaches, loadError, fromSheet, view, num, portraitHTML, fillList, setMeta, profileUrl, photoHTML } from './components/coachView.js?v=38';
 
 const $ = (id) => document.getElementById(id);
 const id = new URLSearchParams(location.search).get('c');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-let idx = Math.max(0, coaches.findIndex((c) => c.id === id));
+let idx = 0;
 
 let galleryItems = [], galleryCat = '';
 function renderGallery() {
@@ -36,8 +36,16 @@ function countUp() {
   nums.forEach((b) => io.observe(b));
 }
 
+function renderMissing() {
+  const main = $('main');
+  main.innerHTML = '<section class="container ch-missing"><p role="status"></p><a class="ch-btn" href="coaches.html"><span></span></a></section>';
+  main.querySelector('p').textContent = t(loadError ? 'chp.error' : 'chp.notfound');
+  main.querySelector('a span').textContent = t('chp.back');
+  document.title = 'PLV';
+}
 function render() {
-  const c = coaches[idx]; if (!c) return;
+  const c = coaches[idx];
+  if (!c) { renderMissing(); return; }
   const v = view(c);
   document.title = `${v.name} | PLV`;
   $('cp-photo').innerHTML = portraitHTML(c);
@@ -46,7 +54,7 @@ function render() {
   $('cp-name').textContent = v.name;
   setMeta($('cp-meta'), v);
   $('cp-lead').textContent = v.bio;
-  $('cp-bio').textContent = v.bio;
+  $('cp-bio').textContent = v.bioFull;
   $('cp-philo').textContent = v.philosophy;
   $('cp-spec').replaceChildren(...v.specs.map((t) => { const li = document.createElement('li'); li.textContent = t; return li; }));
   if (!v.specs.length) $('cp-spec').replaceChildren();
@@ -55,6 +63,8 @@ function render() {
   const show = (id, on) => { $(id).hidden = !on; };
   show('cp-stats', v.stats.length); show('achievements', v.achievements.length || v.trophies.length); show('journey', v.timeline.length || v.journeyPhotos.length); show('gallery', v.gallery.length);
   $('cp-ach-link').hidden = !(v.achievements.length || v.trophies.length);
+  $('cp-about-photo').hidden = fromSheet && !v.aboutPhoto;
+  $('cp-about-photo').closest('.cp-about__in').classList.toggle('cp-about__in--solo', $('cp-about-photo').hidden);
   $('cp-about-photo').firstElementChild.textContent = v.stats[0] ? `${v.stats[0].value} · ${v.stats[0].label}` : '';
   $('cp-about-photo').querySelectorAll('img, .ch-ph').forEach((n) => n.remove());
   $('cp-about-photo').insertAdjacentHTML('afterbegin', photoHTML(v.aboutPhoto, v.name));
@@ -71,11 +81,17 @@ function render() {
   });
 }
 
+async function boot() {
 initI18n();
 try { initChatbot($('chatbot-root')); } catch (err) { console.error('[PLV:chatbot]', err); }
 initHeader();
 setupSiteLinks();
 applyTranslations(document);
+await loadCoaches();
+idx = coaches.findIndex((c) => c.id === id || (c.slug && c.slug === id));
+if (idx < 0 && !id && coaches.length) idx = 0;
 render();
 onLangChange(render);
 initAmbient($('ch-ambient'), { lite: matchMedia('(max-width: 720px)').matches });
+}
+boot();

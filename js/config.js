@@ -5,38 +5,6 @@
  *
  * NEVER put private API keys or secrets in this file: it is public.
  */
-/* TEMP SAMPLE CONTENT: placeholder numbers, titles and empty photo slots so the coach pages show their full layout.
-   Replace per coach with real data (name, role, photo, bio, stats, achievements, timeline, photos). Nothing here is factual. */
-const TEMP_PROFILE = {
-  name: '', role: '', specialization: '', experience: '', photo: '', about_photo: '', bio: '', philosophy: '', qualifications: [],
-  specializations: ['Specialization one', 'Specialization two', 'Specialization three'],
-  stats: [
-    { value: 10, label: 'Years as a player', label_ar: 'سنوات كلاعب' },
-    { value: 5, label: 'Years as a coach', label_ar: 'سنوات كمدرب' },
-    { value: 30, label: 'Athletes trained', label_ar: 'لاعبًا تم تدريبهم' },
-    { value: 8, label: 'Trophies', label_ar: 'كؤوس' },
-  ],
-  achievements: [
-    { place: '1st', place_ar: 'الأول', title: 'Tournament name', title_ar: 'اسم البطولة' },
-    { place: '2nd', place_ar: 'الثاني', title: 'Tournament name', title_ar: 'اسم البطولة' },
-    { place: '3rd', place_ar: 'الثالث', title: 'Tournament name', title_ar: 'اسم البطولة' },
-    { place: '4th', place_ar: 'الرابع', title: 'Tournament name', title_ar: 'اسم البطولة' },
-  ],
-  trophies: [{ src: '' }, { src: '' }, { src: '' }, { src: '' }],
-  timeline: [
-    { when: 'Year', when_ar: 'السنة', text: 'A milestone in the coach’s career will appear here.', text_ar: 'ستظهر هنا محطة من مسيرة المدرب.' },
-    { when: 'Year', when_ar: 'السنة', text: 'A milestone in the coach’s career will appear here.', text_ar: 'ستظهر هنا محطة من مسيرة المدرب.' },
-    { when: 'Year', when_ar: 'السنة', text: 'A milestone in the coach’s career will appear here.', text_ar: 'ستظهر هنا محطة من مسيرة المدرب.' },
-    { when: 'Year', when_ar: 'السنة', text: 'A milestone in the coach’s career will appear here.', text_ar: 'ستظهر هنا محطة من مسيرة المدرب.' },
-  ],
-  journey_photos: [{ src: '' }, { src: '' }],
-  // gallery: cat is one of 'tournaments' | 'match' | 'training'
-  gallery: [
-    { src: '', cat: 'tournaments' }, { src: '', cat: 'match' }, { src: '', cat: 'training' },
-    { src: '', cat: 'match' }, { src: '', cat: 'tournaments' }, { src: '', cat: 'training' },
-  ],
-};
-
 export const CONFIG = {
   /* ---- Content sources (local JSON now, Apps Script endpoints later) ---- */
   // Set a value to null/"" to show a deliberate "not configured" placeholder.
@@ -133,15 +101,9 @@ export const CONFIG = {
       closing: '',
       philosophy: { technique: '', tactics: '', athleticism: '', mentality: '' },
     },
-    // Per coach: photo, about_photo, stats, achievements, trophies, timeline, journey_photos, gallery (see TEMP_PROFILE above). Add *_ar for Arabic.
     // kind: 'head' | 'assistant' picks the placeholder role. Empty text = a clearly marked placeholder on the page.
     // Arabic text goes in name_ar, role_ar, specialization_ar, experience_ar, bio_ar, philosophy_ar.
-    coaches: [
-      { id: 'coach-1', kind: 'head', ...TEMP_PROFILE },
-      { id: 'coach-2', kind: 'assistant', ...TEMP_PROFILE },
-      { id: 'coach-3', kind: 'assistant', ...TEMP_PROFILE },
-      { id: 'coach-4', kind: 'assistant', ...TEMP_PROFILE },
-    ],
+    coaches: [], // the coaches now come from the "Coaches" tab of the content sheet
   },
 
   /* ---- Gallery page ----

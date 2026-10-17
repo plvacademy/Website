@@ -232,3 +232,10 @@
 /* The Coaches link stays lit on the Coaches pages (also a single coach), independent of scripts */
 .coaches-page .site-nav__list a[data-page='coaches'] { color: var(--orange); opacity: 1; }
 .coaches-page .site-nav__list a[data-page='coaches']::after { transform: scaleX(1); }
+.cp-about__in--solo { grid-template-columns: 1fr; }
+
+/* empty / error / not-found states */
+.ch-empty,.ch-missing p{margin:clamp(24px,5vw,56px) 0;padding:clamp(28px,5vw,56px) 20px;text-align:center;font-size:clamp(1rem,2.4vw,1.25rem);color:var(--ch-silver,#C9D3DF);border:1px dashed rgba(201,211,223,.35);border-radius:14px}
+.ch-missing{display:flex;flex-direction:column;align-items:center;gap:20px;padding-block:clamp(120px,18vw,200px) 80px}
+.ch-missing p{margin:0;width:100%;max-width:560px}
+.ch-empty[hidden],.ch-card[hidden],.ch-others[hidden]{display:none}

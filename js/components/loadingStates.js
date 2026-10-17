@@ -2,7 +2,7 @@
  * PLV — loading / empty / error / not-configured states.
  * Each function replaces the contents of ONE section container only.
  */
-import { t } from '../i18n.js?v=36';
+import { t } from '../i18n.js?v=38';
 
 const ICONS = {
   empty: 'M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z',

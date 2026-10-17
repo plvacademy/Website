@@ -1,15 +1,15 @@
 /**
  * PLV — Coaches page entry point.
- * Renders the roster card from CONFIG.COACHES_PAGE (clearly marked placeholders until real data exists), the philosophy bands,
+ * Renders one roster card per published row of the Coaches sheet tab (empty message when there are none), the philosophy bands,
  * the turning 3D court and the ambient background. Each coach opens their own page (coach.html?c=ID).
  */
-import { initI18n, t, onLangChange, applyTranslations } from './i18n.js?v=36';
-import { initHeader } from './components/header.js?v=36';
-import { initChatbot } from './components/chatbot.js?v=36';
-import { setupSiteLinks } from './components/siteLinks.js?v=36';
-import { initAmbient } from './components/ambient.js?v=36';
-import { initCourt } from './components/courtRally.js?v=36';
-import { coaches, view, num, portraitHTML, fillList, setMeta, profileUrl } from './components/coachView.js?v=36';
+import { initI18n, t, onLangChange, applyTranslations } from './i18n.js?v=38';
+import { initHeader } from './components/header.js?v=38';
+import { initChatbot } from './components/chatbot.js?v=38';
+import { setupSiteLinks } from './components/siteLinks.js?v=38';
+import { initAmbient } from './components/ambient.js?v=38';
+import { initCourt } from './components/courtRally.js?v=38';
+import { coaches, loadCoaches, loadError, view, num, portraitHTML, fillList, setMeta, profileUrl } from './components/coachView.js?v=38';
 
 const $ = (id) => document.getElementById(id);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -104,13 +104,23 @@ function initBoard() {
 }
 
 /* ---------- boot ---------- */
-function renderAll() { renderCard(); setTab(state.tab); }
-function boot() {
+function renderAll() {
+  const none = !coaches.length;
+  const msg = $('coach-empty');
+  msg.hidden = !none;
+  msg.textContent = none ? t(loadError ? 'chp.error' : 'chp.empty') : '';
+  $('coach-card').hidden = none;
+  $('coach-others').hidden = none;
+  if (state.sel >= coaches.length) state.sel = 0;
+  if (!none) { renderCard(); setTab(state.tab); }
+}
+async function boot() {
   initI18n();
   try { initChatbot($('chatbot-root')); } catch (err) { console.error('[PLV:chatbot]', err); }
   initHeader();
   setupSiteLinks();
   applyTranslations(document); // also translates the chatbot, which is built after initI18n()
+  await loadCoaches();
   renderAll();
   bindCard(); bindBands(); initReveal(); initBoard();
   initAmbient($('ch-ambient'), { lite });
