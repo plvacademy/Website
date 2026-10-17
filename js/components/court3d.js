@@ -3,7 +3,7 @@
  * Both scenes are purely illustrative: a floating volleyball and a tactical court with sample paths. No match data.
  * Each init function returns { setActive(bool), destroy() }; the caller pauses them when off-screen.
  */
-import * as THREE from '../vendor/three.module.min.js?v=25';
+import * as THREE from '../vendor/three.module.min.js?v=26';
 
 const ORANGE = 0xff850b, BLUE = 0x3fa7ff;
 
@@ -49,28 +49,45 @@ function disposeScene(scene, renderer) {
 /* ------------------------------------------------------------------ */
 /* Hero ball                                                           */
 /* ------------------------------------------------------------------ */
-function ballTexture() {
-  const c = document.createElement('canvas'); c.width = 1024; c.height = 512;
-  const g = c.getContext('2d');
-  g.fillStyle = '#f2f5f9'; g.fillRect(0, 0, 1024, 512);
-  const bands = 6;
-  for (let i = 0; i < bands; i++) {
-    const x0 = (i / bands) * 1024, w = 1024 / bands;
-    g.fillStyle = i % 2 ? '#ff850b' : '#dfe6ee';
-    g.beginPath(); g.moveTo(x0, 0);
-    g.bezierCurveTo(x0 + w * 0.9, 150, x0 - w * 0.2, 360, x0 + w * 0.4, 512);
-    g.lineTo(x0 + w * 0.4 + w * 0.46, 512);
-    g.bezierCurveTo(x0 - w * 0.2 + w * 0.46, 360, x0 + w * 0.9 + w * 0.46, 150, x0 + w * 0.46, 0);
-    g.closePath(); g.fill();
+/**
+ * Real volleyball layout: 18 panels = 6 patches (one per cube face) x 3 parallel strips, strips of neighbouring
+ * patches turning like a pinwheel. Computed per pixel from the sphere direction, with a matching bump map for the seams.
+ */
+function ballMaps(W = 1536) {
+  const H = W / 2;
+  const mk = () => { const c = document.createElement('canvas'); c.width = W; c.height = H; return c; };
+  const cc = mk(), cb = mk(), gc = cc.getContext('2d'), gb = cb.getContext('2d');
+  const img = gc.createImageData(W, H), bmp = gb.createImageData(W, H);
+  const WHITE = [244, 246, 249], ORANGE_C = [255, 133, 11], NAVY_C = [12, 38, 66];
+  for (let y = 0; y < H; y++) {
+    const lat = (0.5 - (y + 0.5) / H) * Math.PI, cl = Math.cos(lat), sl = Math.sin(lat);
+    for (let x = 0; x < W; x++) {
+      const lon = ((x + 0.5) / W) * Math.PI * 2;
+      const d = [cl * Math.cos(lon), sl, cl * Math.sin(lon)];
+      const a = d.map(Math.abs);
+      const i = a[0] >= a[1] && a[0] >= a[2] ? 0 : a[1] >= a[2] ? 1 : 2;
+      const pos = d[i] > 0;
+      const ju = (i + (pos ? 1 : 2)) % 3, jv = (i + (pos ? 2 : 1)) % 3;
+      const u = d[ju] / a[i], v = d[jv] / a[i]; // gnomonic coords on the patch, -1..1
+      const strip = Math.min(2, Math.floor(((u + 1) / 2) * 3));
+      const edgeStrip = Math.min(Math.abs(u - 1 / 3), Math.abs(u + 1 / 3));
+      const edgePatch = 1 - Math.max(Math.abs(u), Math.abs(v));
+      const seam = Math.min(edgeStrip / 0.026, edgePatch / 0.05); // <1 inside a seam
+      const odd = (i + (pos ? 0 : 1)) % 2;
+      const base = (strip === 1) !== (odd === 1) ? ORANGE_C : WHITE;
+      const shade = 1 - 0.07 * Math.abs(u) - 0.07 * Math.abs(v);
+      const k = seam < 1 ? 0.35 + 0.65 * seam : 1;
+      const o = (y * W + x) * 4;
+      for (let ch = 0; ch < 3; ch++) img.data[o + ch] = (seam < 1 ? base[ch] * (1 - k) * 0.4 + NAVY_C[ch] * (1 - k) * 0.6 + base[ch] * k : base[ch]) * shade;
+      img.data[o + 3] = 255;
+      const hgt = seam < 1 ? 70 + 185 * seam : 255;
+      bmp.data[o] = bmp.data[o + 1] = bmp.data[o + 2] = hgt; bmp.data[o + 3] = 255;
+    }
   }
-  g.strokeStyle = 'rgba(7,29,51,.55)'; g.lineWidth = 3;
-  for (let i = 0; i < bands * 2; i++) {
-    const x0 = (i / (bands * 2)) * 1024;
-    g.beginPath(); g.moveTo(x0, 0); g.bezierCurveTo(x0 + 60, 150, x0 - 30, 360, x0 + 36, 512); g.stroke();
-  }
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4;
-  return tex;
+  gc.putImageData(img, 0, 0); gb.putImageData(bmp, 0, 0);
+  const map = new THREE.CanvasTexture(cc); map.colorSpace = THREE.SRGBColorSpace; map.anisotropy = 8;
+  const bump = new THREE.CanvasTexture(cb);
+  return { map, bump };
 }
 
 export function initBall(stage, { lite = false } = {}) {
@@ -79,10 +96,11 @@ export function initBall(stage, { lite = false } = {}) {
   const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 50);
   camera.position.set(0, 0, 7.6);
 
+  const heroMaps = ballMaps(lite ? 1024 : 1536);
   const group = new THREE.Group(); scene.add(group);
   const ball = new THREE.Mesh(
     new THREE.SphereGeometry(1.5, lite ? 32 : 64, lite ? 24 : 48),
-    new THREE.MeshStandardMaterial({ map: ballTexture(), roughness: 0.5, metalness: 0.05 }),
+    new THREE.MeshStandardMaterial({ map: heroMaps.map, bumpMap: heroMaps.bump, bumpScale: 2.2, roughness: 0.42, metalness: 0.04 }),
   );
   group.add(ball);
   // thin orbit rings = tracking overlay
@@ -100,7 +118,7 @@ export function initBall(stage, { lite = false } = {}) {
   addEventListener('pointermove', onMove, { passive: true });
 
   const loop = createLoop(stage, renderer, camera, (dt, t) => {
-    ball.rotation.y += dt * 0.35; ball.rotation.x = Math.sin(t * 0.4) * 0.12;
+    ball.rotation.y += dt * 0.35; ball.rotation.x = 0.35 + Math.sin(t * 0.4) * 0.12;
     group.rotation.y += (tx * 0.35 - group.rotation.y) * Math.min(1, dt * 3);
     group.rotation.x += (ty * 0.2 - group.rotation.x) * Math.min(1, dt * 3);
     group.position.y = Math.sin(t * 0.9) * 0.1;
@@ -180,7 +198,8 @@ export function initCourt(stage, { lite = false } = {}) {
     l.computeLineDistances(); scene.add(l);
   };
   dash([2.8, 0.05, 3.2], [5.2, 0.05, 1.2], BLUE); dash([7.2, 0.05, 0], [6.4, 0.05, -1.6], BLUE); dash([-7.2, 0.05, -3], [-4.2, 0.05, -1.4], ORANGE);
-  const ball = new THREE.Mesh(new THREE.SphereGeometry(0.22, 24, 16), new THREE.MeshStandardMaterial({ map: ballTexture(), roughness: 0.5, emissive: 0x331a00 }));
+  const smallMaps = ballMaps(512);
+  const ball = new THREE.Mesh(new THREE.SphereGeometry(0.22, 24, 16), new THREE.MeshStandardMaterial({ map: smallMaps.map, bumpMap: smallMaps.bump, bumpScale: 1.5, roughness: 0.45 }));
   scene.add(ball);
 
   scene.add(new THREE.AmbientLight(0xbcd2ee, 0.9));

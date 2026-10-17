@@ -3,11 +3,11 @@
  * Renders the featured coach, the gallery and the spotlight from CONFIG.COACHES_PAGE (placeholders until real data exists),
  * and drives the motion layer (reveals, pointer parallax, tilt). The 3D scenes load lazily from components/court3d.js.
  */
-import { CONFIG } from './config.js?v=25';
-import { initI18n, t, pick, onLangChange } from './i18n.js?v=25';
-import { initHeader } from './components/header.js?v=25';
-import { initChatbot } from './components/chatbot.js?v=25';
-import { setupSiteLinks } from './components/siteLinks.js?v=25';
+import { CONFIG } from './config.js?v=26';
+import { initI18n, t, pick, onLangChange, applyTranslations } from './i18n.js?v=26';
+import { initHeader } from './components/header.js?v=26';
+import { initChatbot } from './components/chatbot.js?v=26';
+import { setupSiteLinks } from './components/siteLinks.js?v=26';
 
 const $ = (id) => document.getElementById(id);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -222,7 +222,7 @@ function canRun3D() {
 function initThree() {
   if (!canRun3D() || !('IntersectionObserver' in window)) return;
   let mod;
-  const load = () => (mod ||= import('./components/court3d.js?v=25'));
+  const load = () => (mod ||= import('./components/court3d.js?v=26'));
   // small screens and weaker devices get the lighter render (fewer polygons, no antialiasing, 1x pixel ratio)
   const lite = matchMedia('(max-width: 720px)').matches || (navigator.hardwareConcurrency || 4) < 4 || (navigator.deviceMemory || 4) < 2;
   const scenes = [
@@ -253,6 +253,7 @@ function boot() {
   try { initChatbot($('chatbot-root')); } catch (err) { console.error('[PLV:chatbot]', err); }
   initHeader();
   setupSiteLinks();
+  applyTranslations(document); // also translates the chatbot, which is built after initI18n()
   applyImages();
   renderAll();
   bindInteractions();

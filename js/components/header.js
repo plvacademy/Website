@@ -1,7 +1,7 @@
 /**
  * PLV — header behaviour: mobile menu, language switch, scroll state, active link.
  */
-import { setLang } from '../i18n.js?v=25';
+import { setLang } from '../i18n.js?v=26';
 
 export function initHeader() {
   // Focus ring only for keyboard users: after a mouse click (or coming back with the Back button) a clicked link must not

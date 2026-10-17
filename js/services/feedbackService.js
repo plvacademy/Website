@@ -7,8 +7,8 @@
  * The browser checks are only for convenience; the server validates everything again.
  * Request: Content-Type text/plain (a "simple" request, no CORS preflight, which Apps Script cannot answer).
  */
-import { CONFIG } from '../config.js?v=25';
-import { toAsciiDigits, normalizeName, isValidName, normalizeMobile, newRequestId } from './registrationService.js?v=25';
+import { CONFIG } from '../config.js?v=26';
+import { toAsciiDigits, normalizeName, isValidName, normalizeMobile, newRequestId } from './registrationService.js?v=26';
 
 export { normalizeName, isValidName, normalizeMobile, newRequestId };
 
