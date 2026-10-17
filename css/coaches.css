@@ -55,7 +55,8 @@
 
 /* ---------- 2. marquee ---------- */
 .ch-marquee { background: var(--orange); color: var(--ink); overflow: hidden; direction: ltr; }
-.ch-marquee__run { display: flex; gap: 3.5rem; width: max-content; padding-block: .5rem; white-space: nowrap; font-family: var(--disp); font-weight: 900; text-transform: uppercase; font-size: clamp(1.6rem, 3vw, 2.3rem); letter-spacing: .04em; animation: ch-mq 30s linear infinite; }
+.ch-marquee__run { display: flex; width: max-content; padding-block: .5rem; white-space: nowrap; font-family: var(--disp); font-weight: 900; text-transform: uppercase; font-size: clamp(1.6rem, 3vw, 2.3rem); letter-spacing: .04em; animation: ch-mq 30s linear infinite; }
+.ch-marquee__grp { display: flex; gap: 3.5rem; padding-inline-end: 3.5rem; flex: none; }
 .ch-marquee__run i { font-style: normal; }
 @keyframes ch-mq { to { transform: translateX(-50%); } }
 
