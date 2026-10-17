@@ -4,12 +4,12 @@
  * category (training | matches | events | team | campus). Filters, the masonry layout and the photo viewer all work on that list.
  * With no photos yet, clearly-marked empty slots show the layout (never presented as real events).
  */
-import { CONFIG } from './config.js?v=35';
-import { initI18n, t, pick, isRtl, onLangChange, applyTranslations } from './i18n.js?v=35';
-import { initHeader } from './components/header.js?v=35';
-import { initChatbot } from './components/chatbot.js?v=35';
-import { setupSiteLinks } from './components/siteLinks.js?v=35';
-import { fetchContent } from './services/contentService.js?v=35';
+import { CONFIG } from './config.js?v=36';
+import { initI18n, t, pick, isRtl, onLangChange, applyTranslations } from './i18n.js?v=36';
+import { initHeader } from './components/header.js?v=36';
+import { initChatbot } from './components/chatbot.js?v=36';
+import { setupSiteLinks } from './components/siteLinks.js?v=36';
+import { fetchContent } from './services/contentService.js?v=36';
 
 const $ = (id) => document.getElementById(id);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;

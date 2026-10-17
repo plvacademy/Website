@@ -83,6 +83,7 @@ export const CONFIG = {
     coachDetails: null, // supports {id} and {slug}; e.g. 'coach.html?slug={slug}'
     programDetails: null, // supports {id} and {slug}
     gallery: 'gallery.html',
+    about: null, // set to 'about.html' when the About page exists: the About button then becomes a normal link
     feedback: 'feedback.html',
     privacy: null,
     terms: null,
