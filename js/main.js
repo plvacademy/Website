@@ -16,6 +16,16 @@ import { renderReviewCard } from './components/reviewCard.js?v=38';
 /* ------------------------------------------------------------------ */
 /* Home Page coach card = SUMMARY only: image, name, role, one short intro sentence, profile link.
    Full biography, qualifications, etc. belong to the future profile page (same record, same id/slug). */
+/* Home shows only the coaches ticked in the sheet's "show_on_home" column, ordered by "home_order".
+ * Sheets without that column keep showing every published coach. */
+function homeCoaches(items) {
+  if (!items.some((i) => 'show_on_home' in i)) return items;
+  const on = (v) => v === true || String(v).trim().toLowerCase() === 'true';
+  const n = (v) => { const x = parseFloat(v); return Number.isFinite(x) ? x : Infinity; };
+  return items.filter((i) => on(i.show_on_home)).map((i, k) => ({ i, k }))
+    .sort((a, b) => n(a.i.home_order) - n(b.i.home_order) || a.k - b.k).map((x) => x.i);
+}
+
 function renderCoach(item) {
   const name = pick(item, 'name');
   const ident = item.slug || item.id;
@@ -101,6 +111,7 @@ function init() {
   const sections = [
     createSection({
       key: 'coaches', mount: document.getElementById('coaches-grid'), render: renderCoach,
+      select: homeCoaches,
       skeleton: { count: 4, variant: 'media' },
     }),
     createSection({

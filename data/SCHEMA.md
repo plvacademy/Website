@@ -49,3 +49,5 @@ Optional columns you can add to the same tab (empty = that block simply does not
 | `about_photo`, `photos` | `https://...` or a site path (`assets/images/...`); `photos` takes several separated by `|`. Drive share links are not converted for these two columns |
 
 One published row = one coach card. With no published rows the Coaches page shows a short "announced soon" message.
+
+Home page selection (optional columns): `show_on_home` (TRUE = this coach also appears on Home) and `home_order` (1, 2, 3... order on Home). Without a `show_on_home` column, Home shows every published coach.

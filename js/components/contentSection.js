@@ -77,7 +77,7 @@ export function pageLink(template, ident) {
 }
 
 /* ------------------------- Section controller ------------------------- */
-export function createSection({ key, mount, render, skeleton = {}, onData, emptyKey }) {
+export function createSection({ key, mount, render, skeleton = {}, onData, emptyKey, select }) {
   if (!mount) { // the page has no container for this section: skip it instead of crashing the others
     console.warn(`[PLV] section "${key}" skipped: its container is missing in the HTML`);
     return { load: async () => {}, rerender: () => {} };
@@ -102,7 +102,8 @@ export function createSection({ key, mount, render, skeleton = {}, onData, empty
     const mine = ++token;
     if (!silent) renderLoading(mount, skeleton);
     try {
-      const { items } = await fetchContent(key, { force: force || silent });
+      let { items } = await fetchContent(key, { force: force || silent });
+      if (select) items = select(items); // optional per-page filter / ordering
       if (mine !== token) return; // a newer load superseded this one
       const signature = JSON.stringify(items);
       if (silent && signature === lastSignature) return;
