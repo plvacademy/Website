@@ -2,15 +2,15 @@
  * PLV — Programs / Registration page controller.
  * Screen 1: pick an area  ->  screen 2: player form  ->  screen 3: success (only after the backend confirms the save).
  */
-import { CONFIG } from './config.js?v=33';
-import { initI18n, t, getLang, setLang, applyTranslations } from './i18n.js?v=33';
-import { el, icon } from './components/contentSection.js?v=33';
-import { fetchContent } from './services/contentService.js?v=33';
-import { initChatbot } from './components/chatbot.js?v=33';
+import { CONFIG } from './config.js?v=34';
+import { initI18n, t, getLang, setLang, applyTranslations } from './i18n.js?v=34';
+import { el, icon } from './components/contentSection.js?v=34';
+import { fetchContent } from './services/contentService.js?v=34';
+import { initChatbot } from './components/chatbot.js?v=34';
 import {
   submitRegistration, RegistrationError, newRequestId,
   normalizeName, isValidName, normalizeMobile, normalizeAge, toAsciiDigits,
-} from './services/registrationService.js?v=33';
+} from './services/registrationService.js?v=34';
 
 const $ = (id) => document.getElementById(id);
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;

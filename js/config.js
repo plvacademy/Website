@@ -143,6 +143,17 @@ export const CONFIG = {
     ],
   },
 
+  /* ---- Gallery page ----
+   * Real photos come from the "Gallery" tab of the content sheet (columns: id, src, alt, alt_ar, caption, caption_ar, category, published, order).
+   * category is one of: training | matches | events | team | campus. While the sheet has no photos, empty clearly-marked slots show the layout. */
+  GALLERY_PAGE: {
+    sampleSlots: [
+      { category: 'training' }, { category: 'matches' }, { category: 'team' }, { category: 'events' }, { category: 'campus' },
+      { category: 'training' }, { category: 'matches' }, { category: 'events' }, { category: 'team' }, { category: 'campus' },
+      { category: 'training' }, { category: 'matches' },
+    ],
+  },
+
   /* ---- Feature flags ---- */
   FEATURES: {
     galleryAutoplay: true, // always pausable; disabled for reduced-motion users

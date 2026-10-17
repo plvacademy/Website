@@ -2,8 +2,8 @@
  * PLV — shared coach data helpers for the coaches page and the single-coach profile page.
  * Empty fields show clearly marked placeholders; nothing is ever invented.
  */
-import { CONFIG } from '../config.js?v=33';
-import { t, pick } from '../i18n.js?v=33';
+import { CONFIG } from '../config.js?v=34';
+import { t, pick } from '../i18n.js?v=34';
 
 export const coaches = (CONFIG.COACHES_PAGE && CONFIG.COACHES_PAGE.coaches) || [];
 

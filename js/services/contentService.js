@@ -13,7 +13,7 @@
  *   { "items": [ ... ] }                  local JSON files
  *   { "status": "ok", "data": [ ... ] }   typical Apps Script wrapper
  */
-import { CONFIG } from '../config.js?v=33';
+import { CONFIG } from '../config.js?v=34';
 
 export class ContentError extends Error {
   /** kind: not-configured | timeout | network | http | invalid-json | invalid-structure */
