@@ -1,16 +1,30 @@
 /**
  * PLV — single coach page (coach.html?c=ID). Reads the same CONFIG.COACHES_PAGE data as the roster.
  */
-import { initI18n, onLangChange, applyTranslations } from './i18n.js?v=29';
-import { initHeader } from './components/header.js?v=29';
-import { initChatbot } from './components/chatbot.js?v=29';
-import { setupSiteLinks } from './components/siteLinks.js?v=29';
-import { initAmbient } from './components/ambient.js?v=29';
-import { coaches, view, num, portraitHTML, fillList, setMeta, profileUrl } from './components/coachView.js?v=29';
+import { initI18n, onLangChange, applyTranslations } from './i18n.js?v=30';
+import { initHeader } from './components/header.js?v=30';
+import { initChatbot } from './components/chatbot.js?v=30';
+import { setupSiteLinks } from './components/siteLinks.js?v=30';
+import { initAmbient } from './components/ambient.js?v=30';
+import { coaches, view, num, portraitHTML, fillList, setMeta, profileUrl } from './components/coachView.js?v=30';
 
 const $ = (id) => document.getElementById(id);
 const id = new URLSearchParams(location.search).get('c');
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 let idx = Math.max(0, coaches.findIndex((c) => c.id === id));
+
+function countUp() {
+  const nums = [...document.querySelectorAll('#cp-stats-list b')];
+  if (reduced || !nums.length) return;
+  const run = (b) => {
+    const to = Number(b.dataset.to), t0 = performance.now(), dur = 1200;
+    const step = (now) => { const u = Math.min(1, (now - t0) / dur); b.textContent = Math.round(to * (1 - Math.pow(1 - u, 3))); if (u < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  };
+  if (!('IntersectionObserver' in window)) { nums.forEach((b) => { b.textContent = b.dataset.to; }); return; }
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { run(e.target); io.unobserve(e.target); } }), { threshold: 0.6 });
+  nums.forEach((b) => io.observe(b));
+}
 
 function render() {
   const c = coaches[idx]; if (!c) return;
@@ -26,6 +40,15 @@ function render() {
   $('cp-philo').textContent = v.philosophy;
   fillList($('cp-spec'), v.specs);
   fillList($('cp-qual'), v.quals);
+  // optional sections appear only when the coach has that data
+  const show = (id, on) => { $(id).hidden = !on; };
+  show('cp-stats', v.stats.length); show('achievements', v.achievements.length); show('journey', v.timeline.length); show('gallery', v.gallery.length);
+  $('cp-ach-link').hidden = !v.achievements.length;
+  $('cp-stats-list').replaceChildren(...v.stats.map((x) => { const li = document.createElement('li'); li.innerHTML = '<b data-to=""></b><span></span>'; const b = li.querySelector('b'); b.dataset.to = x.value; b.textContent = reduced ? x.value : '0'; li.querySelector('span').textContent = x.label; return li; }));
+  $('cp-ach-list').replaceChildren(...v.achievements.map((x) => { const li = document.createElement('li'); li.innerHTML = '<b></b><span></span>'; li.querySelector('b').textContent = x.place; li.querySelector('span').textContent = x.title; return li; }));
+  $('cp-tl').replaceChildren(...v.timeline.map((x) => { const li = document.createElement('li'); li.innerHTML = '<b></b><p></p>'; li.querySelector('b').textContent = x.when; li.querySelector('p').textContent = x.text; return li; }));
+  $('cp-gal').replaceChildren(...v.gallery.map((x) => { const li = document.createElement('li'); const im = document.createElement('img'); im.src = x.src; im.alt = x.alt; im.loading = 'lazy'; im.decoding = 'async'; li.append(im); return li; }));
+  countUp();
   const n = coaches.length;
   [['cp-prev', (idx - 1 + n) % n], ['cp-next', (idx + 1) % n]].forEach(([el, j]) => {
     const a = $(el); a.href = profileUrl(coaches[j]); a.querySelector('b').textContent = view(coaches[j]).name;

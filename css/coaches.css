@@ -180,6 +180,29 @@
 .cp-pager a:not(.ch-btn):hover b { color: var(--orange); }
 .cp-pager .is-next { text-align: end; }
 
+/* ---- coach page: stats, achievements, journey, gallery ---- */
+.cp-flow { top: 0; height: 30%; }
+.cp-hero { position: relative; }
+.cp-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.8rem; }
+.cp-stats { background: var(--orange); color: var(--ink); }
+.cp-stats__in { display: flex; flex-wrap: wrap; justify-content: space-around; gap: 1.2rem 2rem; list-style: none; padding-block: clamp(1.6rem, 4vw, 2.6rem); }
+.cp-stats li { display: grid; text-align: center; }
+.cp-stats b { font-family: var(--disp); font-weight: 900; font-size: clamp(3.2rem, 9vw, 6rem); line-height: 1; }
+.cp-stats span { font-weight: 700; font-size: .95rem; }
+.cp-ach, .cp-journey, .cp-gallery { padding-block: clamp(3rem, 7vw, 5rem); }
+.cp-ach__list { list-style: none; margin-top: 2rem; border-bottom: 1px solid var(--line); }
+.cp-ach__list li { display: flex; align-items: baseline; gap: 1.6rem; padding-block: 1rem; border-top: 1px solid var(--line); }
+.cp-ach__list b { flex: none; min-width: 3.6ch; font-family: var(--disp); font-weight: 900; font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1; color: var(--orange); }
+.cp-ach__list span { color: #fff; font-weight: 600; font-size: clamp(1rem, 2vw, 1.3rem); }
+.cp-tl { list-style: none; margin-top: 2.4rem; position: relative; padding-inline-start: 2rem; border-inline-start: 2px solid var(--line); display: grid; gap: 2rem; }
+.cp-tl li { position: relative; }
+.cp-tl li::before { content: ''; position: absolute; inset-inline-start: calc(-2rem - 7px); top: .55rem; width: 12px; height: 12px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 0 5px rgba(255, 133, 11, .2); }
+.cp-tl b { font-family: var(--disp); font-weight: 900; text-transform: uppercase; font-size: clamp(1.7rem, 4vw, 2.4rem); color: #fff; }
+.cp-tl p { margin-top: .3rem; max-width: 46ch; line-height: 1.7; }
+.cp-gallery__grid { list-style: none; margin-top: 2rem; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); }
+.cp-gallery__grid li { aspect-ratio: 4 / 3; border-radius: 28px; overflow: hidden; background: var(--card); }
+.cp-gallery__grid img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
 @media (prefers-reduced-motion: reduce) {
   .ch-flow, .ch-marquee__run { animation: none; }
   .ch-js .rv { opacity: 1; transform: none; transition: none; }

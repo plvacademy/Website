@@ -11,9 +11,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Noto+Kufi+Arabic:wght@700;800;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=29">
-  <link rel="stylesheet" href="css/responsive.css?v=29">
-  <link rel="stylesheet" href="css/coaches.css?v=29">
+  <link rel="stylesheet" href="css/styles.css?v=30">
+  <link rel="stylesheet" href="css/responsive.css?v=30">
+  <link rel="stylesheet" href="css/coaches.css?v=30">
   <script>document.documentElement.classList.add('ch-js');</script>
 </head>
 <body class="coaches-page">
@@ -88,6 +88,7 @@
 
 <main id="main">
   <section class="cp-hero" aria-labelledby="cp-name">
+    <svg class="ch-hero__flow cp-flow" viewBox="0 0 1440 400" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path class="ch-flow" d="M-40 150 C 300 60, 520 260, 820 150 S 1280 70, 1480 170" fill="none" stroke="#FF850B" stroke-opacity=".5" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>
     <div class="container">
       <a class="cp-back" href="coaches.html#roster"><svg class="icon icon--sm ch-ico-prev" aria-hidden="true"><use href="#i-arrow"/></svg><span data-i18n="chp.prof.back">All coaches</span></a>
       <div class="cp-hero__grid">
@@ -98,9 +99,17 @@
           <h1 class="cp-name" id="cp-name"></h1>
           <p class="ch-meta" id="cp-meta"></p>
           <p class="cp-lead" id="cp-lead"></p>
+          <div class="cp-actions">
+            <a class="ch-btn js-register" href="programs.html#register"><span data-i18n="chp.close.cta">Join PLV Academy</span><svg class="icon icon--sm flip-rtl" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            <a class="ch-btn ch-btn--ghost" id="cp-ach-link" href="#achievements" hidden><span data-i18n="chp.prof.seeAch">See achievements</span></a>
+          </div>
         </div>
       </div>
     </div>
+  </section>
+
+  <section class="cp-stats" id="cp-stats" aria-label="Numbers" hidden>
+    <ul class="container cp-stats__in" id="cp-stats-list"></ul>
   </section>
 
   <section class="cp-details" aria-label="Coach details">
@@ -111,6 +120,27 @@
         <h2 data-i18n="chp.spot.specializations">Specializations</h2><ul id="cp-spec"></ul>
         <h2 class="cp-gap" data-i18n="chp.spot.qualifications">Qualifications</h2><ul id="cp-qual"></ul>
       </div>
+    </div>
+  </section>
+
+  <section class="cp-ach" id="achievements" aria-labelledby="cp-ach-title" hidden>
+    <div class="container">
+      <h2 class="ch-h2" id="cp-ach-title" data-i18n="chp.prof.achievements">Achievements</h2>
+      <ul class="cp-ach__list" id="cp-ach-list"></ul>
+    </div>
+  </section>
+
+  <section class="cp-journey" id="journey" aria-labelledby="cp-j-title" hidden>
+    <div class="container">
+      <h2 class="ch-h2" id="cp-j-title" data-i18n="chp.prof.journey">The journey</h2>
+      <ol class="cp-tl" id="cp-tl"></ol>
+    </div>
+  </section>
+
+  <section class="cp-gallery" id="gallery" aria-labelledby="cp-g-title" hidden>
+    <div class="container">
+      <h2 class="ch-h2" id="cp-g-title" data-i18n="chp.prof.gallery">Moments from the court</h2>
+      <ul class="cp-gallery__grid" id="cp-gal"></ul>
     </div>
   </section>
 
@@ -177,6 +207,6 @@
   }
 </script>
 
-<script type="module" src="js/coach-profile.js?v=29"></script>
+<script type="module" src="js/coach-profile.js?v=30"></script>
 </body>
 </html>

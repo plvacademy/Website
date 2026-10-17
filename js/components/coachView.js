@@ -2,8 +2,8 @@
  * PLV — shared coach data helpers for the coaches page and the single-coach profile page.
  * Empty fields show clearly marked placeholders; nothing is ever invented.
  */
-import { CONFIG } from '../config.js?v=29';
-import { t, pick } from '../i18n.js?v=29';
+import { CONFIG } from '../config.js?v=30';
+import { t, pick } from '../i18n.js?v=30';
 
 export const coaches = (CONFIG.COACHES_PAGE && CONFIG.COACHES_PAGE.coaches) || [];
 
@@ -24,6 +24,10 @@ export function view(c) {
     philosophy: pick(c, 'philosophy') || t('chp.ph.philosophy'),
     specs: list(c, 'specializations'),
     quals: list(c, 'qualifications'),
+    stats: (c.stats || []).map((x) => ({ value: Number(x.value) || 0, label: pick(x, 'label') })),
+    achievements: (c.achievements || []).map((x) => ({ place: pick(x, 'place'), title: pick(x, 'title') })),
+    timeline: (c.timeline || []).map((x) => ({ when: pick(x, 'when'), text: pick(x, 'text') })),
+    gallery: (c.gallery || []).filter((x) => x && x.src).map((x) => ({ src: x.src, alt: pick(x, 'alt') })),
   };
 }
 
