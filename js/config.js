@@ -47,7 +47,7 @@ export const CONFIG = {
    */
   PAGES: {
     programs: 'programs.html',
-    coaches: null,
+    coaches: 'coaches.html',
     coachDetails: null, // supports {id} and {slug}; e.g. 'coach.html?slug={slug}'
     programDetails: null, // supports {id} and {slug}
     gallery: null,
@@ -87,6 +87,27 @@ export const CONFIG = {
       { value: 'Not Sure Yet', key: 'notSure' },
     ],
     timeoutMs: 25000,
+  },
+
+  /* ---- Coaches page (coaches.html) ----
+   * Photos: leave '' to show the designed placeholder frame. To use a real photo, put the file in assets/images/ and write
+   * its path here, e.g. hero: 'assets/images/coaches/hero.jpg'. Nothing is requested while a path is empty.
+   * The coach records below are PLACEHOLDERS (no real names, qualifications or experience are invented): replace the
+   * texts, or later load the same fields from the Coaches sheet. */
+  COACHES_PAGE: {
+    images: {
+      hero: '',
+      closing: '',
+      philosophy: { technique: '', tactics: '', athleticism: '', mentality: '' },
+    },
+    // kind: 'head' | 'assistant' picks the placeholder role. Empty text = a clearly marked placeholder on the page.
+    // Arabic text goes in name_ar, role_ar, specialization_ar, experience_ar, bio_ar, philosophy_ar.
+    coaches: [
+      { id: 'coach-1', kind: 'head', name: '', role: '', specialization: '', experience: '', photo: '', bio: '', philosophy: '', specializations: [], qualifications: [] },
+      { id: 'coach-2', kind: 'assistant', name: '', role: '', specialization: '', experience: '', photo: '', bio: '', philosophy: '', specializations: [], qualifications: [] },
+      { id: 'coach-3', kind: 'assistant', name: '', role: '', specialization: '', experience: '', photo: '', bio: '', philosophy: '', specializations: [], qualifications: [] },
+      { id: 'coach-4', kind: 'assistant', name: '', role: '', specialization: '', experience: '', photo: '', bio: '', philosophy: '', specializations: [], qualifications: [] },
+    ],
   },
 
   /* ---- Feature flags ---- */
