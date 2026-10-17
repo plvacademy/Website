@@ -26,7 +26,7 @@
 
   --font: 'Montserrat', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
 }
-:root[lang='ar'] { --font: 'Cairo', 'Segoe UI', Tahoma, system-ui, Arial, sans-serif; }
+:root[lang='ar'] { --font: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, system-ui, Arial, sans-serif; }
 
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; background: var(--navy); }

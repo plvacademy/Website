@@ -1,7 +1,7 @@
 /* PLV — Coaches pages (roster + single coach). Midnight / navy / orange / silver. Mobile first, RTL-safe (logical properties). */
 .coaches-page {
   --ink: #040B16; --ink-2: #071D33; --card: #0f1a2a; --line: rgba(143, 190, 255, .22); --silver: #C9D3DF; --blue: #3FA7FF; --ice: #9fc6f5;
-  --disp: 'Big Shoulders Display', 'Cairo', 'Montserrat', sans-serif;
+  --disp: 'Big Shoulders Display', 'Noto Kufi Arabic', 'Montserrat', sans-serif;
   background: var(--ink); color: var(--silver);
 }
 .coaches-page main { position: relative; z-index: 1; overflow-x: clip; }

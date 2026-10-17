@@ -152,7 +152,7 @@ body.flow:not([data-view='area']) .flow-sub { color: var(--gray-700); opacity: 1
 .success-title { font-size: clamp(1.5rem, 5.5vw, 1.9rem); line-height: 1.25; font-weight: 800; color: var(--navy); margin-bottom: 1.2rem; }
 .success-text { color: var(--gray-700); font-size: .98rem; max-width: 36ch; margin-inline: auto; }
 .success-text p + p { margin-top: 1rem; }
-.success-text--ar { margin-top: 1.4rem; padding-top: 1.4rem; border-top: 1px solid var(--gray-200); font-family: 'Cairo', var(--font); }
+.success-text--ar { margin-top: 1.4rem; padding-top: 1.4rem; border-top: 1px solid var(--gray-200); font-family: 'IBM Plex Sans Arabic', var(--font); }
 .success-actions { display: grid; gap: .8rem; margin-top: 2rem; }
 .btn--outline-navy { border-color: var(--navy); color: var(--navy); background: transparent; }
 .btn--outline-navy:hover { background: var(--navy); color: var(--white); }
