@@ -5,8 +5,8 @@
  * Autoplay never runs for prefers-reduced-motion users, pauses while the user
  * hovers / focuses / touches the track, and stops when the section is off-screen.
  */
-import { CONFIG } from '../config.js?v=39';
-import { isRtl, t } from '../i18n.js?v=39';
+import { CONFIG } from '../config.js?v=40';
+import { isRtl, t } from '../i18n.js?v=40';
 
 export function createGalleryCarousel(root) {
   const track = root.querySelector('.gallery-track');

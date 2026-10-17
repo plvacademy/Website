@@ -3,9 +3,9 @@
  * Shows: stars (+ score), date, the quote, and the person (initials avatar, name, Parent/Player badge).
  * All text is set with textContent (via el()), never as HTML.
  */
-import { t, pick, getLang } from '../i18n.js?v=39';
-import { el } from './contentSection.js?v=39';
-import { renderStars, formatRating } from './stars.js?v=39';
+import { t, pick, getLang } from '../i18n.js?v=40';
+import { el } from './contentSection.js?v=40';
+import { renderStars, formatRating } from './stars.js?v=40';
 
 function initials(name) {
   const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
