@@ -3,15 +3,15 @@
  * The form (name, Parent/Player, half-star rating, message, mobile) and the list of approved reviews.
  * Success is shown ONLY after the server confirms the row was saved; any failure keeps the form and allows a retry.
  */
-import { initI18n, t, pick, getLang, applyTranslations, onLangChange } from './i18n.js?v=19';
-import { initHeader } from './components/header.js?v=19';
-import { initChatbot } from './components/chatbot.js?v=19';
-import { createSection, el } from './components/contentSection.js?v=19';
-import { setupSiteLinks } from './components/siteLinks.js?v=19';
-import { createRatingInput, renderStars, formatRating } from './components/stars.js?v=19';
+import { initI18n, t, pick, getLang, applyTranslations, onLangChange } from './i18n.js?v=20';
+import { initHeader } from './components/header.js?v=20';
+import { initChatbot } from './components/chatbot.js?v=20';
+import { createSection, el } from './components/contentSection.js?v=20';
+import { setupSiteLinks } from './components/siteLinks.js?v=20';
+import { createRatingInput, renderStars, formatRating } from './components/stars.js?v=20';
 import {
   submitFeedback, FeedbackError, newRequestId, normalizeName, isValidName, normalizeMobile, parseRating, isLowRating, FEEDBACK_LIMITS,
-} from './services/feedbackService.js?v=19';
+} from './services/feedbackService.js?v=20';
 
 const $ = (id) => document.getElementById(id);
 

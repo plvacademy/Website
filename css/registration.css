@@ -169,14 +169,14 @@ body.flow[data-view='area']::before {
   content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
   background-image:
     linear-gradient(180deg, rgba(5, 16, 36, .58) 0%, rgba(5, 16, 36, .30) 42%, rgba(5, 16, 36, .06) 100%),
-    url('../assets/images/bg-court-mobile.jpg?v=19');
+    url('../assets/images/bg-court-mobile.jpg?v=20');
   background-size: cover; background-position: center bottom; background-repeat: no-repeat;
 }
 @media (min-width: 700px), (orientation: landscape) {
   body.flow[data-view='area']::before {
     background-image:
       linear-gradient(180deg, rgba(5, 16, 36, .50) 0%, rgba(5, 16, 36, .22) 45%, rgba(5, 16, 36, .04) 100%),
-      url('../assets/images/bg-court-desktop.jpg?v=19');
+      url('../assets/images/bg-court-desktop.jpg?v=20');
     background-position: center 80%;
   }
 }

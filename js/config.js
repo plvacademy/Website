@@ -39,7 +39,7 @@ export const CONFIG = {
   FEEDBACK_API_URL: 'https://script.google.com/macros/s/AKfycby20FtYcsmiQtQanVFAQXq9tJqRM_pPnnzRcHX45T06DMTG7TUMdQuTtylZOkLh1FxOvA/exec',
   // Registration page (same site). The form posts to REGISTRATION_API_URL (Google Apps Script web app).
   REGISTRATION_URL: 'programs.html#register',
-  REGISTRATION_API_URL: 'https://script.google.com/macros/s/AKfycbxvy014piGf11LDKmpQBLhVDa5smaxzvs4GGe_vr6r4U5_I5Y98YisvN4MlWSCIzIej1Q/exec',
+  REGISTRATION_API_URL: 'https://script.google.com/macros/s/AKfycbxmJXn9CupLrmG2ekdWcPPzNDlL1v0ViQr7QfcqdVwU7EYWMSPcatiYrQ4WY2FEiM4W/exec',
 
   /* ---- Links to the future dedicated pages ----
    * null  -> the link falls back to the matching section on this page.
