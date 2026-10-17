@@ -2,8 +2,8 @@
  * PLV — links shared by every page (Home, Programs/Registration):
  * page links from CONFIG.PAGES, Register Now, WhatsApp, social icons, footer contact, year.
  */
-import { CONFIG } from '../config.js?v=32';
-import { el, icon } from './contentSection.js?v=32';
+import { CONFIG } from '../config.js?v=33';
+import { el, icon } from './contentSection.js?v=33';
 
 export function setupSiteLinks() {
   // "View All …" / footer links to future dedicated pages

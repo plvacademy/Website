@@ -228,3 +228,7 @@
 .cp-filter button[aria-pressed='true'] { background: var(--orange); color: var(--ink); box-shadow: none; }
 @media (min-width: 860px) { .cp-about__in { grid-template-columns: 460px 1fr; gap: 4rem; } .cp-cols--2 { grid-template-columns: repeat(2, 1fr); } }
 .cp-about__photo .ch-ph em { display: none; }
+
+/* The Coaches link stays lit on the Coaches pages (also a single coach), independent of scripts */
+.coaches-page .site-nav__list a[data-page='coaches'] { color: var(--orange); opacity: 1; }
+.coaches-page .site-nav__list a[data-page='coaches']::after { transform: scaleX(1); }
