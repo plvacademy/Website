@@ -3,13 +3,13 @@
  * Renders the roster card from CONFIG.COACHES_PAGE (clearly marked placeholders until real data exists), the philosophy bands,
  * the turning 3D court and the ambient background. Each coach opens their own page (coach.html?c=ID).
  */
-import { initI18n, t, onLangChange, applyTranslations } from './i18n.js?v=34';
-import { initHeader } from './components/header.js?v=34';
-import { initChatbot } from './components/chatbot.js?v=34';
-import { setupSiteLinks } from './components/siteLinks.js?v=34';
-import { initAmbient } from './components/ambient.js?v=34';
-import { initCourt } from './components/courtRally.js?v=34';
-import { coaches, view, num, portraitHTML, fillList, setMeta, profileUrl } from './components/coachView.js?v=34';
+import { initI18n, t, onLangChange, applyTranslations } from './i18n.js?v=35';
+import { initHeader } from './components/header.js?v=35';
+import { initChatbot } from './components/chatbot.js?v=35';
+import { setupSiteLinks } from './components/siteLinks.js?v=35';
+import { initAmbient } from './components/ambient.js?v=35';
+import { initCourt } from './components/courtRally.js?v=35';
+import { coaches, view, num, portraitHTML, fillList, setMeta, profileUrl } from './components/coachView.js?v=35';
 
 const $ = (id) => document.getElementById(id);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;

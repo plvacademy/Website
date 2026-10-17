@@ -82,7 +82,7 @@ export const CONFIG = {
     coaches: 'coaches.html',
     coachDetails: null, // supports {id} and {slug}; e.g. 'coach.html?slug={slug}'
     programDetails: null, // supports {id} and {slug}
-    gallery: null,
+    gallery: 'gallery.html',
     feedback: 'feedback.html',
     privacy: null,
     terms: null,
