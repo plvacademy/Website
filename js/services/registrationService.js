@@ -10,7 +10,7 @@
  * keeps the same requestId for the retry, and the server de-duplicates on it, so a retry can never
  * create a second row for the same attempt.
  */
-import { CONFIG } from '../config.js?v=22';
+import { CONFIG } from '../config.js?v=23';
 
 export class RegistrationError extends Error {
   /** kind: not-configured | network | http | bad-response | rejected */
