@@ -1,9 +1,19 @@
 /**
  * PLV — header behaviour: mobile menu, language switch, scroll state, active link.
  */
-import { setLang } from '../i18n.js?v=20';
+import { setLang } from '../i18n.js?v=22';
 
 export function initHeader() {
+  // Focus ring only for keyboard users: after a mouse click (or coming back with the Back button) a clicked link must not
+  // stay outlined. Keyboard users (Tab / arrows) still get the ring.
+  const root = document.documentElement;
+  document.addEventListener('keydown', (e) => { if (['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', ' '].includes(e.key)) root.classList.add('kb'); }, true);
+  document.addEventListener('pointerdown', () => root.classList.remove('kb'), true);
+  window.addEventListener('pageshow', () => {
+    const a = document.activeElement;
+    if (a && a !== document.body && !root.classList.contains('kb') && a.closest && a.closest('.site-header')) a.blur();
+  });
+
   const header = document.querySelector('.site-header');
   const toggle = document.getElementById('nav-toggle');
   const nav = document.getElementById('site-nav');

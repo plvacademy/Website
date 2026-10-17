@@ -2,14 +2,14 @@
  * PLV — Home Page entry point.
  * Wires i18n, header, dynamic sections (each independent), chatbot and small UI bits.
  */
-import { CONFIG } from './config.js?v=20';
-import { initI18n, t, pick, onLangChange, applyTranslations } from './i18n.js?v=20';
-import { initHeader } from './components/header.js?v=20';
-import { initChatbot } from './components/chatbot.js?v=20';
-import { createGalleryCarousel } from './components/gallery.js?v=20';
-import { createSection, el, icon, imageEl, pageLink } from './components/contentSection.js?v=20';
-import { setupSiteLinks } from './components/siteLinks.js?v=20';
-import { renderStars } from './components/stars.js?v=20';
+import { CONFIG } from './config.js?v=22';
+import { initI18n, t, pick, onLangChange, applyTranslations } from './i18n.js?v=22';
+import { initHeader } from './components/header.js?v=22';
+import { initChatbot } from './components/chatbot.js?v=22';
+import { createGalleryCarousel } from './components/gallery.js?v=22';
+import { createSection, el, icon, imageEl, pageLink } from './components/contentSection.js?v=22';
+import { setupSiteLinks } from './components/siteLinks.js?v=22';
+import { renderReviewCard } from './components/reviewCard.js?v=22';
 
 /* ------------------------------------------------------------------ */
 /* Renderers: one per content type. Text is always set via textContent. */
@@ -50,19 +50,6 @@ function renderCoach(item) {
 function renderGalleryItem(item) {
   return el('figure', { class: 'gallery-item' }, [
     imageEl(item.src, pick(item, 'alt') || '', { cls: 'gallery-item__img' }),
-  ]);
-}
-
-function renderFeedback(item) {
-  return el('figure', { class: 'feedback-card' }, [
-    el('blockquote', { class: 'feedback-card__quote' }, [el('p', { text: pick(item, 'message') })]),
-    el('figcaption', { class: 'feedback-card__who' }, [
-      el('div', {}, [
-        el('strong', { text: pick(item, 'name') }),
-        item.type && el('span', { text: t(`feedback.type.${item.type}`) }),
-      ]),
-      Number(item.rating) > 0 && renderStars(item.rating),
-    ]),
   ]);
 }
 
@@ -122,7 +109,7 @@ function init() {
       onData: (items) => carousel.refresh(items),
     }),
     createSection({
-      key: 'feedbackHome', mount: document.getElementById('feedback-grid'), render: renderFeedback,
+      key: 'feedbackHome', mount: document.getElementById('feedback-grid'), render: renderReviewCard,
       skeleton: { count: 3, variant: 'feedback' },
     }),
   ];

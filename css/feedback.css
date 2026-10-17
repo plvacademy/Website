@@ -1,13 +1,6 @@
 /* PLV — Feedback page. Brand: navy, orange, white. Mobile first. */
 .feedback-page { background: var(--gray-50); }
 
-/* Stars (shared by the form and the review cards) */
-.star { --s: 20px; position: relative; display: inline-block; width: var(--s); height: var(--s); flex: none; }
-.star svg { display: block; width: var(--s); height: var(--s); fill: #cdd5e0; }
-.star__fill { position: absolute; inset: 0 auto 0 0; width: 0; overflow: hidden; }
-.star__fill svg { fill: var(--orange); max-width: none; flex: none; } /* never shrink with the clipped box: it is cut, not scaled */
-.star svg { max-width: none; }
-.stars-row { display: inline-flex; gap: 2px; vertical-align: middle; }
 .rating-input { --star: 46px; display: inline-flex; gap: 6px; padding: .25rem .1rem; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; border-radius: 10px; }
 .rating-input .star { --s: var(--star); }
 .rating-input:hover .star__fill svg { filter: brightness(1.04); }
@@ -99,13 +92,6 @@
 .fb-prev__title em { display: inline; }
 .cards-grid--2 { grid-template-columns: repeat(2, 1fr); }
 .fb-prev .feedback-card { background: var(--white); }
-.feedback-card__top { display: flex; align-items: center; justify-content: space-between; gap: .8rem; }
-.feedback-card__avatar { display: grid; place-items: center; flex: none; width: 46px; height: 46px; border-radius: 50%; background: var(--navy); color: var(--white); font-weight: 800; font-size: .9rem; }
-.feedback-card__who--lead { display: flex; align-items: center; gap: .8rem; min-width: 0; }
-.feedback-card__who--lead strong { display: block; color: var(--navy); font-size: .92rem; overflow-wrap: anywhere; }
-.feedback-card__who--lead span { color: var(--gray-500); font-size: .78rem; }
-.feedback-card__date { font-size: .78rem; color: var(--gray-500); margin: 0; }
-.feedback-card__quote p { overflow-wrap: anywhere; white-space: pre-line; }
 
 @media (min-width: 900px) {
   .fb-top { padding-block: 2.6rem 1.8rem; }

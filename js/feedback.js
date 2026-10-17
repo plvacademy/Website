@@ -3,53 +3,18 @@
  * The form (name, Parent/Player, half-star rating, message, mobile) and the list of approved reviews.
  * Success is shown ONLY after the server confirms the row was saved; any failure keeps the form and allows a retry.
  */
-import { initI18n, t, pick, getLang, applyTranslations, onLangChange } from './i18n.js?v=20';
-import { initHeader } from './components/header.js?v=20';
-import { initChatbot } from './components/chatbot.js?v=20';
-import { createSection, el } from './components/contentSection.js?v=20';
-import { setupSiteLinks } from './components/siteLinks.js?v=20';
-import { createRatingInput, renderStars, formatRating } from './components/stars.js?v=20';
+import { initI18n, t, getLang, applyTranslations, onLangChange } from './i18n.js?v=22';
+import { initHeader } from './components/header.js?v=22';
+import { initChatbot } from './components/chatbot.js?v=22';
+import { createSection, el } from './components/contentSection.js?v=22';
+import { setupSiteLinks } from './components/siteLinks.js?v=22';
+import { createRatingInput, formatRating } from './components/stars.js?v=22';
+import { renderReviewCard } from './components/reviewCard.js?v=22';
 import {
   submitFeedback, FeedbackError, newRequestId, normalizeName, isValidName, normalizeMobile, parseRating, isLowRating, FEEDBACK_LIMITS,
-} from './services/feedbackService.js?v=20';
+} from './services/feedbackService.js?v=22';
 
 const $ = (id) => document.getElementById(id);
-
-/* ------------------------------------------------------------------ */
-/* Review cards                                                        */
-/* ------------------------------------------------------------------ */
-function initials(name) {
-  const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
-  const letters = (parts.length > 1 ? [parts[0], parts[parts.length - 1]] : [parts[0] || '']).map((p) => [...p][0] || '');
-  return letters.join('').toUpperCase();
-}
-
-function formatDate(iso) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(iso || ''))) return '';
-  const [y, m, d] = iso.split('-').map(Number);
-  try {
-    return new Intl.DateTimeFormat(getLang() === 'ar' ? 'ar-EG' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })
-      .format(new Date(Date.UTC(y, m - 1, d)));
-  } catch { return iso; }
-}
-
-function renderReview(item) {
-  const name = pick(item, 'name') || item.name;
-  const typeKey = `feedback.type.${item.type}`;
-  const typeLabel = item.type === 'Parent' || item.type === 'Player' ? t(typeKey) : '';
-  const date = formatDate(item.date);
-  return el('figure', { class: 'feedback-card', dataset: { feedbackId: item.id } }, [
-    el('div', { class: 'feedback-card__top' }, [
-      el('div', { class: 'feedback-card__who--lead' }, [
-        el('span', { class: 'feedback-card__avatar', 'aria-hidden': 'true', text: initials(name) }),
-        el('div', {}, [el('strong', { text: name }), typeLabel && el('span', { text: typeLabel })]),
-      ]),
-      item.rating && renderStars(item.rating),
-    ]),
-    el('blockquote', { class: 'feedback-card__quote' }, [el('p', { text: pick(item, 'message') || item.message })]),
-    date && el('p', { class: 'feedback-card__date', text: date }),
-  ]);
-}
 
 /* ------------------------------------------------------------------ */
 /* Form                                                                */
@@ -229,7 +194,7 @@ function init() {
   setupSiteLinks();
   const form = initForm();
   const list = createSection({
-    key: 'feedback', mount: $('fb-list'), render: renderReview, skeleton: { count: 2, variant: 'feedback' }, emptyKey: 'feedback.empty',
+    key: 'feedback', mount: $('fb-list'), render: renderReviewCard, skeleton: { count: 2, variant: 'feedback' }, emptyKey: 'feedback.empty',
   });
   list.load();
   applyTranslations(document);

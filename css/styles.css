@@ -44,6 +44,7 @@ button { font: inherit; cursor: pointer; }
 section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
 
 :focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; border-radius: 6px; }
+html:not(.kb) a:focus-visible, html:not(.kb) button:focus-visible { outline: none; } /* mouse users: no leftover ring after a click */
 
 .container { width: min(100% - 2.5rem, var(--container)); margin-inline: auto; }
 .skip-link {
@@ -128,10 +129,9 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
 .hero { position: relative; overflow: hidden; background: var(--navy); color: var(--white); isolation: isolate; }
 .hero__bg {
   position: absolute; inset: 0; z-index: -1;
-  /* If Hero.jpg is missing the url() is ignored and the navy gradient shows. */
+  /* No photo yet: navy gradient only. To add one later, put assets/images/Hero.jpg and add it as a url() layer here. */
   background:
     linear-gradient(90deg, rgba(7, 29, 51, .94) 0%, rgba(7, 29, 51, .72) 45%, rgba(7, 29, 51, .25) 100%),
-    url('../assets/images/Hero.jpg') center / cover no-repeat,
     linear-gradient(135deg, var(--navy) 0%, var(--navy-3) 100%);
   transform-origin: 70% 40%;
   animation: heroDrift 24s ease-in-out infinite alternate;
@@ -139,7 +139,6 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
 [dir='rtl'] .hero__bg {
   background:
     linear-gradient(270deg, rgba(7, 29, 51, .94) 0%, rgba(7, 29, 51, .72) 45%, rgba(7, 29, 51, .25) 100%),
-    url('../assets/images/Hero.jpg') center / cover no-repeat,
     linear-gradient(225deg, var(--navy) 0%, var(--navy-3) 100%);
 }
 @keyframes heroDrift { from { transform: scale(1); } to { transform: scale(1.07) translate3d(-1%, 0, 0); } }
@@ -259,14 +258,28 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
 .gallery-btn--toggle[data-state='paused'] .icon-play { display: block; }
 .gallery .state { flex: 1 0 100%; }
 
-/* Feedback */
-.feedback-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 1.2rem; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 1rem; transition: transform .35s var(--ease), box-shadow .35s var(--ease); }
+/* Stars (shared by the Home reviews, the Feedback page and the rating input) */
+.star { --s: 18px; position: relative; display: inline-block; width: var(--s); height: var(--s); flex: none; }
+.star svg { display: block; width: var(--s); height: var(--s); max-width: none; fill: #d5dce6; }
+.star__fill { position: absolute; inset: 0 auto 0 0; width: 0; overflow: hidden; }
+.star__fill svg { fill: var(--orange); flex: none; } /* cut, never scaled */
+.stars-row { display: inline-flex; gap: 2px; vertical-align: middle; }
+
+/* Review card (Home + Feedback page) */
+.feedback-card { position: relative; display: flex; flex-direction: column; gap: 1rem; padding: 1.4rem 1.35rem 1.2rem; background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; transition: transform .35s var(--ease), box-shadow .35s var(--ease); }
+.feedback-card::after { content: '\201D'; position: absolute; inset-block-end: .1rem; inset-inline-end: 1.1rem; font: 800 4.6rem/1 Georgia, 'Times New Roman', serif; color: var(--orange); opacity: .2; pointer-events: none; }
 .feedback-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
-.feedback-card__quote { font-size: .85rem; color: var(--gray-700); flex: 1; }
-.feedback-card__who { display: flex; align-items: center; justify-content: space-between; gap: .8rem; font-size: .78rem; }
-.feedback-card__who strong { display: block; color: var(--navy); }
-.feedback-card__who span { color: var(--gray-500); }
-.stars { color: var(--orange) !important; letter-spacing: .08em; font-size: .9rem; white-space: nowrap; }
+.feedback-card__head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; position: relative; }
+.feedback-card__rating { display: inline-flex; align-items: center; gap: .55rem; }
+.feedback-card__score { font-weight: 800; font-size: .82rem; color: var(--navy); }
+.feedback-card__date { font-size: .74rem; color: var(--gray-500); white-space: nowrap; }
+.feedback-card__quote { flex: 1; margin: 0; position: relative; }
+.feedback-card__quote p { margin: 0; font-size: .95rem; line-height: 1.7; color: var(--gray-700); overflow-wrap: anywhere; white-space: pre-line; }
+.feedback-card__who { display: flex; align-items: center; gap: .8rem; padding-top: 1rem; border-top: 1px solid var(--gray-200); }
+.feedback-card__avatar { display: grid; place-items: center; flex: none; width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(145deg, var(--navy-3), var(--navy)); color: var(--white); font-weight: 800; font-size: .85rem; letter-spacing: .02em; }
+.feedback-card__id { display: flex; flex-direction: column; align-items: flex-start; gap: .25rem; min-width: 0; }
+.feedback-card__name { color: var(--navy); font-size: .92rem; font-weight: 700; line-height: 1.2; overflow-wrap: anywhere; }
+.feedback-card__role { padding: .1rem .6rem; border-radius: 999px; background: rgba(255, 133, 11, .13); color: #b25a00; font-size: .7rem; font-weight: 700; letter-spacing: .02em; }
 
 /* CTA band */
 .cta-band { background: radial-gradient(circle at 8% 50%, rgba(255, 133, 11, .35), transparent 38%), var(--navy); color: var(--white); padding-block: 2.2rem; }
@@ -307,7 +320,7 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
 .skeleton { position: relative; overflow: hidden; border-radius: var(--radius); background: rgba(7, 29, 51, .08); min-height: 220px; }
 .section--navy .skeleton { background: rgba(255, 255, 255, .08); }
 .skeleton--media { min-height: 280px; }
-.skeleton--feedback { min-height: 170px; }
+.skeleton--feedback { min-height: 210px; }
 .skeleton--gallery { flex: 0 0 calc((100% - 2.7rem) / 4); aspect-ratio: 4 / 3; min-height: 0; }
 .skeleton::after { content: ''; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .35), transparent); animation: shimmer 1.4s infinite; }
 [dir='rtl'] .skeleton::after { animation-direction: reverse; }
