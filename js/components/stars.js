@@ -4,7 +4,7 @@
  *  - createRatingInput(): the interactive rating of the feedback form (1 to 5, steps of 0.5).
  * Stars are always drawn left to right (also in Arabic), the usual convention for ratings.
  */
-import { t } from '../i18n.js?v=30';
+import { t } from '../i18n.js?v=31';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const STAR_PATH = 'M12 2.6l2.9 6.1 6.7.9-4.9 4.6 1.2 6.6L12 17.6 6.1 20.8l1.2-6.6L2.4 9.6l6.7-.9z';

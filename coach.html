@@ -11,9 +11,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Noto+Kufi+Arabic:wght@700;800;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=30">
-  <link rel="stylesheet" href="css/responsive.css?v=30">
-  <link rel="stylesheet" href="css/coaches.css?v=30">
+  <link rel="stylesheet" href="css/styles.css?v=31">
+  <link rel="stylesheet" href="css/responsive.css?v=31">
+  <link rel="stylesheet" href="css/coaches.css?v=31">
   <script>document.documentElement.classList.add('ch-js');</script>
 </head>
 <body class="coaches-page">
@@ -112,14 +112,25 @@
     <ul class="container cp-stats__in" id="cp-stats-list"></ul>
   </section>
 
-  <section class="cp-details" aria-label="Coach details">
-    <div class="container cp-cols">
-      <div><h2 data-i18n="chp.prof.bio">Biography</h2><p id="cp-bio"></p></div>
-      <div><h2 data-i18n="chp.spot.philosophy">Philosophy</h2><p id="cp-philo"></p></div>
+  <section class="cp-about" id="about" aria-labelledby="cp-about-title">
+    <div class="container cp-about__in">
+      <figure class="cp-about__photo" id="cp-about-photo"><figcaption id="cp-about-cap"></figcaption></figure>
       <div>
-        <h2 data-i18n="chp.spot.specializations">Specializations</h2><ul id="cp-spec"></ul>
-        <h2 class="cp-gap" data-i18n="chp.spot.qualifications">Qualifications</h2><ul id="cp-qual"></ul>
+        <h2 class="ch-h2" id="cp-about-title" data-i18n="chp.prof.bio">Biography</h2>
+        <p class="cp-about__bio" id="cp-bio"></p>
+        <ul class="cp-feats" id="cp-spec"></ul>
       </div>
+    </div>
+  </section>
+
+  <section class="cp-stats" id="cp-stats" aria-label="Numbers" hidden>
+    <ul class="container cp-stats__in" id="cp-stats-list"></ul>
+  </section>
+
+  <section class="cp-details" aria-label="Coach details">
+    <div class="container cp-cols cp-cols--2">
+      <div><h2 data-i18n="chp.spot.philosophy">Philosophy</h2><p id="cp-philo"></p></div>
+      <div><h2 data-i18n="chp.spot.qualifications">Qualifications</h2><ul id="cp-qual"></ul></div>
     </div>
   </section>
 
@@ -127,12 +138,14 @@
     <div class="container">
       <h2 class="ch-h2" id="cp-ach-title" data-i18n="chp.prof.achievements">Achievements</h2>
       <ul class="cp-ach__list" id="cp-ach-list"></ul>
+      <ul class="cp-photos" id="cp-trophies"></ul>
     </div>
   </section>
 
   <section class="cp-journey" id="journey" aria-labelledby="cp-j-title" hidden>
     <div class="container">
       <h2 class="ch-h2" id="cp-j-title" data-i18n="chp.prof.journey">The journey</h2>
+      <ul class="cp-photos cp-photos--2" id="cp-jphotos"></ul>
       <ol class="cp-tl" id="cp-tl"></ol>
     </div>
   </section>
@@ -140,6 +153,12 @@
   <section class="cp-gallery" id="gallery" aria-labelledby="cp-g-title" hidden>
     <div class="container">
       <h2 class="ch-h2" id="cp-g-title" data-i18n="chp.prof.gallery">Moments from the court</h2>
+      <div class="cp-filter" id="cp-filter" role="group" data-i18n-aria="chp.prof.gallery" aria-label="Gallery filter">
+        <button type="button" data-cat="" aria-pressed="true" data-i18n="chp.gal.all">All</button>
+        <button type="button" data-cat="tournaments" aria-pressed="false" data-i18n="chp.gal.tournaments">Tournaments</button>
+        <button type="button" data-cat="match" aria-pressed="false" data-i18n="chp.gal.match">Match play</button>
+        <button type="button" data-cat="training" aria-pressed="false" data-i18n="chp.gal.training">Training</button>
+      </div>
       <ul class="cp-gallery__grid" id="cp-gal"></ul>
     </div>
   </section>
@@ -207,6 +226,6 @@
   }
 </script>
 
-<script type="module" src="js/coach-profile.js?v=30"></script>
+<script type="module" src="js/coach-profile.js?v=31"></script>
 </body>
 </html>

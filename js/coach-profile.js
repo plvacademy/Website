@@ -1,17 +1,27 @@
 /**
  * PLV — single coach page (coach.html?c=ID). Reads the same CONFIG.COACHES_PAGE data as the roster.
  */
-import { initI18n, onLangChange, applyTranslations } from './i18n.js?v=30';
-import { initHeader } from './components/header.js?v=30';
-import { initChatbot } from './components/chatbot.js?v=30';
-import { setupSiteLinks } from './components/siteLinks.js?v=30';
-import { initAmbient } from './components/ambient.js?v=30';
-import { coaches, view, num, portraitHTML, fillList, setMeta, profileUrl } from './components/coachView.js?v=30';
+import { initI18n, onLangChange, applyTranslations } from './i18n.js?v=31';
+import { initHeader } from './components/header.js?v=31';
+import { initChatbot } from './components/chatbot.js?v=31';
+import { setupSiteLinks } from './components/siteLinks.js?v=31';
+import { initAmbient } from './components/ambient.js?v=31';
+import { coaches, view, num, portraitHTML, fillList, setMeta, profileUrl, photoHTML } from './components/coachView.js?v=31';
 
 const $ = (id) => document.getElementById(id);
 const id = new URLSearchParams(location.search).get('c');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 let idx = Math.max(0, coaches.findIndex((c) => c.id === id));
+
+let galleryItems = [], galleryCat = '';
+function renderGallery() {
+  const ul = $('cp-gal');
+  const list = galleryItems.filter((x) => !galleryCat || x.cat === galleryCat);
+  ul.replaceChildren(...list.map((x) => { const li = document.createElement('li'); li.innerHTML = photoHTML(x.src, x.alt); return li; }));
+  document.querySelectorAll('#cp-filter button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.cat === galleryCat)));
+  $('cp-filter').hidden = !galleryItems.some((x) => x.cat);
+}
+document.querySelectorAll('#cp-filter button').forEach((b) => b.addEventListener('click', () => { galleryCat = b.dataset.cat; renderGallery(); }));
 
 function countUp() {
   const nums = [...document.querySelectorAll('#cp-stats-list b')];
@@ -38,16 +48,22 @@ function render() {
   $('cp-lead').textContent = v.bio;
   $('cp-bio').textContent = v.bio;
   $('cp-philo').textContent = v.philosophy;
-  fillList($('cp-spec'), v.specs);
+  $('cp-spec').replaceChildren(...v.specs.map((t) => { const li = document.createElement('li'); li.textContent = t; return li; }));
+  if (!v.specs.length) $('cp-spec').replaceChildren();
   fillList($('cp-qual'), v.quals);
-  // optional sections appear only when the coach has that data
+  // photo and list sections appear only when the coach has that data
   const show = (id, on) => { $(id).hidden = !on; };
-  show('cp-stats', v.stats.length); show('achievements', v.achievements.length); show('journey', v.timeline.length); show('gallery', v.gallery.length);
-  $('cp-ach-link').hidden = !v.achievements.length;
+  show('cp-stats', v.stats.length); show('achievements', v.achievements.length || v.trophies.length); show('journey', v.timeline.length || v.journeyPhotos.length); show('gallery', v.gallery.length);
+  $('cp-ach-link').hidden = !(v.achievements.length || v.trophies.length);
+  $('cp-about-photo').firstElementChild.textContent = v.stats[0] ? `${v.stats[0].value} · ${v.stats[0].label}` : '';
+  $('cp-about-photo').querySelectorAll('img, .ch-ph').forEach((n) => n.remove());
+  $('cp-about-photo').insertAdjacentHTML('afterbegin', photoHTML(v.aboutPhoto, v.name));
   $('cp-stats-list').replaceChildren(...v.stats.map((x) => { const li = document.createElement('li'); li.innerHTML = '<b data-to=""></b><span></span>'; const b = li.querySelector('b'); b.dataset.to = x.value; b.textContent = reduced ? x.value : '0'; li.querySelector('span').textContent = x.label; return li; }));
   $('cp-ach-list').replaceChildren(...v.achievements.map((x) => { const li = document.createElement('li'); li.innerHTML = '<b></b><span></span>'; li.querySelector('b').textContent = x.place; li.querySelector('span').textContent = x.title; return li; }));
+  const tiles = (ul, items) => ul.replaceChildren(...items.map((x) => { const li = document.createElement('li'); li.innerHTML = photoHTML(x.src, x.alt); return li; }));
+  tiles($('cp-trophies'), v.trophies); tiles($('cp-jphotos'), v.journeyPhotos);
   $('cp-tl').replaceChildren(...v.timeline.map((x) => { const li = document.createElement('li'); li.innerHTML = '<b></b><p></p>'; li.querySelector('b').textContent = x.when; li.querySelector('p').textContent = x.text; return li; }));
-  $('cp-gal').replaceChildren(...v.gallery.map((x) => { const li = document.createElement('li'); const im = document.createElement('img'); im.src = x.src; im.alt = x.alt; im.loading = 'lazy'; im.decoding = 'async'; li.append(im); return li; }));
+  galleryItems = v.gallery; renderGallery();
   countUp();
   const n = coaches.length;
   [['cp-prev', (idx - 1 + n) % n], ['cp-next', (idx + 1) % n]].forEach(([el, j]) => {

@@ -2,8 +2,8 @@
  * PLV — shared coach data helpers for the coaches page and the single-coach profile page.
  * Empty fields show clearly marked placeholders; nothing is ever invented.
  */
-import { CONFIG } from '../config.js?v=30';
-import { t, pick } from '../i18n.js?v=30';
+import { CONFIG } from '../config.js?v=31';
+import { t, pick } from '../i18n.js?v=31';
 
 export const coaches = (CONFIG.COACHES_PAGE && CONFIG.COACHES_PAGE.coaches) || [];
 
@@ -27,7 +27,10 @@ export function view(c) {
     stats: (c.stats || []).map((x) => ({ value: Number(x.value) || 0, label: pick(x, 'label') })),
     achievements: (c.achievements || []).map((x) => ({ place: pick(x, 'place'), title: pick(x, 'title') })),
     timeline: (c.timeline || []).map((x) => ({ when: pick(x, 'when'), text: pick(x, 'text') })),
-    gallery: (c.gallery || []).filter((x) => x && x.src).map((x) => ({ src: x.src, alt: pick(x, 'alt') })),
+    gallery: (c.gallery || []).map((x) => ({ src: x.src || '', alt: pick(x, 'alt'), cat: x.cat || '' })),
+    trophies: (c.trophies || []).map((x) => ({ src: x.src || '', alt: pick(x, 'alt') })),
+    journeyPhotos: (c.journey_photos || []).map((x) => ({ src: x.src || '', alt: pick(x, 'alt') })),
+    aboutPhoto: c.about_photo || '',
   };
 }
 
@@ -47,3 +50,9 @@ export function setMeta(node, v) {
 }
 
 export const profileUrl = (c) => `coach.html?c=${encodeURIComponent(c.id)}`;
+
+/** Any photo slot: the image when a path is set, otherwise a clearly marked empty slot. */
+export function photoHTML(src, alt = '') {
+  if (src) return `<img src="${encodeURI(src)}" alt="${String(alt).replace(/"/g, '&quot;')}" loading="lazy" decoding="async">`;
+  return `<span class="ch-ph ch-ph--tile" aria-hidden="true">${SILHOUETTE}<em>${t('chp.ph.photo')}</em></span>`;
+}

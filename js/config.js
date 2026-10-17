@@ -5,6 +5,38 @@
  *
  * NEVER put private API keys or secrets in this file: it is public.
  */
+/* TEMP SAMPLE CONTENT: placeholder numbers, titles and empty photo slots so the coach pages show their full layout.
+   Replace per coach with real data (name, role, photo, bio, stats, achievements, timeline, photos). Nothing here is factual. */
+const TEMP_PROFILE = {
+  name: '', role: '', specialization: '', experience: '', photo: '', about_photo: '', bio: '', philosophy: '', qualifications: [],
+  specializations: ['Specialization one', 'Specialization two', 'Specialization three'],
+  stats: [
+    { value: 10, label: 'Years as a player', label_ar: 'سنوات كلاعب' },
+    { value: 5, label: 'Years as a coach', label_ar: 'سنوات كمدرب' },
+    { value: 30, label: 'Athletes trained', label_ar: 'لاعبًا تم تدريبهم' },
+    { value: 8, label: 'Trophies', label_ar: 'كؤوس' },
+  ],
+  achievements: [
+    { place: '1st', place_ar: 'الأول', title: 'Tournament name', title_ar: 'اسم البطولة' },
+    { place: '2nd', place_ar: 'الثاني', title: 'Tournament name', title_ar: 'اسم البطولة' },
+    { place: '3rd', place_ar: 'الثالث', title: 'Tournament name', title_ar: 'اسم البطولة' },
+    { place: '4th', place_ar: 'الرابع', title: 'Tournament name', title_ar: 'اسم البطولة' },
+  ],
+  trophies: [{ src: '' }, { src: '' }, { src: '' }, { src: '' }],
+  timeline: [
+    { when: 'Year', when_ar: 'السنة', text: 'A milestone in the coach’s career will appear here.', text_ar: 'ستظهر هنا محطة من مسيرة المدرب.' },
+    { when: 'Year', when_ar: 'السنة', text: 'A milestone in the coach’s career will appear here.', text_ar: 'ستظهر هنا محطة من مسيرة المدرب.' },
+    { when: 'Year', when_ar: 'السنة', text: 'A milestone in the coach’s career will appear here.', text_ar: 'ستظهر هنا محطة من مسيرة المدرب.' },
+    { when: 'Year', when_ar: 'السنة', text: 'A milestone in the coach’s career will appear here.', text_ar: 'ستظهر هنا محطة من مسيرة المدرب.' },
+  ],
+  journey_photos: [{ src: '' }, { src: '' }],
+  // gallery: cat is one of 'tournaments' | 'match' | 'training'
+  gallery: [
+    { src: '', cat: 'tournaments' }, { src: '', cat: 'match' }, { src: '', cat: 'training' },
+    { src: '', cat: 'match' }, { src: '', cat: 'tournaments' }, { src: '', cat: 'training' },
+  ],
+};
+
 export const CONFIG = {
   /* ---- Content sources (local JSON now, Apps Script endpoints later) ---- */
   // Set a value to null/"" to show a deliberate "not configured" placeholder.
@@ -100,41 +132,14 @@ export const CONFIG = {
       closing: '',
       philosophy: { technique: '', tactics: '', athleticism: '', mentality: '' },
     },
-    // Optional per coach: stats [{value,label}], achievements [{place,title}], timeline [{when,text}], gallery [{src,alt}]. Add *_ar for Arabic.
+    // Per coach: photo, about_photo, stats, achievements, trophies, timeline, journey_photos, gallery (see TEMP_PROFILE above). Add *_ar for Arabic.
     // kind: 'head' | 'assistant' picks the placeholder role. Empty text = a clearly marked placeholder on the page.
     // Arabic text goes in name_ar, role_ar, specialization_ar, experience_ar, bio_ar, philosophy_ar.
     coaches: [
-      {
-        id: 'coach-1', kind: 'head', photo: '', philosophy: '', qualifications: [],
-        name: 'Mohamed Ragab', name_ar: 'محمد رجب',
-        role: 'Head Coach & Founder of PLV Academy', role_ar: 'المدرب الرئيسي ومؤسس أكاديمية PLV',
-        specialization: 'Former opposite hitter', specialization_ar: 'لاعب سابق في مركز الضارب المقابل',
-        experience: '12 years as a player, 2 as a coach', experience_ar: '12 سنة لاعبًا و2 مدربًا',
-        bio: 'A former opposite hitter who spent 12 years at Al Tayaran Club, now building champions as a coach.',
-        bio_ar: 'لاعب سابق في مركز الضارب المقابل قضى 12 سنة في نادي الطيران، ويصنع الآن أبطالًا كمدرب.',
-        specializations: ['Position-specific skills', 'Physical fitness', 'A respectful, ethical training environment'],
-        specializations_ar: ['مهارات خاصة بكل مركز', 'اللياقة البدنية', 'بيئة تدريب تحترم اللاعب وتلتزم بالأخلاق'],
-        stats: [
-          { value: 12, label: 'Years as a player', label_ar: 'سنة كلاعب' },
-          { value: 2, label: 'Years as a coach', label_ar: 'سنة كمدرب' },
-        ],
-        achievements: [
-          { place: '1st', place_ar: 'الأول', title: 'Academies Tournament', title_ar: 'بطولة الأكاديميات' },
-          { place: '1st', place_ar: 'الأول', title: 'Republic Championship (the academy’s first participation)', title_ar: 'بطولة الجمهورية (أول مشاركة للأكاديمية)' },
-          { place: '2nd', place_ar: 'الثاني', title: 'Girls’ Teams Tournament', title_ar: 'بطولة فرق البنات' },
-          { place: '4th', place_ar: 'الرابع', title: 'American University Tournament (first participation)', title_ar: 'بطولة الجامعة الأمريكية (أول مشاركة)' },
-        ],
-        timeline: [
-          { when: '12 years', when_ar: '12 سنة', text: 'Player at Al Tayaran Club, opposite hitter.', text_ar: 'لاعب في نادي الطيران في مركز الضارب المقابل.' },
-          { when: '2019', when_ar: '2019', text: 'First place in the school league, and with the school team.', text_ar: 'المركز الأول في دوري المدارس ومع فريق المدرسة.' },
-          { when: 'Coaching', when_ar: 'التدريب', text: 'Coach at Al Wai Club: the girls’ 15-year-old team and the minis team.', text_ar: 'مدرب في نادي الوعي: فريق البنات تحت 15 سنة وفريق الميني.' },
-          { when: 'December 2025', when_ar: 'ديسمبر 2025', text: 'Founded PLV Academy.', text_ar: 'تأسيس أكاديمية PLV.' },
-        ],
-        gallery: [], // [{ src: 'assets/images/coaches/...', alt: '', alt_ar: '' }]
-      },
-      { id: 'coach-2', kind: 'assistant', name: '', role: '', specialization: '', experience: '', photo: '', bio: '', philosophy: '', specializations: [], qualifications: [] },
-      { id: 'coach-3', kind: 'assistant', name: '', role: '', specialization: '', experience: '', photo: '', bio: '', philosophy: '', specializations: [], qualifications: [] },
-      { id: 'coach-4', kind: 'assistant', name: '', role: '', specialization: '', experience: '', photo: '', bio: '', philosophy: '', specializations: [], qualifications: [] },
+      { id: 'coach-1', kind: 'head', ...TEMP_PROFILE },
+      { id: 'coach-2', kind: 'assistant', ...TEMP_PROFILE },
+      { id: 'coach-3', kind: 'assistant', ...TEMP_PROFILE },
+      { id: 'coach-4', kind: 'assistant', ...TEMP_PROFILE },
     ],
   },
 
