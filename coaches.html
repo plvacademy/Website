@@ -10,10 +10,10 @@
   <link rel="preconnect" href="https://script.google.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=26">
-  <link rel="stylesheet" href="css/responsive.css?v=26">
-  <link rel="stylesheet" href="css/coaches.css?v=26">
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Cairo:wght@400;600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=28">
+  <link rel="stylesheet" href="css/responsive.css?v=28">
+  <link rel="stylesheet" href="css/coaches.css?v=28">
   <script>document.documentElement.classList.add('ch-js');</script>
 </head>
 <body class="coaches-page">
@@ -84,188 +84,113 @@
   </div>
 </header>
 
+<canvas class="ch-ambient" id="ch-ambient" aria-hidden="true"></canvas>
+
 <main id="main">
 
-  <!-- 1. Hero: cinematic 3D ball over a tactical court -->
+  <!-- 1. Hero -->
   <section class="ch-hero" aria-labelledby="ch-title">
-    <div class="ch-hero__bg" aria-hidden="true">
-      <div class="ch-hero__photo" id="hero-photo"></div>
-      <svg class="ch-hero__court" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" focusable="false">
-        <defs>
-          <linearGradient id="ch-trail" x1="0" y1="1" x2="1" y2="0">
-            <stop offset="0" stop-color="#FF850B" stop-opacity="0"/><stop offset=".55" stop-color="#FF850B" stop-opacity=".85"/><stop offset="1" stop-color="#ffd2a0"/>
-          </linearGradient>
-        </defs>
-        <g class="ch-court-lines" fill="none" stroke="#7fb4ff" stroke-opacity=".28" stroke-width="1.2">
-          <path d="M-40 640 L360 470 L1240 470 L1330 640 Z"/>
-          <path d="M70 640 L420 470 M240 640 L520 470 M420 640 L640 470 M600 640 L760 470 M780 640 L880 470 M960 640 L1000 470"/>
-          <path d="M-40 560 L1330 560 M-40 600 L1330 600" stroke-opacity=".14"/>
-          <path d="M-10 470 L1300 470" stroke-opacity=".4"/>
-        </g>
-        <path class="ch-traj ch-traj--a" d="M80 600 C 360 520, 620 140, 930 205" fill="none" stroke="url(#ch-trail)" stroke-width="2.4" stroke-linecap="round"/>
-        <path class="ch-traj ch-traj--b" d="M300 620 C 520 470, 760 330, 1010 300" fill="none" stroke="#FF850B" stroke-opacity=".5" stroke-width="1.4" stroke-dasharray="3 9" stroke-linecap="round"/>
-        <g class="ch-marks" fill="#FF850B">
-          <circle cx="80" cy="600" r="4"/><circle cx="360" cy="520" r="3"/><circle cx="640" cy="330" r="3"/>
-        </g>
-      </svg>
-    </div>
-
-    <div class="ch-hero__stage" id="ball-stage" role="img" data-i18n-aria="chp.ball.label" aria-label="Interactive 3D volleyball. Move the pointer over it.">
-      <canvas id="ball-canvas" aria-hidden="true"></canvas>
-      <div class="ch-ball-fallback" aria-hidden="true"></div>
-      <svg class="ch-reticle" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
-        <g fill="none" stroke="#ffb066" stroke-width="2" stroke-linecap="round">
-          <path d="M20 58V20h38M142 20h38v38M180 142v38h-38M58 180H20v-38"/>
-        </g>
-      </svg>
-    </div>
-
+    <svg class="ch-hero__flow" viewBox="0 0 1440 400" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path class="ch-flow" d="M-40 150 C 300 60, 520 260, 820 150 S 1280 70, 1480 170" fill="none" stroke="#FF850B" stroke-opacity=".55" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>
     <div class="container ch-hero__inner">
-      <p class="ch-vert" aria-hidden="true" data-i18n="chp.hero.label">Coaches</p>
-      <div class="ch-hero__copy">
-        <h1 id="ch-title" class="ch-title">
-          <span class="ch-title__a" data-i18n="chp.hero.title1">Behind every great player,</span>
-          <span class="ch-title__b" data-i18n="chp.hero.title2">there is a great coach.</span>
-        </h1>
-        <p class="ch-hero__text" data-i18n="chp.hero.text">Meet the minds, mentors, and strategists shaping the next generation of volleyball talent.</p>
-      </div>
-      <ul class="ch-pills" aria-hidden="true"><li data-i18n="chp.pill.technique">Technique</li><li data-i18n="chp.pill.tactics">Tactics</li><li data-i18n="chp.pill.athleticism">Athleticism</li><li data-i18n="chp.pill.mentality">Mentality</li></ul>
+      <p class="ch-eyebrow" data-i18n="chp.hero.eyebrow">PLV Performance Lab Volleyball Academy</p>
+      <h1 id="ch-title" class="ch-title">
+        <span class="ch-title__a" data-i18n="chp.hero.title1">Behind every great player,</span>
+        <span class="ch-title__b" data-i18n="chp.hero.title2">there is a great coach.</span>
+      </h1>
+      <p class="ch-hero__text" data-i18n="chp.hero.text">Meet the minds, mentors, and strategists shaping the next generation of volleyball talent.</p>
     </div>
   </section>
 
-  <!-- 2. Featured coach -->
-  <section class="ch-feature" id="featured" aria-labelledby="feat-title">
-    <span class="ch-bignum" aria-hidden="true">01</span>
-    <svg class="ch-feature__lines" viewBox="0 0 1200 520" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-      <path class="ch-traj ch-traj--c" d="M-20 470 C 300 430, 640 120, 1220 60" fill="none" stroke="#FF850B" stroke-opacity=".55" stroke-width="1.6"/>
-      <path d="M-20 500 L1220 500" stroke="#7fb4ff" stroke-opacity=".14" fill="none"/>
-    </svg>
-    <div class="container ch-feature__inner">
-      <figure class="ch-portrait ch-portrait--lg" id="feat-portrait"></figure>
-      <div class="ch-feature__info">
-        <p class="ch-kicker"><span data-i18n="chp.feat.label">Featured coach</span></p>
-        <p class="ch-role" id="feat-role"></p>
-        <h2 class="ch-name" id="feat-title"></h2>
-        <p class="ch-meta" id="feat-meta"></p>
-        <p class="ch-bio" id="feat-bio"></p>
-        <button class="ch-btn" type="button" id="feat-open"><span data-i18n="chp.feat.profile">View full profile</span><svg class="icon icon--sm flip-rtl" aria-hidden="true"><use href="#i-arrow"/></svg></button>
-      </div>
-      <ul class="ch-facts">
-        <li><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><div><h3 data-i18n="chp.feat.qual">Qualifications &amp; certifications</h3><p id="feat-qual" data-i18n="chp.feat.qualText"></p></div></li>
-        <li><svg class="icon" aria-hidden="true"><use href="#i-compass"/></svg><div><h3 data-i18n="chp.feat.philo">Coaching philosophy</h3><p id="feat-philo" data-i18n="chp.feat.philoText"></p></div></li>
-        <li><svg class="icon" aria-hidden="true"><use href="#i-target"/></svg><div><h3 data-i18n="chp.feat.spec">Specializations</h3><p id="feat-spec" data-i18n="chp.feat.specText"></p></div></li>
-      </ul>
+  <!-- 2. Marquee -->
+  <div class="ch-marquee" aria-hidden="true">
+    <div class="ch-marquee__run">
+      <span data-i18n="chp.pill.technique">Technique</span><i>&#10022;</i><span data-i18n="chp.pill.tactics">Tactics</span><i>&#10022;</i><span data-i18n="chp.pill.athleticism">Athleticism</span><i>&#10022;</i><span data-i18n="chp.pill.mentality">Mentality</span><i>&#10022;</i>
+      <span data-i18n="chp.pill.technique">Technique</span><i>&#10022;</i><span data-i18n="chp.pill.tactics">Tactics</span><i>&#10022;</i><span data-i18n="chp.pill.athleticism">Athleticism</span><i>&#10022;</i><span data-i18n="chp.pill.mentality">Mentality</span><i>&#10022;</i>
     </div>
-  </section>
+  </div>
 
-  <!-- 3. Coaches showcase: horizontal gallery -->
-  <section class="ch-gallery" id="our-coaches" aria-labelledby="gal-title">
-    <div class="container ch-gallery__head">
-      <div>
-        <h2 class="ch-h2" id="gal-title" data-i18n="chp.gal.title">Our coaches</h2>
-        <p class="ch-sub" data-i18n="chp.gal.hint">Select a coach to open the full profile.</p>
-      </div>
-      <div class="ch-arrows">
-        <button class="ch-arrow" type="button" id="gal-prev" data-i18n-aria="chp.gal.prev" aria-label="Previous coaches"><svg class="icon ch-ico-prev" aria-hidden="true"><use href="#i-arrow"/></svg></button>
-        <button class="ch-arrow" type="button" id="gal-next" data-i18n-aria="chp.gal.next" aria-label="Next coaches"><svg class="icon flip-rtl" aria-hidden="true"><use href="#i-arrow"/></svg></button>
-      </div>
-    </div>
-    <ul class="ch-track" id="coach-track"></ul>
-  </section>
-
-  <!-- 4. Science: real-time 3D court (illustration only) -->
-  <section class="ch-science" id="science" aria-labelledby="sci-title">
-    <div class="container ch-science__inner">
-      <div class="ch-court" id="court-stage" role="img" data-i18n-aria="chp.sci.court" aria-label="Interactive 3D volleyball court. Move the pointer to look around.">
-        <canvas id="court-canvas" aria-hidden="true"></canvas>
-        <svg class="ch-court-fallback" viewBox="0 0 600 380" aria-hidden="true" focusable="false">
-          <g fill="none" stroke="#7fb4ff" stroke-opacity=".5" stroke-width="1.4">
-            <path d="M70 330 L170 110 L430 110 L530 330 Z"/><path d="M120 220 L480 220" stroke="#fff" stroke-opacity=".7"/><path d="M95 275 L505 275M145 165 L455 165" stroke-opacity=".3"/>
-          </g>
-          <path class="ch-traj ch-traj--d" d="M150 300 C 220 120, 360 60, 450 150" fill="none" stroke="#FF850B" stroke-width="2.4"/>
-          <g fill="#FF850B"><circle cx="190" cy="285" r="6"/><circle cx="300" cy="300" r="6"/><circle cx="410" cy="285" r="6"/></g>
-          <g fill="#3fa7ff"><circle cx="210" cy="150" r="6"/><circle cx="300" cy="140" r="6"/><circle cx="390" cy="150" r="6"/></g>
-        </svg>
-        <div class="ch-panel ch-panel--1"><span data-i18n="chp.sci.panel1">Court geometry</span><svg viewBox="0 0 80 40" aria-hidden="true"><path d="M6 34 L22 6 H58 L74 34Z M14 20H66" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></div>
-        <div class="ch-panel ch-panel--2"><span data-i18n="chp.sci.panel2">Player positions</span><svg viewBox="0 0 80 40" aria-hidden="true"><g fill="currentColor"><circle cx="16" cy="28" r="3"/><circle cx="40" cy="30" r="3"/><circle cx="64" cy="28" r="3"/><circle cx="24" cy="12" r="3"/><circle cx="40" cy="10" r="3"/><circle cx="56" cy="12" r="3"/></g></svg></div>
-        <div class="ch-panel ch-panel--3"><span data-i18n="chp.sci.panel3">Movement paths</span><svg viewBox="0 0 80 40" aria-hidden="true"><path d="M6 32C20 4 48 4 74 28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3"/></svg></div>
-        <p class="ch-court__note" data-i18n="chp.sci.note">Illustration only. No match data is shown.</p>
-      </div>
-      <div class="ch-science__copy">
-        <h2 class="ch-h2 ch-h2--xl" id="sci-title"><span class="ch-h2__a" data-i18n="chp.sci.title1">More than coaching.</span> <span class="ch-h2__b" data-i18n="chp.sci.title2">It’s a science.</span></h2>
-        <p class="ch-sub ch-sub--lg" data-i18n="chp.sci.text">We combine experience, observation, and modern analysis to build smarter players and stronger teams.</p>
-        <ul class="ch-steps">
-          <li><svg class="icon" aria-hidden="true"><use href="#i-target"/></svg><span data-i18n="chp.sci.analyze">Analyze</span></li>
-          <li><svg class="icon" aria-hidden="true"><use href="#i-compass"/></svg><span data-i18n="chp.sci.adjust">Adjust</span></li>
-          <li><svg class="icon" aria-hidden="true"><use href="#i-growth"/></svg><span data-i18n="chp.sci.improve">Improve</span></li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5. Coaching philosophy: four different compositions -->
-  <section class="ch-phil" id="philosophy" aria-labelledby="phil-title">
-    <div class="container"><h2 class="ch-h2" id="phil-title" data-i18n="chp.phil.title">The coaching philosophy</h2></div>
-    <ul class="ch-phil__strip">
-      <li class="ch-phil__item ch-phil__item--technique" data-k="technique">
-        <div class="ch-phil__art" aria-hidden="true"><svg viewBox="0 0 300 300" focusable="false"><circle cx="150" cy="150" r="64" fill="none" stroke="#FF850B" stroke-width="3"/><path d="M96 150h108M150 96v108M112 112c28 22 48 22 76 0M112 188c28-22 48-22 76 0" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2"/><circle cx="150" cy="150" r="104" fill="none" stroke="#7fb4ff" stroke-opacity=".35" stroke-dasharray="4 8"/><g fill="#FF850B"><circle cx="150" cy="86" r="5"/><circle cx="214" cy="150" r="5"/><circle cx="86" cy="150" r="5"/></g></svg></div>
-        <div class="ch-phil__txt"><span class="ch-phil__no" aria-hidden="true">01</span><h3 data-i18n="chp.phil.technique">Technique</h3><p data-i18n="chp.phil.techniqueText">Master the fundamentals. Build lasting habits.</p></div>
-      </li>
-      <li class="ch-phil__item ch-phil__item--tactics" data-k="tactics">
-        <div class="ch-phil__art" aria-hidden="true"><svg viewBox="0 0 300 300" focusable="false"><g fill="none" stroke="#7fb4ff" stroke-opacity=".5"><path d="M40 250 L90 60 H210 L260 250Z"/><path d="M65 155H235"/></g><path class="ch-traj ch-traj--e" d="M80 230 C 110 110, 190 90, 230 130" fill="none" stroke="#FF850B" stroke-width="3" stroke-linecap="round"/><path d="M150 230 L190 190 M190 190l-14 2M190 190l-2 14" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2" stroke-linecap="round"/><g fill="#FF850B"><circle cx="80" cy="230" r="6"/><circle cx="150" cy="238" r="6"/></g><g fill="#3fa7ff"><circle cx="110" cy="100" r="6"/><circle cx="190" cy="100" r="6"/></g></svg></div>
-        <div class="ch-phil__txt"><span class="ch-phil__no" aria-hidden="true">02</span><h3 data-i18n="chp.phil.tactics">Tactics</h3><p data-i18n="chp.phil.tacticsText">Think the game. Make better decisions.</p></div>
-      </li>
-      <li class="ch-phil__item ch-phil__item--athleticism" data-k="athleticism">
-        <div class="ch-phil__art" aria-hidden="true"><svg viewBox="0 0 300 300" focusable="false"><path d="M40 250C100 240 130 130 150 70C170 130 200 240 260 250" fill="none" stroke="#FF850B" stroke-width="3"/><g fill="none" stroke="#fff" stroke-opacity=".5"><path d="M70 262C110 250 134 150 150 100"/><path d="M230 262C190 250 166 150 150 100"/></g><circle cx="150" cy="58" r="12" fill="#FF850B"/><path d="M20 270H280" stroke="#7fb4ff" stroke-opacity=".4"/></svg></div>
-        <div class="ch-phil__txt"><span class="ch-phil__no" aria-hidden="true">03</span><h3 data-i18n="chp.phil.athleticism">Athleticism</h3><p data-i18n="chp.phil.athleticismText">Stronger bodies. Higher potential.</p></div>
-      </li>
-      <li class="ch-phil__item ch-phil__item--mentality" data-k="mentality">
-        <div class="ch-phil__art" aria-hidden="true"><svg viewBox="0 0 300 300" focusable="false"><g fill="none" stroke="#FF850B"><circle cx="150" cy="150" r="22" stroke-width="3"/><circle cx="150" cy="150" r="52" stroke-opacity=".7" stroke-width="2"/><circle cx="150" cy="150" r="86" stroke-opacity=".4"/><circle cx="150" cy="150" r="120" stroke-opacity=".2"/></g><path d="M150 20v50M150 230v50M20 150h50M230 150h50" stroke="#fff" stroke-opacity=".55" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="ch-phil__txt"><span class="ch-phil__no" aria-hidden="true">04</span><h3 data-i18n="chp.phil.mentality">Mentality</h3><p data-i18n="chp.phil.mentalityText">Focus today. Stronger tomorrow.</p></div>
-      </li>
-    </ul>
-  </section>
-
-  <!-- 6. Coach spotlight -->
-  <section class="ch-spot" id="spotlight" aria-labelledby="spot-title">
+  <!-- 3. The roster -->
+  <section class="ch-roster" id="roster" aria-labelledby="roster-title">
     <div class="container">
-      <h2 class="ch-h2" id="spot-title" data-i18n="chp.spot.title">Coach spotlight</h2>
-      <div class="ch-spot__panel" id="spot-panel">
-        <figure class="ch-portrait ch-portrait--spot" id="spot-portrait"></figure>
-        <div class="ch-spot__body">
-          <p class="ch-role" id="spot-role"></p>
-          <h3 class="ch-name ch-name--md" id="spot-name"></h3>
-          <p class="ch-meta" id="spot-meta"></p>
-          <div class="ch-tabs" role="tablist" data-i18n-aria="chp.spot.title" aria-label="Coach spotlight">
+      <h2 class="ch-h2 ch-h2--xl" id="roster-title" data-i18n="chp.roster.title">The roster</h2>
+
+      <article class="ch-card" id="coach-card" aria-live="polite">
+        <figure class="ch-card__photo" id="card-photo"></figure>
+        <span class="ch-card__no" id="card-no" aria-hidden="true">01</span>
+        <div class="ch-card__body">
+          <p class="ch-role" id="card-role"></p>
+          <h3 class="ch-name" id="card-name"></h3>
+          <p class="ch-meta" id="card-meta"></p>
+          <div class="ch-tabs" role="tablist" data-i18n-aria="chp.roster.title" aria-label="The roster">
             <button role="tab" type="button" id="tab-about" aria-controls="pane-about" aria-selected="true" data-i18n="chp.spot.about">About</button>
             <button role="tab" type="button" id="tab-philosophy" aria-controls="pane-philosophy" aria-selected="false" tabindex="-1" data-i18n="chp.spot.philosophy">Philosophy</button>
             <button role="tab" type="button" id="tab-specializations" aria-controls="pane-specializations" aria-selected="false" tabindex="-1" data-i18n="chp.spot.specializations">Specializations</button>
             <button role="tab" type="button" id="tab-qualifications" aria-controls="pane-qualifications" aria-selected="false" tabindex="-1" data-i18n="chp.spot.qualifications">Qualifications</button>
           </div>
-          <div class="ch-pane" role="tabpanel" id="pane-about" aria-labelledby="tab-about"><p id="spot-bio"></p></div>
-          <div class="ch-pane" role="tabpanel" id="pane-philosophy" aria-labelledby="tab-philosophy" hidden><p id="spot-philo"></p></div>
-          <div class="ch-pane" role="tabpanel" id="pane-specializations" aria-labelledby="tab-specializations" hidden><ul id="spot-spec"></ul></div>
-          <div class="ch-pane" role="tabpanel" id="pane-qualifications" aria-labelledby="tab-qualifications" hidden><ul id="spot-qual"></ul></div>
-          <div class="ch-spot__actions">
-            <button class="ch-btn ch-btn--ghost" type="button" id="spot-close"><span data-i18n="chp.spot.close">Back to coaches</span></button>
-            <button class="ch-btn ch-btn--ghost" type="button" id="spot-prev"><svg class="icon icon--sm ch-ico-prev" aria-hidden="true"><use href="#i-arrow"/></svg><span data-i18n="chp.spot.prev">Previous coach</span></button>
-            <button class="ch-btn" type="button" id="spot-next"><span data-i18n="chp.spot.next">Next coach</span><svg class="icon icon--sm flip-rtl" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+          <div class="ch-pane" role="tabpanel" id="pane-about" aria-labelledby="tab-about"><p id="card-bio"></p></div>
+          <div class="ch-pane" role="tabpanel" id="pane-philosophy" aria-labelledby="tab-philosophy" hidden><p id="card-philo"></p></div>
+          <div class="ch-pane" role="tabpanel" id="pane-specializations" aria-labelledby="tab-specializations" hidden><ul id="card-spec"></ul></div>
+          <div class="ch-pane" role="tabpanel" id="pane-qualifications" aria-labelledby="tab-qualifications" hidden><ul id="card-qual"></ul></div>
+          <div class="ch-card__actions">
+            <button class="ch-btn ch-btn--ghost" type="button" id="card-prev"><svg class="icon icon--sm ch-ico-prev" aria-hidden="true"><use href="#i-arrow"/></svg><span data-i18n="chp.spot.prev">Previous coach</span></button>
+            <button class="ch-btn ch-btn--ghost" type="button" id="card-next"><span data-i18n="chp.spot.next">Next coach</span><svg class="icon icon--sm flip-rtl" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+            <a class="ch-btn" id="card-open" href="coach.html"><span data-i18n="chp.feat.profile">View full profile</span><svg class="icon icon--sm flip-rtl" aria-hidden="true"><use href="#i-arrow"/></svg></a>
           </div>
         </div>
+      </article>
+
+      <ul class="ch-others" id="coach-others"></ul>
+    </div>
+  </section>
+
+  <!-- 4. Science: turning 3D court -->
+  <section class="ch-science" id="science" aria-labelledby="sci-title">
+    <div class="container ch-science__inner">
+      <div class="ch-science__copy">
+        <h2 class="ch-h2 ch-h2--xl" id="sci-title"><span class="ch-h2__a" data-i18n="chp.sci.title1">More than coaching.</span> <span class="ch-h2__b" data-i18n="chp.sci.title2">It’s a science.</span></h2>
+        <p class="ch-sub ch-sub--lg" data-i18n="chp.sci.text">We combine experience, observation, and modern analysis to build smarter players and stronger teams.</p>
+        <ol class="ch-steps">
+          <li><span data-i18n="chp.sci.analyze">Analyze</span></li>
+          <li><span data-i18n="chp.sci.adjust">Adjust</span></li>
+          <li><span data-i18n="chp.sci.improve">Improve</span></li>
+        </ol>
+      </div>
+      <div class="ch-board" id="court-board">
+        <div class="ch-board__in" id="court-host" role="img" data-i18n-aria="chp.sci.court" aria-label="Illustration of a volleyball court that turns slowly while a ball is played between the teams."></div>
+        <ul class="ch-legend" aria-hidden="true">
+          <li><b>S</b> <span data-i18n="chp.pos.s">Setter</span></li>
+          <li><b>OH</b> <span data-i18n="chp.pos.oh">Outside hitter</span></li>
+          <li><b>MB</b> <span data-i18n="chp.pos.mb">Middle blocker</span></li>
+          <li><b>OPP</b> <span data-i18n="chp.pos.opp">Opposite</span></li>
+          <li><b>L</b> <span data-i18n="chp.pos.l">Libero</span></li>
+        </ul>
+        <p class="ch-board__note" data-i18n="chp.sci.note">Illustration only. No match data is shown.</p>
       </div>
     </div>
   </section>
 
-  <!-- 7. Closing -->
+  <!-- 5. Coaching philosophy: bands -->
+  <section class="ch-phil" id="philosophy" aria-labelledby="phil-title">
+    <div class="container">
+      <h2 class="ch-h2" id="phil-title" data-i18n="chp.phil.title">The coaching philosophy</h2>
+      <ul class="ch-bands" id="phil-bands">
+        <li class="ch-band is-open"><button type="button" aria-expanded="true"><span class="ch-band__no" aria-hidden="true">01</span><span class="ch-band__t" data-i18n="chp.phil.technique">Technique</span></button><p data-i18n="chp.phil.techniqueText">Master the fundamentals. Build lasting habits.</p></li>
+        <li class="ch-band"><button type="button" aria-expanded="false"><span class="ch-band__no" aria-hidden="true">02</span><span class="ch-band__t" data-i18n="chp.phil.tactics">Tactics</span></button><p data-i18n="chp.phil.tacticsText">Think the game. Make better decisions.</p></li>
+        <li class="ch-band"><button type="button" aria-expanded="false"><span class="ch-band__no" aria-hidden="true">03</span><span class="ch-band__t" data-i18n="chp.phil.athleticism">Athleticism</span></button><p data-i18n="chp.phil.athleticismText">Stronger bodies. Higher potential.</p></li>
+        <li class="ch-band"><button type="button" aria-expanded="false"><span class="ch-band__no" aria-hidden="true">04</span><span class="ch-band__t" data-i18n="chp.phil.mentality">Mentality</span></button><p data-i18n="chp.phil.mentalityText">Focus today. Stronger tomorrow.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 6. Closing -->
   <section class="ch-close" aria-labelledby="close-title">
-    <div class="ch-close__photo" id="close-photo" aria-hidden="true"></div>
-    <svg class="ch-close__lines" viewBox="0 0 1200 300" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M-20 260 C 300 240, 700 40, 1220 80" fill="none" stroke="#FF850B" stroke-opacity=".5" stroke-width="1.6"/></svg>
+    <span class="ch-close__mark" aria-hidden="true">PLV</span>
     <div class="container ch-close__inner">
       <div>
-        <h2 class="ch-h2 ch-h2--xl" id="close-title"><span class="ch-h2__a" data-i18n="chp.close.title1">Great coaching.</span> <span class="ch-h2__b" data-i18n="chp.close.title2">Greater possibilities.</span></h2>
+        <h2 class="ch-h2 ch-h2--xl" id="close-title"><span class="ch-h2__a" data-i18n="chp.close.title1">Great coaching.</span> <span class="ch-h2__a" data-i18n="chp.close.title2">Greater possibilities.</span></h2>
         <p class="ch-sub ch-sub--lg" data-i18n="chp.close.text">Every athlete has potential. The right guidance helps turn it into performance.</p>
       </div>
-      <a class="btn btn--primary js-register" href="programs.html#register"><span data-i18n="chp.close.cta">Join PLV Academy</span><svg class="icon icon--sm flip-rtl" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      <a class="ch-cta js-register" href="programs.html#register"><span data-i18n="chp.close.cta">Join PLV Academy</span><svg class="icon icon--sm flip-rtl" aria-hidden="true"><use href="#i-arrow"/></svg></a>
     </div>
   </section>
 
@@ -314,6 +239,6 @@
   }
 </script>
 
-<script type="module" src="js/coaches.js?v=26"></script>
+<script type="module" src="js/coaches.js?v=28"></script>
 </body>
 </html>
