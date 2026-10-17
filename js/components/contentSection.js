@@ -15,9 +15,9 @@
  * Each section owns its own loading / empty / error state, so one failing
  * source never affects another.
  */
-import { fetchContent } from '../services/contentService.js?v=38';
-import { renderLoading, renderEmpty, renderError, renderNotConfigured } from './loadingStates.js?v=38';
-import { t } from '../i18n.js?v=38';
+import { fetchContent } from '../services/contentService.js?v=39';
+import { renderLoading, renderEmpty, renderError, renderNotConfigured } from './loadingStates.js?v=39';
+import { t } from '../i18n.js?v=39';
 
 /* ------------------------- DOM helpers ------------------------- */
 const SVG_NS = 'http://www.w3.org/2000/svg';

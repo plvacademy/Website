@@ -5,9 +5,9 @@
  * When a secure backend exists, set CONFIG.CHATBOT_API_URL and the same UI
  * becomes a working chat — no redesign needed.
  */
-import { el } from './contentSection.js?v=38';
-import { t, getLang } from '../i18n.js?v=38';
-import { isChatbotConfigured, sendMessage } from '../services/chatbotService.js?v=38';
+import { el } from './contentSection.js?v=39';
+import { t, getLang } from '../i18n.js?v=39';
+import { isChatbotConfigured, sendMessage } from '../services/chatbotService.js?v=39';
 
 export function initChatbot(root) {
   if (!root) return;

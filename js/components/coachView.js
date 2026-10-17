@@ -2,9 +2,9 @@
  * PLV — shared coach data helpers for the coaches page and the single-coach profile page.
  * Empty fields show clearly marked placeholders; nothing is ever invented.
  */
-import { CONFIG } from '../config.js?v=38';
-import { t, pick } from '../i18n.js?v=38';
-import { fetchContent } from '../services/contentService.js?v=38';
+import { CONFIG } from '../config.js?v=39';
+import { t, pick } from '../i18n.js?v=39';
+import { fetchContent } from '../services/contentService.js?v=39';
 
 /* The coaches come from the "Coaches" tab of the content sheet (same tab the Home page uses): one card per published row. */
 export let coaches = [];
