@@ -9,7 +9,7 @@
  * Security: the AI provider key must live ONLY on the backend. Never put keys
  * or secrets in front-end code.
  */
-import { CONFIG } from '../config.js?v=31';
+import { CONFIG } from '../config.js?v=32';
 
 export function isChatbotConfigured() {
   return typeof CONFIG.CHATBOT_API_URL === 'string' && CONFIG.CHATBOT_API_URL.trim() !== '';

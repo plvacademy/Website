@@ -3,16 +3,16 @@
  * The form (name, Parent/Player, half-star rating, message, mobile) and the list of approved reviews.
  * Success is shown ONLY after the server confirms the row was saved; any failure keeps the form and allows a retry.
  */
-import { initI18n, t, getLang, applyTranslations, onLangChange } from './i18n.js?v=31';
-import { initHeader } from './components/header.js?v=31';
-import { initChatbot } from './components/chatbot.js?v=31';
-import { createSection, el } from './components/contentSection.js?v=31';
-import { setupSiteLinks } from './components/siteLinks.js?v=31';
-import { createRatingInput, formatRating } from './components/stars.js?v=31';
-import { renderReviewCard } from './components/reviewCard.js?v=31';
+import { initI18n, t, getLang, applyTranslations, onLangChange } from './i18n.js?v=32';
+import { initHeader } from './components/header.js?v=32';
+import { initChatbot } from './components/chatbot.js?v=32';
+import { createSection, el } from './components/contentSection.js?v=32';
+import { setupSiteLinks } from './components/siteLinks.js?v=32';
+import { createRatingInput, formatRating } from './components/stars.js?v=32';
+import { renderReviewCard } from './components/reviewCard.js?v=32';
 import {
   submitFeedback, FeedbackError, newRequestId, normalizeName, isValidName, normalizeMobile, parseRating, isLowRating, FEEDBACK_LIMITS,
-} from './services/feedbackService.js?v=31';
+} from './services/feedbackService.js?v=32';
 
 const $ = (id) => document.getElementById(id);
 

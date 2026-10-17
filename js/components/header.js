@@ -1,7 +1,7 @@
 /**
  * PLV — header behaviour: mobile menu, language switch, scroll state, active link.
  */
-import { setLang } from '../i18n.js?v=31';
+import { setLang } from '../i18n.js?v=32';
 
 export function initHeader() {
   // Focus ring only for keyboard users: after a mouse click (or coming back with the Back button) a clicked link must not
@@ -56,6 +56,13 @@ export function initHeader() {
   const keyOf = (a) => a.dataset.page || (a.getAttribute('href') || '').replace(/^#/, '');
   const links = [...nav.querySelectorAll('.site-nav__list a')].filter((a) => GROUPS[keyOf(a)]);
   if (!links.length) return;
+
+  // Stand-alone pages (Programs, Coaches, a coach): mark their own link, no scroll-spy needed.
+  const own = document.documentElement.dataset.page;
+  if (own && GROUPS[own]) {
+    links.forEach((a) => { if (keyOf(a) === own) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+    return;
+  }
 
   let locked = false;
   let lockTimer = 0;
