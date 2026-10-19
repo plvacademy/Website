@@ -3,13 +3,13 @@
  * Renders one roster card per published row of the Coaches sheet tab (empty message when there are none), the philosophy bands,
  * the turning 3D court and the ambient background. Each coach opens their own page (coach.html?c=ID).
  */
-import { initI18n, t, onLangChange, applyTranslations } from './i18n.js?v=40';
-import { initHeader } from './components/header.js?v=40';
-import { initChatbot } from './components/chatbot.js?v=40';
-import { setupSiteLinks } from './components/siteLinks.js?v=40';
-import { initAmbient } from './components/ambient.js?v=40';
-import { initCourt } from './components/courtRally.js?v=40';
-import { coaches, loadCoaches, loadError, view, num, portraitHTML, fillList, setMeta, profileUrl } from './components/coachView.js?v=40';
+import { initI18n, t, onLangChange, applyTranslations } from './i18n.js?v=41';
+import { initHeader } from './components/header.js?v=41';
+import { initChatbot } from './components/chatbot.js?v=41';
+import { setupSiteLinks } from './components/siteLinks.js?v=41';
+import { initAmbient } from './components/ambient.js?v=41';
+import { initCourt } from './components/courtRally.js?v=41';
+import { coaches, loadCoaches, loadError, view, num, portraitHTML, fillList, setMeta, profileUrl } from './components/coachView.js?v=41';
 
 const $ = (id) => document.getElementById(id);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;

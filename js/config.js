@@ -32,7 +32,9 @@ export const CONFIG = {
   },
 
   /* ---- Future endpoints (leave null until a secure backend exists) ---- */
-  CHATBOT_API_URL: null, // e.g. 'https://your-backend.example.com/chat'
+  // Chatbot: the bot is one module published separately (answers, registration from the chat); this site only shows it.
+  CHATBOT_API_URL: 'https://script.google.com/macros/s/AKfycbxNHRYpdGLuToqMr0BzxEyQiehUbUJBhTFOeA8VgL7lxXHgknvpsXNIFu0CQAcxssML9w/exec',
+  CHATBOT_MODULE_URL: 'https://plvacademy.github.io/chatbot-admin/js/bot/site-bot.js?v=1',
   CONTACT_API_URL: null, // future Apps Script endpoint for contact requests
   // Feedback web app (Google Apps Script bound to the Feedback sheet). Reviews are read from here and new ones are sent here;
   // only rows the owner marked Visible are returned. Never put secrets in this file.

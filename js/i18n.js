@@ -268,6 +268,9 @@ const translations = {
     'chat.soonText': 'Our chat assistant isn’t active yet. For now, please use the contact options on this page.',
     'chat.placeholder': 'Type your message…',
     'chat.send': 'Send',
+    'chat.reset': 'New chat',
+    'chat.typing': 'Typing…',
+    'chat.whatsapp': 'Chat on WhatsApp',
     'chat.error': 'Sorry, the assistant is unavailable right now. Please try again later.',
     /* ---- Coaches page ---- */
     'meta.title.coaches': 'Coaches | PLV Performance Lab Volleyball Academy',
@@ -620,6 +623,9 @@ const translations = {
     'chat.soonText': 'مساعد المحادثة غير مفعّل بعد. حاليًا، يرجى استخدام وسائل التواصل المتاحة في هذه الصفحة.',
     'chat.placeholder': 'اكتب رسالتك…',
     'chat.send': 'إرسال',
+    'chat.reset': 'محادثة جديدة',
+    'chat.typing': 'جارٍ الكتابة…',
+    'chat.whatsapp': 'تواصل عبر واتساب',
     'chat.error': 'عذرًا، المساعد غير متاح الآن. يرجى المحاولة لاحقًا.',
     /* ---- صفحة المدربين ---- */
     'meta.title.coaches': 'المدربون | أكاديمية PLV لكرة الطائرة',

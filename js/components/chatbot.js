@@ -1,18 +1,24 @@
 /**
  * PLV — floating chatbot launcher + panel.
- * Honest placeholder: while CHATBOT_API_URL is unset the panel shows a clear
- * "Coming soon" state and the message form is disabled.
- * When a secure backend exists, set CONFIG.CHATBOT_API_URL and the same UI
- * becomes a working chat — no redesign needed.
+ * The panel is the view only. The bot itself (answers, registration from the chat, unanswered-question log) is one
+ * module loaded the first time a visitor opens the chat (CONFIG.CHATBOT_MODULE_URL). If it cannot be loaded, or the
+ * chatbot is not configured, the panel keeps the honest "Coming soon" state with a WhatsApp link.
  */
-import { el } from './contentSection.js?v=40';
-import { t, getLang } from '../i18n.js?v=40';
-import { isChatbotConfigured, sendMessage } from '../services/chatbotService.js?v=40';
+import { el } from './contentSection.js?v=41';
+import { t, getLang, onLangChange } from '../i18n.js?v=41';
+import { CONFIG } from '../config.js?v=41';
+import { submitRegistration } from '../services/registrationService.js?v=41';
+
+const isHttps = (v) => typeof v === 'string' && /^https:\/\//i.test(v.trim());
+const withTimeout = (promise, ms) => Promise.race([
+  promise,
+  new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms)),
+]);
 
 export function initChatbot(root) {
   if (!root) return;
 
-  const live = isChatbotConfigured();
+  const configured = isHttps(CONFIG.CHATBOT_API_URL) && isHttps(CONFIG.CHATBOT_MODULE_URL);
 
   /* Launcher */
   const logo = el('img', { src: 'assets/images/Logo.png?v=2', alt: '', width: '40', height: '40' });
@@ -32,32 +38,32 @@ export function initChatbot(root) {
 
   /* Panel */
   const closeBtn = el('button', { type: 'button', class: 'chatbot__close', 'data-i18n-aria': 'chat.close', text: '×' });
-  const messages = el('div', { class: 'chatbot__messages', role: 'log', 'aria-live': 'polite' }, [
-    el('p', { class: 'chatbot__msg chatbot__msg--bot', 'data-i18n': 'chat.welcome' }),
+  const resetBtn = el('button', { type: 'button', class: 'chatbot__reset', hidden: true, 'data-i18n-aria': 'chat.reset', 'data-i18n-title': 'chat.reset', text: '↻' });
+  const messages = el('div', { class: 'chatbot__messages', role: 'log', 'aria-live': 'polite' });
+
+  const waNumber = String((CONFIG.CONTACT && CONFIG.CONTACT.whatsappNumber) || '').replace(/\D/g, '');
+  const status = el('div', { class: 'chatbot__soon', hidden: true }, [
+    el('strong', { 'data-i18n': 'chat.soon' }),
+    el('p', { 'data-i18n': 'chat.soonText' }),
+    waNumber ? el('a', { class: 'chatbot__action chatbot__action--wa', href: `https://wa.me/${waNumber}`, target: '_blank', rel: 'noopener noreferrer', 'data-i18n': 'chat.whatsapp' }) : null,
   ]);
 
-  const status = live
-    ? null
-    : el('div', { class: 'chatbot__soon' }, [
-        el('strong', { 'data-i18n': 'chat.soon' }),
-        el('p', { 'data-i18n': 'chat.soonText' }),
-      ]);
-
   const input = el('input', {
-    type: 'text', class: 'chatbot__input', autocomplete: 'off', maxlength: '500',
+    type: 'text', class: 'chatbot__input', autocomplete: 'off', maxlength: '500', enterkeyhint: 'send',
     'data-i18n-placeholder': 'chat.placeholder', 'data-i18n-aria': 'chat.placeholder',
   });
-  const sendBtn = el('button', { type: 'submit', class: 'btn btn--primary btn--sm', 'data-i18n': 'chat.send' });
-  const form = el('form', { class: 'chatbot__form' }, [input, sendBtn]);
-  if (!live) { input.disabled = true; sendBtn.disabled = true; }
+  const sendBtn = el('button', { type: 'button', class: 'btn btn--primary btn--sm', 'data-i18n': 'chat.send' });
+  const form = el('div', { class: 'chatbot__form' }, [input, sendBtn]); // not a <form>: Enter is handled below
+  input.disabled = true; sendBtn.disabled = true;
 
+  const title = el('h2', { id: 'chatbot-title' });
   const panel = el('section', {
     id: 'chatbot-panel', class: 'chatbot__panel', role: 'dialog', 'aria-modal': 'false',
     'aria-labelledby': 'chatbot-title', hidden: true,
   }, [
     el('header', { class: 'chatbot__header' }, [
-      el('h2', { id: 'chatbot-title', 'data-i18n': 'chat.title' }),
-      closeBtn,
+      title,
+      el('div', { class: 'chatbot__tools' }, [resetBtn, closeBtn]),
     ]),
     messages,
     status,
@@ -82,7 +88,7 @@ export function initChatbot(root) {
     launcher.setAttribute('aria-expanded', String(open));
     root.classList.toggle('is-open', open);
     if (!open) placePanel(false);
-    if (open) (live ? input : closeBtn).focus();
+    if (open) { ensureBot(); (state === 'ready' ? input : closeBtn).focus(); }
     else launcher.focus();
   };
 
@@ -188,26 +194,183 @@ export function initChatbot(root) {
   closeBtn.addEventListener('click', () => setOpen(false));
   panel.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
 
-  const addMessage = (who, text) => {
-    messages.append(el('p', { class: `chatbot__msg chatbot__msg--${who}`, text }));
-    messages.scrollTop = messages.scrollHeight;
+  /* ---------------- Chat (view of the bot module) ---------------- */
+  let bot = null;
+  let state = configured ? 'idle' : 'off'; // idle | loading | ready | failed | off
+  let busy = false;       // true while an answer (and its follow-up) is pending: nothing can be sent
+  let epoch = 0;          // bumped on "new chat" so late answers of the old conversation are dropped
+  let chipsEl = null;
+
+  const scrollDown = () => { messages.scrollTop = messages.scrollHeight; };
+  const dirOf = (lang) => (lang === 'ar' ? 'rtl' : 'ltr');
+  const safeHref = (href) => {
+    try {
+      const u = new URL(String(href), location.href);
+      return u.protocol === 'https:' || u.protocol === 'http:' ? u.href : '';
+    } catch { return ''; }
   };
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const text = input.value.trim();
-    if (!live || !text) return;
-    addMessage('user', text);
-    input.value = '';
-    sendBtn.disabled = true;
-    try {
-      addMessage('bot', await sendMessage(text, { lang: getLang() }));
-    } catch (err) {
-      console.warn('[PLV:chatbot]', err.message);
-      addMessage('bot', t('chat.error'));
-    } finally {
-      sendBtn.disabled = false;
-      input.focus();
+  function bubble(who, text, lang) {
+    const node = el('div', { class: `chatbot__msg chatbot__msg--${who}` });
+    node.textContent = String(text); // never innerHTML
+    if (lang) { node.dir = dirOf(lang); node.lang = lang; }
+    messages.append(node);
+    scrollDown();
+    return node;
+  }
+  function showTyping() {
+    const node = el('div', { class: 'chatbot__msg chatbot__msg--bot chatbot__typing', role: 'status', 'aria-label': t('chat.typing') }, [
+      el('span'), el('span'), el('span'),
+    ]);
+    messages.append(node);
+    scrollDown();
+    return () => node.remove();
+  }
+  function clearChips() { if (chipsEl) { chipsEl.remove(); chipsEl = null; } }
+
+  function showReply(reply) {
+    clearChips();
+    if (!reply || typeof reply !== 'object') return;
+    const lang = reply.lang === 'ar' ? 'ar' : 'en';
+    if (reply.text) bubble('bot', reply.text, lang);
+    const links = (Array.isArray(reply.actions) ? reply.actions : []).map((a) => {
+      const href = a && safeHref(a.href);
+      if (!href || !a.label) return null;
+      const link = el('a', { class: `chatbot__action${a.kind === 'whatsapp' ? ' chatbot__action--wa' : ''}`, href });
+      link.textContent = String(a.label);
+      if (a.external) { link.target = '_blank'; link.rel = 'noopener noreferrer'; }
+      return link;
+    }).filter(Boolean);
+    if (links.length) { messages.append(el('div', { class: 'chatbot__actions', dir: dirOf(lang) }, links)); }
+    const chips = (Array.isArray(reply.chips) ? reply.chips : []).filter((c) => c && c.label);
+    if (chips.length) {
+      chipsEl = el('div', { class: 'chatbot__chips', dir: dirOf(lang) });
+      chips.forEach((chip) => {
+        const b = el('button', { type: 'button', class: 'chatbot__chip' });
+        b.textContent = String(chip.label);
+        b.addEventListener('click', () => turn(chip.label, () => bot.choose(chip, getLang())));
+        chipsEl.append(b);
+      });
+      messages.append(chipsEl);
     }
+    scrollDown();
+  }
+
+  function setBusy(on) {
+    busy = on;
+    sendBtn.disabled = on || state !== 'ready';
+    messages.querySelectorAll('.chatbot__chip').forEach((b) => { b.disabled = on; });
+  }
+  function setComposer(on) {
+    input.disabled = !on;
+    sendBtn.disabled = !on;
+    resetBtn.hidden = !on;
+  }
+  function updateTitle() {
+    let name = '';
+    try { name = (bot && bot.botName(getLang())) || ''; } catch { /* fall back to the default title */ }
+    title.textContent = name || t('chat.title');
+  }
+
+  /** One conversation turn: the visitor's bubble, "typing…", the answer, then the follow-up if there is one. */
+  async function turn(userLabel, call) {
+    if (busy || state !== 'ready') return;
+    const mine = epoch;
+    setBusy(true);
+    clearChips();
+    bubble('user', userLabel);
+    const stop = showTyping();
+    try {
+      const reply = await call();
+      if (mine !== epoch) return;
+      stop();
+      showReply(reply);
+      if (reply && reply.followUp && typeof reply.followUp.then === 'function') {
+        const stopFollow = showTyping();
+        try {
+          const next = await reply.followUp;
+          if (mine !== epoch) return;
+          stopFollow();
+          showReply(next);
+        } catch (err) { stopFollow(); console.warn('[PLV:chatbot] follow-up', err && err.message); }
+      }
+    } catch (err) {
+      console.warn('[PLV:chatbot]', err && err.message);
+      if (mine === epoch) { stop(); bubble('bot', t('chat.error')); }
+    } finally {
+      if (mine === epoch) { setBusy(false); if (!panel.hidden) input.focus(); }
+    }
+  }
+
+  function send() {
+    const text = input.value.trim();
+    if (!text || busy || state !== 'ready') return;
+    input.value = '';
+    turn(text, () => bot.reply(text, getLang()));
+  }
+  sendBtn.addEventListener('click', send);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); send(); }
   });
+
+  function startConversation() {
+    epoch += 1;
+    busy = false;
+    messages.replaceChildren();
+    chipsEl = null;
+    showReply(bot.welcome(getLang()));
+    setBusy(false);
+  }
+  resetBtn.addEventListener('click', () => {
+    if (state !== 'ready') return;
+    bot.reset();
+    startConversation();
+    input.focus();
+  });
+
+  /** Loads the bot module the first time (and again on the next open if it failed). */
+  async function ensureBot() {
+    if (state !== 'idle' && state !== 'failed') return;
+    state = 'loading';
+    status.hidden = true;
+    messages.replaceChildren();
+    const stop = showTyping();
+    try {
+      const mod = await withTimeout(import(CONFIG.CHATBOT_MODULE_URL.trim()), 12000);
+      if (typeof mod.createSiteBot !== 'function') throw new Error('createSiteBot is missing');
+      const instance = mod.createSiteBot({
+        apiUrl: CONFIG.CHATBOT_API_URL,
+        feedbackUrl: CONFIG.FEEDBACK_API_URL,
+        whatsappNumber: CONFIG.CONTACT.whatsappNumber,
+        socials: CONFIG.CONTACT.socials,
+        links: {
+          register: CONFIG.REGISTRATION_URL,
+          coaches: CONFIG.PAGES.coaches || 'coaches.html',
+          gallery: CONFIG.PAGES.gallery || 'gallery.html',
+          feedback: CONFIG.PAGES.feedback || 'feedback.html',
+        },
+        submitRegistration,
+      });
+      await withTimeout(instance.ready, 15000);
+      bot = instance;
+      state = 'ready';
+      stop();
+      updateTitle();
+      setComposer(true);
+      startConversation();
+      if (!panel.hidden) input.focus();
+    } catch (err) {
+      console.warn('[PLV:chatbot] could not start', err && err.message);
+      state = 'failed';
+      stop();
+      messages.replaceChildren();
+      bubble('bot', t('chat.welcome'));
+      status.hidden = false;
+      setComposer(false);
+    }
+  }
+
+  if (state === 'off') { bubble('bot', t('chat.welcome')); status.hidden = false; }
+  updateTitle();
+  onLangChange(() => { updateTitle(); });
 }
