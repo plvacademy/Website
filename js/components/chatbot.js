@@ -4,10 +4,10 @@
  * module loaded the first time a visitor opens the chat (CONFIG.CHATBOT_MODULE_URL). If it cannot be loaded, or the
  * chatbot is not configured, the panel keeps the honest "Coming soon" state with a WhatsApp link.
  */
-import { el } from './contentSection.js?v=41';
-import { t, getLang, onLangChange } from '../i18n.js?v=41';
-import { CONFIG } from '../config.js?v=41';
-import { submitRegistration } from '../services/registrationService.js?v=41';
+import { el } from './contentSection.js?v=42';
+import { t, getLang, onLangChange } from '../i18n.js?v=42';
+import { CONFIG } from '../config.js?v=42';
+import { submitRegistration } from '../services/registrationService.js?v=42';
 
 const isHttps = (v) => typeof v === 'string' && /^https:\/\//i.test(v.trim());
 const withTimeout = (promise, ms) => Promise.race([
@@ -200,6 +200,7 @@ export function initChatbot(root) {
   let busy = false;       // true while an answer (and its follow-up) is pending: nothing can be sent
   let epoch = 0;          // bumped on "new chat" so late answers of the old conversation are dropped
   let chipsEl = null;
+  let spoke = false;      // true once the visitor has written or pressed anything in this conversation
 
   const scrollDown = () => { messages.scrollTop = messages.scrollHeight; };
   const dirOf = (lang) => (lang === 'ar' ? 'rtl' : 'ltr');
@@ -276,6 +277,7 @@ export function initChatbot(root) {
   async function turn(userLabel, call) {
     if (busy || state !== 'ready') return;
     const mine = epoch;
+    spoke = true;
     setBusy(true);
     clearChips();
     bubble('user', userLabel);
@@ -316,10 +318,14 @@ export function initChatbot(root) {
   function startConversation() {
     epoch += 1;
     busy = false;
+    spoke = false;
+    showWelcome();
+    setBusy(false);
+  }
+  function showWelcome() {
     messages.replaceChildren();
     chipsEl = null;
     showReply(bot.welcome(getLang()));
-    setBusy(false);
   }
   resetBtn.addEventListener('click', () => {
     if (state !== 'ready') return;
@@ -372,5 +378,12 @@ export function initChatbot(root) {
 
   if (state === 'off') { bubble('bot', t('chat.welcome')); status.hidden = false; }
   updateTitle();
-  onLangChange(() => { updateTitle(); });
+  onLangChange(() => {
+    updateTitle();
+    if (spoke) return; // a conversation already started: leave it as it is
+    // The visitor changed the site language before saying anything: show the welcome again in the new language
+    // (no bot.reset(): the conversation id stays the same).
+    if (state === 'ready') showWelcome();
+    else if (state === 'failed' || state === 'off') { messages.replaceChildren(); bubble('bot', t('chat.welcome')); }
+  });
 }

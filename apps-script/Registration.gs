@@ -15,6 +15,8 @@
  *    The mobile number is saved as plain text.
  *    Success reply (only after the row really exists): { ok:true, saved:true, success:true, duplicate, message }.
  *    Failure reply: { ok:false, success:false, code, message }  (generic; details only in the Apps Script log).
+ *  - After each NEW registration it emails the addresses in the script property NOTIFY_EMAILS (comma-separated; empty = off).
+ *    Run `testNotification` once from the editor to grant the email permission and to check it.
  *  - It never touches any other worksheet (the old "Schedule" tab is protected). Content tabs are only read.
  *
  * Which spreadsheet is used (first match wins):
@@ -134,6 +136,31 @@ const PLVReg = (function () {
     sheet.setFrozenRows(1);
   }
 
+  /* ------------------------ email for every new registration ------------------------ */
+  // Who gets it: the script property NOTIFY_EMAILS (Project Settings -> Script properties), one or more addresses
+  // separated by commas. Add, remove or change addresses there any time: it takes effect at once, no redeploy.
+  // Empty or missing = no email. A failed email never affects the registration (it is already saved).
+  function notifyEmails() {
+    const raw = PropertiesService.getScriptProperties().getProperty('NOTIFY_EMAILS') || '';
+    return raw.split(/[,;\s]+/).filter(function (e) { return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e); }).slice(0, 10);
+  }
+  function notifyRegistration(reg) {
+    try {
+      const to = notifyEmails();
+      if (!to.length) return;
+      MailApp.sendEmail({
+        to: to.join(','),
+        name: 'PLV Academy',
+        subject: 'New PLV registration: ' + reg.name + ' (' + reg.area + ')',
+        body: ['A new registration was saved.', '',
+          'Area: ' + reg.area, 'Name: ' + reg.name, 'Mobile: ' + reg.mobile, 'Age: ' + reg.age, 'Position: ' + reg.position,
+          '', 'It is in the "' + reg.sheet + '" tab of the registration sheet.'].join('\n'),
+      });
+    } catch (err) {
+      console.error('PLVReg notify failed: ' + (err && err.message ? err.message : err));
+    }
+  }
+
   /* ------------------------------ main handler ------------------------------ */
   function handle(e) {
     try {
@@ -166,6 +193,7 @@ const PLVReg = (function () {
       // The worksheet is decided on the server from the validated area.
       const sheetName = areaMap[area];
 
+      let notifyAfter = null; // the email is sent after the lock is released
       const lock = LockService.getScriptLock();
       if (!lock.tryLock(CONFIG.lockWaitMs)) return fail('busy');
       try {
@@ -196,9 +224,11 @@ const PLVReg = (function () {
         cache.put(contentKey, '1', CONFIG.contentDedupeTtlSec);
         cache.put(bucketKey, String(count + 1), 660);
 
+        notifyAfter = { area: area, name: name, mobile: mobile, age: age, position: position, sheet: sheetName };
         return saved(false);
       } finally {
         lock.releaseLock();
+        if (notifyAfter) notifyRegistration(notifyAfter);
       }
     } catch (err) {
       // Details go to the Apps Script log only; the visitor gets a generic code.
@@ -408,7 +438,7 @@ const PLVReg = (function () {
   }
 
   return { handle: handle, health: health, content: content, setupSheets: setupSheets,
-    CONFIG: CONFIG };
+    notify: notifyRegistration, notifyEmails: notifyEmails, CONFIG: CONFIG };
 })();
 
 /** GET: health check by default; ?type=content&name=areas|coaches|gallery returns the published rows of that tab. */
@@ -426,4 +456,11 @@ function doPost(e) {
 /** One-time helper: run from the Apps Script editor. */
 function setupRegistrationSheets() {
   PLVReg.setupSheets();
+}
+
+/** Run once from the editor: authorizes sending email and sends a sample message to the addresses in NOTIFY_EMAILS. */
+function testNotification() {
+  const to = PLVReg.notifyEmails();
+  console.log(to.length ? 'Sending a sample email to: ' + to.join(', ') : 'NOTIFY_EMAILS is empty or has no valid address.');
+  PLVReg.notify({ area: 'Test area', name: 'Test Player', mobile: '01000000000', age: 12, position: 'Setter', sheet: 'Test area' });
 }
