@@ -13,7 +13,7 @@
  *   { "items": [ ... ] }                  local JSON files
  *   { "status": "ok", "data": [ ... ] }   typical Apps Script wrapper
  */
-import { CONFIG } from '../config.js?v=42';
+import { CONFIG } from '../config.js?v=43';
 
 export class ContentError extends Error {
   /** kind: not-configured | timeout | network | http | invalid-json | invalid-structure */
@@ -373,6 +373,15 @@ export function fetchContent(key, { force = false } = {}) {
     .finally(() => inflight.delete(key));
   inflight.set(key, promise);
   return promise;
+}
+
+/** Rows of the optional "Texts" tab ({ key, text, text_ar }), already filtered to published ones by the server. Never throws. */
+export async function loadTexts() {
+  try {
+    if (!CONFIG.REGISTRATION_API_URL || !CONFIG.SHEET_CONTENT?.includes('areas')) return [];
+    const bundle = await getBundle();
+    return Array.isArray(bundle.texts) ? bundle.texts.filter((r) => isObject(r) && isTrue(r.published)) : [];
+  } catch { return []; }
 }
 
 /** Re-fetch from the source, ignoring the cache. */

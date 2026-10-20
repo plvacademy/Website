@@ -30,7 +30,7 @@ The Home Page, and every future dedicated page, must read these same records —
 ## Feedback
 Feedback is not a JSON file any more: it lives in the private "PLV Feedback" Google Sheet and is served by the feedback web app
 (`CONFIG.FEEDBACK_API_URL`). Only rows with `Visibility = Visible` are returned, with public fields only:
-`id`, `name`, `type` (Parent/Player), `rating` (1-5 in 0.5 steps), `message`, `date`, `order`, `home`. See `apps-script/SETUP.md`.
+`id`, `name`, `type` (Parent/Player), `rating` (1-5 in 0.5 steps), `message`, `date`, `order`, `home`.
 
 ## Coaches page and coach pages (read from the "Coaches" tab, same tab as the Home page)
 Required: `id`, `name`, `published`. Existing columns still used: `name_ar`, `role`, `role_ar`, `intro`, `intro_ar`, `image`, `slug`, `order`.

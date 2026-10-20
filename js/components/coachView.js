@@ -2,9 +2,9 @@
  * PLV — shared coach data helpers for the coaches page and the single-coach profile page.
  * Empty fields show clearly marked placeholders; nothing is ever invented.
  */
-import { CONFIG } from '../config.js?v=42';
-import { t, pick } from '../i18n.js?v=42';
-import { fetchContent } from '../services/contentService.js?v=42';
+import { CONFIG } from '../config.js?v=43';
+import { t, esc, pick } from '../i18n.js?v=43';
+import { fetchContent } from '../services/contentService.js?v=43';
 
 /* The coaches come from the "Coaches" tab of the content sheet (same tab the Home page uses): one card per published row. */
 export let coaches = [];
@@ -80,7 +80,7 @@ export const num = (i) => String(i + 1).padStart(2, '0');
 
 export function portraitHTML(c) {
   if (c.photo) return `<img src="${encodeURI(c.photo)}" alt="" loading="lazy" decoding="async">`;
-  return `<span class="ch-ph" aria-hidden="true">${SILHOUETTE}${fromSheet ? '' : `<em>${t('chp.ph.photo')}</em>`}</span>`;
+  return `<span class="ch-ph" aria-hidden="true">${SILHOUETTE}${fromSheet ? '' : `<em>${esc(t('chp.ph.photo'))}</em>`}</span>`;
 }
 
 export function fillList(ul, items) {
@@ -96,5 +96,5 @@ export const profileUrl = (c) => `coach.html?c=${encodeURIComponent(c.id)}`;
 /** Any photo slot: the image when a path is set, otherwise a clearly marked empty slot. */
 export function photoHTML(src, alt = '') {
   if (src) return `<img src="${encodeURI(src)}" alt="${String(alt).replace(/"/g, '&quot;')}" loading="lazy" decoding="async">`;
-  return `<span class="ch-ph ch-ph--tile" aria-hidden="true">${SILHOUETTE}<em>${t('chp.ph.photo')}</em></span>`;
+  return `<span class="ch-ph ch-ph--tile" aria-hidden="true">${SILHOUETTE}<em>${esc(t('chp.ph.photo'))}</em></span>`;
 }

@@ -6,6 +6,21 @@
  * NEVER put private API keys or secrets in this file: it is public.
  */
 export const CONFIG = {
+  /* Home-page texts the owner may change from the "Texts" tab of the content sheet (column `key`). Only these keys are
+   * applied, and always as plain text. Built-in wording is used when a key has no published row. */
+  EDITABLE_TEXTS: [
+    'about.cta', 'about.eyebrow', 'about.f1.text', 'about.f1.title', 'about.f2.text', 'about.f2.title',
+    'about.f3.text', 'about.f3.title', 'about.f4.text', 'about.f4.title', 'about.text', 'about.title1',
+    'about.title2', 'announcement', 'coaches.cta', 'coaches.eyebrow', 'coaches.text', 'coaches.title1',
+    'coaches.title2', 'cta.text', 'cta.title', 'cta.whatsapp', 'feedback.cta', 'feedback.dialogText',
+    'feedback.dialogTitle', 'feedback.eyebrow', 'feedback.text', 'feedback.title1', 'feedback.title2',
+    'footer.privacy', 'footer.terms', 'gallery.cta', 'gallery.eyebrow', 'gallery.text', 'gallery.title1',
+    'gallery.title2', 'hero.coaches', 'hero.explore', 'hero.eyebrow', 'hero.mission', 'hero.title1',
+    'hero.title2', 'programs.cta', 'programs.eyebrow', 'programs.text', 'programs.title1', 'programs.title2',
+    'register', 'why.b1.text', 'why.b1.title', 'why.b2.text', 'why.b2.title', 'why.b3.text', 'why.b3.title',
+    'why.b4.text', 'why.b4.title', 'why.cta', 'why.eyebrow', 'why.text', 'why.title1', 'why.title2',
+  ],
+
   /* ---- Content sources (local JSON now, Apps Script endpoints later) ---- */
   // Set a value to null/"" to show a deliberate "not configured" placeholder.
   DATA_SOURCES: {},

@@ -3,13 +3,13 @@
  * Renders one roster card per published row of the Coaches sheet tab (empty message when there are none), the philosophy bands,
  * the turning 3D court and the ambient background. Each coach opens their own page (coach.html?c=ID).
  */
-import { initI18n, t, onLangChange, applyTranslations } from './i18n.js?v=42';
-import { initHeader } from './components/header.js?v=42';
-import { initChatbot } from './components/chatbot.js?v=42';
-import { setupSiteLinks } from './components/siteLinks.js?v=42';
-import { initAmbient } from './components/ambient.js?v=42';
-import { initCourt } from './components/courtRally.js?v=42';
-import { coaches, loadCoaches, loadError, view, num, portraitHTML, fillList, setMeta, profileUrl } from './components/coachView.js?v=42';
+import { initI18n, t, esc, onLangChange, applyTranslations } from './i18n.js?v=43';
+import { initHeader } from './components/header.js?v=43';
+import { initChatbot } from './components/chatbot.js?v=43';
+import { setupSiteLinks } from './components/siteLinks.js?v=43';
+import { initAmbient } from './components/ambient.js?v=43';
+import { initCourt } from './components/courtRally.js?v=43';
+import { coaches, loadCoaches, loadError, view, num, portraitHTML, fillList, setMeta, profileUrl } from './components/coachView.js?v=43';
 
 const $ = (id) => document.getElementById(id);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -38,7 +38,7 @@ function renderOthers() {
   ul.replaceChildren(...coaches.map((c, i) => ({ c, i })).filter(({ i }) => i !== state.sel).map(({ c, i }) => {
     const v = view(c);
     const li = document.createElement('li');
-    li.innerHTML = `<a class="ch-mini" href="${profileUrl(c)}"><span class="ch-mini__img">${portraitHTML(c)}</span><span class="ch-mini__txt"><i>${num(i)}</i><b></b><small></small><em>${t('chp.mini.view')}</em></span></a>`;
+    li.innerHTML = `<a class="ch-mini" href="${profileUrl(c)}"><span class="ch-mini__img">${portraitHTML(c)}</span><span class="ch-mini__txt"><i>${num(i)}</i><b></b><small></small><em>${esc(t('chp.mini.view'))}</em></span></a>`;
     li.querySelector('b').textContent = v.name;
     li.querySelector('small').textContent = v.role;
     return li;

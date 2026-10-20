@@ -9,6 +9,9 @@
  *   data-i18n-title="key"    -> title
  * Data items may carry Arabic text in "<field>_ar" (e.g. title_ar).
  */
+import { loadTexts } from './services/contentService.js?v=43';
+import { CONFIG } from './config.js?v=43';
+
 const STORAGE_KEY = 'plv-lang';
 const SUPPORTED = ['en', 'ar'];
 
@@ -730,8 +733,15 @@ const listeners = new Set();
 export const getLang = () => currentLang;
 export const isRtl = () => currentLang === 'ar';
 
+/* Texts the owner edits in the "Texts" tab of the content sheet. Only keys that already exist in `translations.en`
+ * are accepted, and they are always written to the page as text (never as HTML). Missing/empty = the built-in text. */
+let overrides = { en: {}, ar: {} };
+
+/** Escape a translated string before it is put inside an HTML template. */
+export const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
 export function t(key, vars = {}) {
-  const raw = translations[currentLang]?.[key] ?? translations.en[key] ?? key;
+  const raw = overrides[currentLang]?.[key] ?? translations[currentLang]?.[key] ?? translations.en[key] ?? key;
   return raw.replace(/\{(\w+)\}/g, (_, name) => (name in vars ? String(vars[name]) : `{${name}}`));
 }
 
@@ -779,6 +789,22 @@ export function setLang(lang, { persist = true } = {}) {
   listeners.forEach((fn) => fn(lang));
 }
 
+/** rows: [{ key, text, text_ar }] from the sheet. Applies them and refreshes the page text. */
+export function setTextOverrides(rows) {
+  const next = { en: {}, ar: {} };
+  (Array.isArray(rows) ? rows : []).forEach((r) => {
+    if (!r || typeof r.key !== 'string' || !CONFIG.EDITABLE_TEXTS.includes(r.key) || !Object.prototype.hasOwnProperty.call(translations.en, r.key)) return;
+    ['en', 'ar'].forEach((l) => {
+      const v = l === 'en' ? r.text : r.text_ar;
+      if (typeof v === 'string' && v.trim() && v.length <= 400) next[l][r.key] = v.trim();
+    });
+  });
+  overrides = next;
+  const suffix = document.documentElement.dataset.page ? `.${document.documentElement.dataset.page}` : '';
+  document.title = t(`meta.title${suffix}`);
+  applyTranslations();
+}
+
 export function initI18n() {
   let lang = 'en';
   try {
@@ -788,4 +814,6 @@ export function initI18n() {
   const fromUrl = new URLSearchParams(window.location.search).get('lang');
   if (SUPPORTED.includes(fromUrl)) lang = fromUrl;
   setLang(lang, { persist: false });
+  // The owner's own wording (Texts tab). The built-in text shows first and is swapped when the sheet answers.
+  loadTexts().then((rows) => { if (rows.length) setTextOverrides(rows); }).catch(() => {});
 }

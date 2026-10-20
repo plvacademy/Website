@@ -4,12 +4,12 @@
  * category (training | matches | events | team | campus). Filters, the masonry layout and the photo viewer all work on that list.
  * With no photos yet, clearly-marked empty slots show the layout (never presented as real events).
  */
-import { CONFIG } from './config.js?v=42';
-import { initI18n, t, pick, isRtl, onLangChange, applyTranslations } from './i18n.js?v=42';
-import { initHeader } from './components/header.js?v=42';
-import { initChatbot } from './components/chatbot.js?v=42';
-import { setupSiteLinks } from './components/siteLinks.js?v=42';
-import { fetchContent } from './services/contentService.js?v=42';
+import { CONFIG } from './config.js?v=43';
+import { initI18n, t, esc, pick, isRtl, onLangChange, applyTranslations } from './i18n.js?v=43';
+import { initHeader } from './components/header.js?v=43';
+import { initChatbot } from './components/chatbot.js?v=43';
+import { setupSiteLinks } from './components/siteLinks.js?v=43';
+import { fetchContent } from './services/contentService.js?v=43';
 
 const $ = (id) => document.getElementById(id);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -40,11 +40,11 @@ function tile(it, i) {
   if (it.src) {
     const img = document.createElement('img');
     img.src = it.src; img.alt = ''; img.loading = i < 3 ? 'eager' : 'lazy'; img.decoding = 'async';
-    img.addEventListener('error', () => { img.remove(); b.classList.add('is-empty'); b.insertAdjacentHTML('afterbegin', `<span class="gp-slot">${t('gp.slot')}</span>`); }, { once: true });
+    img.addEventListener('error', () => { img.remove(); b.classList.add('is-empty'); b.insertAdjacentHTML('afterbegin', `<span class="gp-slot">${esc(t('gp.slot'))}</span>`); }, { once: true });
     b.append(img);
   } else {
     b.classList.add('is-empty');
-    b.insertAdjacentHTML('afterbegin', `<span class="gp-slot">${t('gp.slot')}</span>`);
+    b.insertAdjacentHTML('afterbegin', `<span class="gp-slot">${esc(t('gp.slot'))}</span>`);
   }
   const lab = catLabel(it.cat), cap = caption(it);
   if (lab || cap) {
