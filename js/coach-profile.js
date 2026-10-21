@@ -1,12 +1,12 @@
 /**
  * PLV — single coach page (coach.html?c=ID). Reads the same CONFIG.COACHES_PAGE data as the roster.
  */
-import { initI18n, t, onLangChange, applyTranslations } from './i18n.js?v=43';
-import { initHeader } from './components/header.js?v=43';
-import { initChatbot } from './components/chatbot.js?v=43';
-import { setupSiteLinks } from './components/siteLinks.js?v=43';
-import { initAmbient } from './components/ambient.js?v=43';
-import { coaches, loadCoaches, loadError, fromSheet, view, num, portraitHTML, fillList, setMeta, profileUrl, photoHTML } from './components/coachView.js?v=43';
+import { initI18n, t, onLangChange, applyTranslations } from './i18n.js?v=45';
+import { initHeader } from './components/header.js?v=45';
+import { initChatbot } from './components/chatbot.js?v=45';
+import { setupSiteLinks } from './components/siteLinks.js?v=45';
+import { initAmbient } from './components/ambient.js?v=45';
+import { coaches, loadCoaches, loadError, fromSheet, view, num, portraitHTML, fillList, setMeta, profileUrl, photoHTML } from './components/coachView.js?v=45';
 
 const $ = (id) => document.getElementById(id);
 const id = new URLSearchParams(location.search).get('c');

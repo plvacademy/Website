@@ -13,7 +13,7 @@
  *   { "items": [ ... ] }                  local JSON files
  *   { "status": "ok", "data": [ ... ] }   typical Apps Script wrapper
  */
-import { CONFIG } from '../config.js?v=43';
+import { CONFIG } from '../config.js?v=45';
 
 export class ContentError extends Error {
   /** kind: not-configured | timeout | network | http | invalid-json | invalid-structure */
@@ -381,6 +381,24 @@ export async function loadTexts() {
     if (!CONFIG.REGISTRATION_API_URL || !CONFIG.SHEET_CONTENT?.includes('areas')) return [];
     const bundle = await getBundle();
     return Array.isArray(bundle.texts) ? bundle.texts.filter((r) => isObject(r) && isTrue(r.published)) : [];
+  } catch { return []; }
+}
+
+/** Rows of the optional "Menu" tab ({ key, visible }). Never throws; no rows = every link shows. */
+export async function loadMenu() {
+  try {
+    if (!CONFIG.REGISTRATION_API_URL || !CONFIG.SHEET_CONTENT?.includes('areas')) return [];
+    const bundle = await getBundle();
+    return Array.isArray(bundle.menu) ? bundle.menu.filter((r) => isObject(r) && typeof r.key === 'string') : [];
+  } catch { return []; }
+}
+
+/** Rows of the optional "Contact" tab ({ key, value }). Never throws; no rows = the built-in values in config.js stay. */
+export async function loadContact() {
+  try {
+    if (!CONFIG.REGISTRATION_API_URL || !CONFIG.SHEET_CONTENT?.includes('areas')) return [];
+    const bundle = await getBundle();
+    return Array.isArray(bundle.contact) ? bundle.contact.filter((r) => isObject(r) && typeof r.key === 'string') : [];
   } catch { return []; }
 }
 

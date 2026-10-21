@@ -9,8 +9,10 @@
  *   data-i18n-title="key"    -> title
  * Data items may carry Arabic text in "<field>_ar" (e.g. title_ar).
  */
-import { loadTexts } from './services/contentService.js?v=43';
-import { CONFIG } from './config.js?v=43';
+import { loadTexts, loadMenu, loadContact } from './services/contentService.js?v=45';
+import { applyMenu, applyRememberedMenu } from './services/siteMenu.js?v=45';
+import { applyContact } from './services/contact.js?v=45';
+import { CONFIG } from './config.js?v=45';
 
 const STORAGE_KEY = 'plv-lang';
 const SUPPORTED = ['en', 'ar'];
@@ -37,6 +39,7 @@ const translations = {
     'hero.eyebrow': 'PLV | Performance Lab Volleyball Academy',
     'hero.title1': 'Train with purpose.',
     'hero.title2': 'Perform beyond limits.',
+    'hero.tagline': 'Better\nPlayers\nBigger\nDreams',
     'hero.mission': 'We aim to bring out the best in every athlete, helping them elevate their game, build confidence, and unleash their full potential.',
     'hero.explore': 'Explore Programs',
     'hero.coaches': 'View Our Coaches',
@@ -392,6 +395,7 @@ const translations = {
     'hero.eyebrow': 'PLV | أكاديمية بيرفورمانس لاب للكرة الطائرة',
     'hero.title1': 'تدرّب بهدف.',
     'hero.title2': 'وتألّق بلا حدود.',
+    'hero.tagline': 'Better\nPlayers\nBigger\nDreams',
     'hero.mission': 'نسعى لإظهار أفضل ما في كل لاعب، ومساعدته على الارتقاء بمستواه وبناء ثقته بنفسه وإطلاق كامل إمكاناته.',
     'hero.explore': 'استكشف البرامج',
     'hero.coaches': 'تعرّف على مدربينا',
@@ -793,7 +797,7 @@ export function setLang(lang, { persist = true } = {}) {
 export function setTextOverrides(rows) {
   const next = { en: {}, ar: {} };
   (Array.isArray(rows) ? rows : []).forEach((r) => {
-    if (!r || typeof r.key !== 'string' || !CONFIG.EDITABLE_TEXTS.includes(r.key) || !Object.prototype.hasOwnProperty.call(translations.en, r.key)) return;
+    if (!r || typeof r.key !== 'string' || !CONFIG.EDITABLE_TEXTS.some((e) => e.key === r.key) || !Object.prototype.hasOwnProperty.call(translations.en, r.key)) return;
     ['en', 'ar'].forEach((l) => {
       const v = l === 'en' ? r.text : r.text_ar;
       if (typeof v === 'string' && v.trim() && v.length <= 400) next[l][r.key] = v.trim();
@@ -816,4 +820,8 @@ export function initI18n() {
   setLang(lang, { persist: false });
   // The owner's own wording (Texts tab). The built-in text shows first and is swapped when the sheet answers.
   loadTexts().then((rows) => { if (rows.length) setTextOverrides(rows); }).catch(() => {});
+  applyRememberedMenu();
+  loadMenu().then((rows) => applyMenu(rows)).catch(() => {});
+  // WhatsApp and social links from the sheet; the links on the page are redrawn when they differ from config.js.
+  loadContact().then((rows) => { if (applyContact(rows)) document.dispatchEvent(new CustomEvent('plv:contact')); }).catch(() => {});
 }

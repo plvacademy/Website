@@ -2,8 +2,42 @@
  * PLV — links shared by every page (Home, Programs/Registration):
  * page links from CONFIG.PAGES, Register Now, WhatsApp, social icons, footer contact, year.
  */
-import { CONFIG } from '../config.js?v=43';
-import { el, icon } from './contentSection.js?v=43';
+import { CONFIG } from '../config.js?v=45';
+import { el, icon } from './contentSection.js?v=45';
+import { applyTranslations } from '../i18n.js?v=45';
+
+/** WhatsApp buttons and social icons. Runs at start and again if the Contact tab of the sheet changes a value. */
+function renderContact() {
+  // WhatsApp
+  const number = (CONFIG.CONTACT.whatsappNumber || '').replace(/\D/g, '');
+  document.querySelectorAll('.js-whatsapp').forEach((a) => {
+    const label = a.querySelector('.wa-label');
+    if (label && !label.dataset.waKey) label.dataset.waKey = label.dataset.i18n || '';
+    const num = a.querySelector('.wa-number');
+    if (number) {
+      if (label && label.dataset.waKey) label.dataset.i18n = label.dataset.waKey;
+      a.classList.remove('is-disabled'); a.removeAttribute('aria-disabled');
+      a.href = `https://wa.me/${number}`;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      if (num) num.remove(); // the number is not displayed on the page
+    } else {
+      a.removeAttribute('href');
+      a.setAttribute('aria-disabled', 'true');
+      a.classList.add('is-disabled');
+      if (label) label.dataset.i18n = 'cta.whatsappSoon';
+    }
+  });
+
+  // Social links: only configured ones are shown
+  const socials = Object.entries(CONFIG.CONTACT.socials).filter(([, url]) => /^https?:\/\//i.test(url || ''));
+  document.querySelectorAll('.js-socials').forEach((box) => {
+    if (!socials.length) { box.hidden = true; return; }
+    box.hidden = false;
+    box.replaceChildren(...socials.map(([name, url]) =>
+      el('a', { class: 'social-link', href: url, target: '_blank', rel: 'noopener noreferrer', 'data-i18n-aria': `social.${name}` }, [icon(`i-${name}`)])));
+  });
+}
 
 export function setupSiteLinks() {
   // "View All …" / footer links to future dedicated pages
@@ -45,31 +79,7 @@ export function setupSiteLinks() {
     }
   });
 
-  // WhatsApp
-  const number = (CONFIG.CONTACT.whatsappNumber || '').replace(/\D/g, '');
-  document.querySelectorAll('.js-whatsapp').forEach((a) => {
-    const label = a.querySelector('.wa-label');
-    const num = a.querySelector('.wa-number');
-    if (number) {
-      a.href = `https://wa.me/${number}`;
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
-      if (num) num.remove(); // the number is not displayed on the page
-    } else {
-      a.removeAttribute('href');
-      a.setAttribute('aria-disabled', 'true');
-      a.classList.add('is-disabled');
-      if (label) label.dataset.i18n = 'cta.whatsappSoon';
-    }
-  });
-
-  // Social links: only configured ones are shown
-  const socials = Object.entries(CONFIG.CONTACT.socials).filter(([, url]) => /^https?:\/\//i.test(url || ''));
-  document.querySelectorAll('.js-socials').forEach((box) => {
-    if (!socials.length) { box.hidden = true; return; }
-    box.replaceChildren(...socials.map(([name, url]) =>
-      el('a', { class: 'social-link', href: url, target: '_blank', rel: 'noopener noreferrer', 'data-i18n-aria': `social.${name}` }, [icon(`i-${name}`)])));
-  });
+  renderContact();
 
   // Footer contact info: only what is configured is shown
   const rows = [];
@@ -83,3 +93,5 @@ export function setupSiteLinks() {
 
   document.getElementById('year')?.replaceChildren(String(new Date().getFullYear()));
 }
+
+document.addEventListener('plv:contact', () => { renderContact(); applyTranslations(document); });

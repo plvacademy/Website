@@ -4,10 +4,10 @@
  * module loaded the first time a visitor opens the chat (CONFIG.CHATBOT_MODULE_URL). If it cannot be loaded, or the
  * chatbot is not configured, the panel keeps the honest "Coming soon" state with a WhatsApp link.
  */
-import { el } from './contentSection.js?v=43';
-import { t, getLang, onLangChange } from '../i18n.js?v=43';
-import { CONFIG } from '../config.js?v=43';
-import { submitRegistration } from '../services/registrationService.js?v=43';
+import { el } from './contentSection.js?v=45';
+import { t, getLang, onLangChange } from '../i18n.js?v=45';
+import { CONFIG } from '../config.js?v=45';
+import { submitRegistration } from '../services/registrationService.js?v=45';
 
 const isHttps = (v) => typeof v === 'string' && /^https:\/\//i.test(v.trim());
 const withTimeout = (promise, ms) => Promise.race([

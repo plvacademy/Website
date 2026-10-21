@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://plvacademy.github.io/chatbot-admin/js/; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://drive.google.com https://*.googleusercontent.com https://plvacademy.github.io; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://plvacademy.github.io; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <script src="js/boot.js?v=45"></script>
   <title>Programs &amp; Registration | PLV Academy</title>
   <meta name="description" content="Register a player at PLV — Performance Lab Volleyball Academy. Choose a training area and fill in the player details.">
   <meta name="theme-color" content="#071D33">
@@ -12,8 +14,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=43">
-  <link rel="stylesheet" href="css/registration.css?v=43">
+  <link rel="stylesheet" href="css/styles.css?v=45">
+  <link rel="stylesheet" href="css/registration.css?v=45">
 </head>
 <body class="flow" data-view="area">
 
@@ -39,11 +41,9 @@
   <header class="flow-header">
     <a class="flow-logo" href="index.html" aria-label="PLV Academy — Home">
       <!-- Logo.png = the main logo (white text, for dark backgrounds); Logo-dark.png = navy-text version for the light screens -->
-      <img class="flow-logo__img flow-logo__img--on-dark" src="assets/images/Logo.png?v=2" alt="PLV Academy" width="47" height="56"
-           onerror="document.body.classList.add('no-logo-on-dark')">
+      <img class="flow-logo__img flow-logo__img--on-dark" src="assets/images/Logo.png?v=2" alt="PLV Academy" width="47" height="56" data-fail-class="no-logo-on-dark">
       <!-- Optional navy-text version of the same logo for the light screens (see README) -->
-      <img class="flow-logo__img flow-logo__img--on-light" src="assets/images/Logo-dark.png?v=2" alt="" aria-hidden="true" width="47" height="56"
-           onerror="document.body.classList.add('no-logo-on-light')">
+      <img class="flow-logo__img flow-logo__img--on-light" src="assets/images/Logo-dark.png?v=2" alt="" aria-hidden="true" width="47" height="56" data-fail-class="no-logo-on-light">
       <span class="flow-logo__text" aria-hidden="true"><strong>PLV</strong><small>ACADEMY</small></span>
     </a>
     <div class="flow-header__side">
@@ -170,21 +170,9 @@
 </div>
 
 <!-- Shown only when the page is opened by double-click (file://): ES modules need a local server. -->
-<script>
-  if (location.protocol === 'file:') {
-    document.addEventListener('DOMContentLoaded', function () {
-      var d = document.createElement('div');
-      d.setAttribute('role', 'alert');
-      d.style.cssText = 'position:sticky;top:0;z-index:300;background:#FF850B;color:#071D33;padding:.8rem 1rem;text-align:center;font:600 14px/1.5 sans-serif';
-      d.textContent = 'Open this page through a local server (VS Code Live Server, or: python -m http.server). Opening index.html directly blocks the scripts, so the chatbot and dynamic sections cannot load. / افتح الصفحة عبر Live Server وليس بالضغط المزدوج على الملف.';
-      document.body.prepend(d);
-    });
-  }
-</script>
-
 <!-- Floating chatbot (same component as the Home page) -->
 <div class="chatbot" id="chatbot-root"></div>
 
-<script type="module" src="js/programs.js?v=43"></script>
+<script type="module" src="js/programs.js?v=45"></script>
 </body>
 </html>

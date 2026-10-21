@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://plvacademy.github.io/chatbot-admin/js/; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://drive.google.com https://*.googleusercontent.com https://plvacademy.github.io; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://plvacademy.github.io; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <script src="js/boot.js?v=45"></script>
   <title>PLV | Performance Lab Volleyball Academy</title>
   <meta name="description" content="PLV — Performance Lab Volleyball Academy. Train with purpose. Perform beyond limits.">
   <meta name="theme-color" content="#071D33">
@@ -12,8 +14,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=43">
-  <link rel="stylesheet" href="css/responsive.css?v=43">
+  <link rel="stylesheet" href="css/styles.css?v=45">
+  <link rel="stylesheet" href="css/responsive.css?v=45">
 </head>
 <body>
 
@@ -54,8 +56,7 @@
 <header class="site-header">
   <div class="container header-inner">
     <a class="brand" href="#home" aria-label="PLV — Performance Lab Volleyball Academy">
-      <img src="assets/images/Logo.png?v=2" alt="PLV — Performance Lab Volleyball Academy" class="brand__logo" width="45" height="54"
-           onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+      <img src="assets/images/Logo.png?v=2" alt="PLV — Performance Lab Volleyball Academy" class="brand__logo" width="45" height="54">
       <span class="brand__text" hidden><strong>PLV</strong><small>Performance Lab<br>Volleyball Academy</small></span>
     </a>
 
@@ -102,7 +103,10 @@
           <a class="btn btn--outline" href="#coaches" data-page="coaches"><span data-i18n="hero.coaches">View Our Coaches</span></a>
         </div>
       </div>
-      <p class="hero__tagline" aria-hidden="true">Better<br>Players<br>Bigger<br>Dreams</p>
+      <p class="hero__tagline" aria-hidden="true" data-i18n="hero.tagline">Better
+Players
+Bigger
+Dreams</p>
     </div>
   </section>
 
@@ -227,8 +231,7 @@
 <footer class="site-footer">
   <div class="container footer-top">
     <a class="brand" href="#home" aria-label="PLV — Performance Lab Volleyball Academy">
-      <img src="assets/images/Logo.png?v=2" alt="PLV — Performance Lab Volleyball Academy" class="brand__logo" width="45" height="54" loading="lazy"
-           onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+      <img src="assets/images/Logo.png?v=2" alt="PLV — Performance Lab Volleyball Academy" class="brand__logo" width="45" height="54" loading="lazy">
       <span class="brand__text" hidden><strong>PLV</strong><small>Performance Lab<br>Volleyball Academy</small></span>
     </a>
     <nav class="footer-nav" data-i18n-aria="nav.footer" aria-label="Footer navigation">
@@ -263,18 +266,6 @@
 </dialog>
 
 <!-- Shown only when the page is opened by double-click (file://): ES modules need a local server. -->
-<script>
-  if (location.protocol === 'file:') {
-    document.addEventListener('DOMContentLoaded', function () {
-      var d = document.createElement('div');
-      d.setAttribute('role', 'alert');
-      d.style.cssText = 'position:sticky;top:0;z-index:300;background:#FF850B;color:#071D33;padding:.8rem 1rem;text-align:center;font:600 14px/1.5 sans-serif';
-      d.textContent = 'Open this page through a local server (VS Code Live Server, or: python -m http.server). Opening index.html directly blocks the scripts, so the chatbot and dynamic sections cannot load. / افتح الصفحة عبر Live Server وليس بالضغط المزدوج على الملف.';
-      document.body.prepend(d);
-    });
-  }
-</script>
-
-<script type="module" src="js/main.js?v=43"></script>
+<script type="module" src="js/main.js?v=45"></script>
 </body>
 </html>

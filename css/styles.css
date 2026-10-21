@@ -155,7 +155,7 @@ html:not(.kb) a:focus-visible, html:not(.kb) button:focus-visible { outline: non
 .hero__tagline {
   position: absolute; inset-inline-end: 0; bottom: 2.2rem; font-style: italic; font-weight: 700;
   font-size: clamp(1rem, 2vw, 1.5rem); line-height: 1.2; transform: rotate(-8deg); opacity: .9;
-  text-align: start; color: var(--white);
+  text-align: start; color: var(--white); white-space: pre-line;
 }
 
 /* ---------------- Sections ---------------- */
@@ -440,3 +440,6 @@ html[lang='en'] .chatbot__hint { letter-spacing: .14em; text-transform: uppercas
 .spinner { flex: none; width: .95rem; height: .95rem; border-radius: 50%; border: 2px solid rgba(255, 133, 11, .3); border-top-color: var(--orange); animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 2.4s; } }
+
+/* Menu links the owner switched off (Menu tab) */
+.site-nav [hidden], .footer-nav [hidden] { display: none !important; }
